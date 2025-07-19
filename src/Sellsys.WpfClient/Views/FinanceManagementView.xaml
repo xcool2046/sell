@@ -82,7 +82,7 @@
         </Style>
     </UserControl.Resources>
 
-    <Grid Margin="20">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/> <!-- 订单列表标签 -->
             <RowDefinition Height="Auto"/> <!-- 筛选区域 -->
@@ -186,7 +186,7 @@
                         Margin="0,0,10,0"/>
                 <Button Content="重置"
                         Command="{Binding ResetFiltersCommand}"
-                        Style="{StaticResource EditButtonStyle}"
+                        Style="{StaticResource GrayButtonStyle}"
                         Width="60"
                         Height="32"
                         Margin="0"/>
@@ -233,9 +233,9 @@
                     <!-- 列头样式 -->
                     <DataGrid.ColumnHeaderStyle>
                         <Style TargetType="DataGridColumnHeader">
-                            <Setter Property="Background" Value="{StaticResource TableHeaderBrush}"/>
-                            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
-                            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+                            <Setter Property="Background" Value="#007ACC"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="BorderBrush" Value="#005A9B"/>
                             <Setter Property="BorderThickness" Value="0,0,1,1"/>
                             <Setter Property="Padding" Value="12,8"/>
                             <Setter Property="FontWeight" Value="Bold"/>
@@ -256,8 +256,8 @@
                                     <Setter Property="Background" Value="{StaticResource LightBlueBrush}"/>
                                 </Trigger>
                                 <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="{StaticResource PrimaryBlueBrush}"/>
-                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="Background" Value="#F0F8FF"/>
+                                    <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
@@ -294,9 +294,12 @@
                     <DataGrid.Columns>
                         <!-- 序号 -->
                         <DataGridTextColumn Header="序号"
-                                            Binding="{Binding RowNumber}"
                                             Width="60"
                                             IsReadOnly="True">
+                            <DataGridTextColumn.Binding>
+                                <Binding RelativeSource="{RelativeSource AncestorType=DataGridRow}"
+                                         Converter="{StaticResource RowIndexConverter}"/>
+                            </DataGridTextColumn.Binding>
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -305,8 +308,8 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <!-- 客户名称 -->
-                        <DataGridTextColumn Header="客户名称"
+                        <!-- 客户单位 -->
+                        <DataGridTextColumn Header="客户单位"
                                             Binding="{Binding CustomerName}"
                                             Width="150"
                                             IsReadOnly="True">
@@ -323,7 +326,7 @@
                         <!-- 产品名称 -->
                         <DataGridTextColumn Header="产品名称"
                                             Binding="{Binding ProductFullName}"
-                                            Width="180"
+                                            Width="120"
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -331,6 +334,47 @@
                                     <Setter Property="VerticalAlignment" Value="Center"/>
                                     <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
                                     <Setter Property="ToolTip" Value="{Binding ProductFullName}"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- 型号规格 -->
+                        <DataGridTextColumn Header="型号规格"
+                                            Binding="{Binding ProductSpecification}"
+                                            Width="100"
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Left"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                                    <Setter Property="ToolTip" Value="{Binding ProductSpecification}"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- 产品定价 -->
+                        <DataGridTextColumn Header="产品定价"
+                                            Binding="{Binding FormattedListPrice}"
+                                            Width="100"
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- 实际单价 -->
+                        <DataGridTextColumn Header="实际单价"
+                                            Binding="{Binding FormattedUnitPrice}"
+                                            Width="100"
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
@@ -348,21 +392,21 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <!-- 单价 -->
-                        <DataGridTextColumn Header="单价"
-                                            Binding="{Binding FormattedUnitPrice}"
-                                            Width="100"
+                        <!-- 单位 -->
+                        <DataGridTextColumn Header="单位"
+                                            Binding="{Binding ProductUnit}"
+                                            Width="60"
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
-                                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
                                     <Setter Property="VerticalAlignment" Value="Center"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <!-- 总金额 -->
-                        <DataGridTextColumn Header="总金额"
+                        <!-- 订单金额 -->
+                        <DataGridTextColumn Header="订单金额"
                                             Binding="{Binding FormattedTotalAmount}"
                                             Width="120"
                                             IsReadOnly="True">
@@ -375,53 +419,48 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <!-- 已收金额 -->
-                        <DataGridTextColumn Header="已收金额"
-                                            Binding="{Binding FormattedReceivedAmount}"
-                                            Width="120"
-                                            IsReadOnly="True">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="HorizontalAlignment" Value="Right"/>
-                                    <Setter Property="VerticalAlignment" Value="Center"/>
-                                    <Setter Property="Foreground" Value="#67C23A"/>
-                                    <Setter Property="FontWeight" Value="Bold"/>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-
-                        <!-- 未收金额 -->
-                        <DataGridTextColumn Header="未收金额"
-                                            Binding="{Binding FormattedUnreceivedAmount}"
-                                            Width="120"
-                                            IsReadOnly="True">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="HorizontalAlignment" Value="Right"/>
-                                    <Setter Property="VerticalAlignment" Value="Center"/>
-                                    <Setter Property="Foreground" Value="#E6A23C"/>
-                                    <Setter Property="FontWeight" Value="Bold"/>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-
-                        <!-- 收款比例 -->
-                        <DataGridTextColumn Header="收款比例"
-                                            Binding="{Binding FormattedPaymentRatio}"
+                        <!-- 销售提成 -->
+                        <DataGridTextColumn Header="销售提成"
+                                            Binding="{Binding FormattedSalesCommission}"
                                             Width="100"
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
-                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="HorizontalAlignment" Value="Right"/>
                                     <Setter Property="VerticalAlignment" Value="Center"/>
-                                    <Setter Property="FontWeight" Value="Bold"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <!-- 收款日期 -->
-                        <DataGridTextColumn Header="收款日期"
-                                            Binding="{Binding FormattedPaymentReceivedDate}"
+                        <!-- 主管提成 -->
+                        <DataGridTextColumn Header="主管提成"
+                                            Binding="{Binding FormattedSupervisorCommission}"
+                                            Width="100"
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- 经理提成 -->
+                        <DataGridTextColumn Header="经理提成"
+                                            Binding="{Binding FormattedManagerCommission}"
+                                            Width="100"
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- 签单日期 -->
+                        <DataGridTextColumn Header="签单日期"
+                                            Binding="{Binding FormattedCreatedDate}"
                                             Width="120"
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
@@ -432,10 +471,36 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <!-- 负责人 -->
-                        <DataGridTextColumn Header="负责人"
+                        <!-- 销售人 -->
+                        <DataGridTextColumn Header="销售人"
                                             Binding="{Binding SalesPersonName}"
                                             Width="100"
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- 订单状态 -->
+                        <DataGridTextColumn Header="订单状态"
+                                            Binding="{Binding OrderStatus}"
+                                            Width="100"
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- 到期日期 -->
+                        <DataGridTextColumn Header="到期日期"
+                                            Binding="{Binding FormattedExpiryDate}"
+                                            Width="120"
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">

@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Sellsys.WpfClient.Models
 {
@@ -48,5 +49,13 @@ namespace Sellsys.WpfClient.Models
         
         // 是否可以取消
         public bool CanCancel => Status is "Draft" or "Confirmed";
+
+        // 显示第一个订单项的产品信息（用于表格显示）
+        public string ProductName => OrderItems.FirstOrDefault()?.ProductName ?? "无产品";
+        public string ModelSpecification => OrderItems.FirstOrDefault()?.ProductSpecification ?? "无规格";
+        public string Unit => OrderItems.FirstOrDefault()?.UnitDisplay ?? "件";
+        public int Quantity => OrderItems.FirstOrDefault()?.Quantity ?? 0;
+        public string FormattedProductPrice => OrderItems.FirstOrDefault()?.ProductPrice?.ToString("C") ?? "¥0.00";
+        public string FormattedActualPrice => OrderItems.FirstOrDefault()?.FormattedActualPrice ?? "¥0.00";
     }
 }

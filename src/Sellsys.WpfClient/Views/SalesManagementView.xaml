@@ -70,8 +70,8 @@
                           Height="32"
                           Margin="0,0,15,0"/>
 
-                <!-- 负责人 (下拉框) -->
-                <TextBlock Text="负责人:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <!-- 销售人员 (下拉框) -->
+                <TextBlock Text="销售人员:" VerticalAlignment="Center" Margin="0,0,5,0"/>
                 <ComboBox ItemsSource="{Binding ResponsiblePersons}"
                           SelectedItem="{Binding SelectedResponsiblePerson}"
                           Style="{StaticResource StandardComboBoxStyle}"
@@ -86,9 +86,9 @@
                         Width="60"
                         Height="32"
                         Margin="0,0,10,0"/>
-                <Button Content="清空"
+                <Button Content="重置"
                         Command="{Binding ClearFiltersCommand}"
-                        Style="{StaticResource EditButtonStyle}"
+                        Style="{StaticResource GrayButtonStyle}"
                         Width="60"
                         Height="32"
                         Margin="0"/>
@@ -144,8 +144,8 @@
                                             Width="80"
                                             IsReadOnly="True"/>
 
-                        <!-- 客户单位名称 -->
-                        <DataGridTextColumn Header="客户单位名称"
+                        <!-- 客户单位 -->
+                        <DataGridTextColumn Header="客户单位"
                                             Binding="{Binding Name}"
                                             Width="200"
                                             IsReadOnly="True"/>
@@ -189,29 +189,95 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <!-- 销售 -->
-                        <DataGridTextColumn Header="销售"
-                                            Binding="{Binding SalesPersonName}"
-                                            Width="100"
-                                            IsReadOnly="True"/>
-
-                        <!-- 客服 -->
-                        <DataGridTextColumn Header="客服"
-                                            Binding="{Binding SupportPersonName}"
-                                            Width="100"
-                                            IsReadOnly="True"/>
-
                         <!-- 联系状态 -->
                         <DataGridTextColumn Header="联系状态"
                                             Binding="{Binding Status}"
                                             Width="100"
                                             IsReadOnly="True"/>
 
-                        <!-- 计划 -->
-                        <DataGridTextColumn Header="计划"
-                                            Binding="{Binding PendingTasks}"
-                                            Width="120"
+                        <!-- 客户意向 -->
+                        <DataGridTextColumn Header="客户意向"
+                                            Binding="{Binding CustomerIntention}"
+                                            Width="100"
                                             IsReadOnly="True"/>
+
+                        <!-- 联系记录 -->
+                        <DataGridTemplateColumn Header="联系记录" Width="80">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="{Binding ContactRecordCount}"
+                                            Command="{Binding DataContext.ViewContactRecordsCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                            CommandParameter="{Binding}"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Foreground="#409EFF"
+                                            FontWeight="Bold"
+                                            Cursor="Hand"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center">
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <TextBlock Text="{TemplateBinding Content}"
+                                                                       Foreground="{TemplateBinding Foreground}"
+                                                                       FontWeight="{TemplateBinding FontWeight}"
+                                                                       HorizontalAlignment="Center"
+                                                                       VerticalAlignment="Center"/>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter Property="TextBlock.TextDecorations" Value="Underline"/>
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!-- 订单 -->
+                        <DataGridTemplateColumn Header="订单" Width="80">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="{Binding OrderCount}"
+                                            Command="{Binding DataContext.ViewOrdersCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                            CommandParameter="{Binding}"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Foreground="#409EFF"
+                                            FontWeight="Bold"
+                                            Cursor="Hand"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center">
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <TextBlock Text="{TemplateBinding Content}"
+                                                                       Foreground="{TemplateBinding Foreground}"
+                                                                       FontWeight="{TemplateBinding FontWeight}"
+                                                                       HorizontalAlignment="Center"
+                                                                       VerticalAlignment="Center"/>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter Property="TextBlock.TextDecorations" Value="Underline"/>
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
                         <!-- 下次联系日期 -->
                         <DataGridTextColumn Header="下次联系日期"
@@ -219,10 +285,16 @@
                                             Width="120"
                                             IsReadOnly="True"/>
 
-                        <!-- 备注 -->
-                        <DataGridTextColumn Header="备注"
-                                            Binding="{Binding Remarks}"
-                                            Width="150"
+                        <!-- 销售人 -->
+                        <DataGridTextColumn Header="销售人"
+                                            Binding="{Binding SalesPersonName}"
+                                            Width="80"
+                                            IsReadOnly="True"/>
+
+                        <!-- 更新时间 -->
+                        <DataGridTextColumn Header="更新时间"
+                                            Binding="{Binding UpdatedAt, StringFormat=yyyy-MM-dd HH:mm:ss}"
+                                            Width="140"
                                             IsReadOnly="True"/>
 
                         <!-- 操作 -->
@@ -233,7 +305,7 @@
                                         <Button Content="编辑"
                                                 Command="{Binding DataContext.EditCustomerCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                                 CommandParameter="{Binding}"
-                                                Style="{StaticResource EditButtonStyle}"
+                                                Style="{StaticResource BlueButtonStyle}"
                                                 Width="50"
                                                 Height="25"
                                                 Margin="0,0,5,0"/>

@@ -23,6 +23,13 @@ namespace Sellsys.WpfClient.Models
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
+        // 新增属性以匹配原型图
+        public string Province => CustomerProvince ?? "未知省份";
+        public string City => CustomerCity ?? "未知城市";
+        public string? SalesPersonName { get; set; }
+        public int Quantity { get; set; } = 1;
+        public int ServiceRecordCount { get; set; } = 0;
+
         public bool IsSelected
         {
             get => _isSelected;

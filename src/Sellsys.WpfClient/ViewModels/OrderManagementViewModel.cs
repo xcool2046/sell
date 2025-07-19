@@ -254,6 +254,9 @@ namespace Sellsys.WpfClient.ViewModels
             catch (Exception ex)
             {
                 ErrorHandlingService.HandleApiError(ex, "loading order data");
+
+                // Load mock data as fallback
+                LoadMockOrderData();
             }
             finally
             {
@@ -469,6 +472,64 @@ namespace Sellsys.WpfClient.ViewModels
             {
                 MessageBox.Show($"打开订单详情对话框失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void LoadMockOrderData()
+        {
+            Orders.Clear();
+
+            // 添加模拟订单数据
+            var mockOrders = new List<Order>
+            {
+                new Order
+                {
+                    Id = 1,
+                    OrderNumber = "ORD-2025-001",
+                    CustomerId = 1,
+                    CustomerName = "广文学院职业技术学校",
+                    EffectiveDate = new DateTime(2025, 7, 9),
+                    ExpiryDate = new DateTime(2026, 7, 9),
+                    Status = "待收款",
+                    SalesPersonId = 1,
+                    SalesPersonName = "张飞",
+                    CreatedAt = new DateTime(2025, 7, 9, 11, 23, 46),
+                    UpdatedAt = new DateTime(2025, 7, 9, 11, 23, 46),
+                    OrderItems = new System.Collections.ObjectModel.ObservableCollection<OrderItem>
+                    {
+                        new OrderItem
+                        {
+                            Id = 1,
+                            OrderId = 1,
+                            ProductId = 1,
+                            ProductName = "应急管理系统",
+                            ProductSpecification = "MIS",
+                            ProductUnit = "套",
+                            ProductPrice = 46000.00m,
+                            ActualPrice = 46000.00m,
+                            Quantity = 1,
+                            TotalAmount = 46000.00m,
+                            CreatedAt = new DateTime(2025, 7, 9, 11, 23, 46)
+                        }
+                    }
+                }
+            };
+
+            foreach (var order in mockOrders)
+            {
+                Orders.Add(order);
+            }
+
+            // Update summary
+            UpdateOrderSummarySync();
+        }
+
+        private void UpdateOrderSummarySync()
+        {
+            if (OrderSummary == null)
+                OrderSummary = new OrderSummary();
+
+            OrderSummary.TotalOrders = Orders.Count;
+            OrderSummary.TotalAmount = Orders.Sum(o => o.TotalAmount);
         }
     }
 }

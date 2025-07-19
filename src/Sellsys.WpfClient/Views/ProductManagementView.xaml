@@ -7,7 +7,7 @@
              d:DataContext="{d:DesignInstance Type=viewmodels:ProductManagementViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="1000">
-    <Grid Margin="20">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/> <!-- Action Button -->
             <RowDefinition Height="*"/>    <!-- Data Grid -->
@@ -17,7 +17,7 @@
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,15">
             <Button Content="添加产品"
                     Command="{Binding AddProductCommand}"
-                    Style="{StaticResource PrimaryButtonStyle}"
+                    Style="{StaticResource BlueButtonStyle}"
                     Width="100"
                     Height="35"/>
         </StackPanel>
@@ -45,42 +45,67 @@
                 <DataGrid x:Name="ProductsDataGrid"
                           ItemsSource="{Binding Products}"
                           SelectedItem="{Binding SelectedProduct}"
-                          Style="{StaticResource StandardDataGridStyle}"
-                          ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
-                          RowStyle="{StaticResource DataGridRowStyle}">
+                          Style="{StaticResource BlueHeaderDataGridStyle}">
                     <DataGrid.Columns>
+                        <!-- 序号 -->
+                        <DataGridTextColumn Header="序号"
+                                            Width="60"
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.Binding>
+                                <Binding RelativeSource="{RelativeSource AncestorType=DataGridRow}"
+                                         Converter="{StaticResource RowIndexConverter}"/>
+                            </DataGridTextColumn.Binding>
+                        </DataGridTextColumn>
+
+                        <!-- 产品名称 -->
                         <DataGridTextColumn Header="产品名称"
                                             Binding="{Binding Name}"
                                             Width="180"
                                             IsReadOnly="True"/>
+
+                        <!-- 型号规格 -->
                         <DataGridTextColumn Header="型号规格"
                                             Binding="{Binding SpecificationDisplay}"
                                             Width="120"
                                             IsReadOnly="True"/>
+
+                        <!-- 计量单位 -->
                         <DataGridTextColumn Header="计量单位"
                                             Binding="{Binding UnitDisplay}"
                                             Width="80"
                                             IsReadOnly="True"/>
+
+                        <!-- 产品定价 -->
                         <DataGridTextColumn Header="产品定价"
                                             Binding="{Binding FormattedListPrice}"
                                             Width="100"
                                             IsReadOnly="True"/>
+
+                        <!-- 最低控价 -->
                         <DataGridTextColumn Header="最低控价"
                                             Binding="{Binding FormattedMinPrice}"
                                             Width="100"
                                             IsReadOnly="True"/>
+
+                        <!-- 销售提成 -->
                         <DataGridTextColumn Header="销售提成"
                                             Binding="{Binding FormattedSalesCommission}"
                                             Width="100"
                                             IsReadOnly="True"/>
+
+                        <!-- 主管提成 -->
                         <DataGridTextColumn Header="主管提成"
                                             Binding="{Binding FormattedSupervisorCommission}"
                                             Width="100"
                                             IsReadOnly="True"/>
+
+                        <!-- 经理提成 -->
                         <DataGridTextColumn Header="经理提成"
                                             Binding="{Binding FormattedManagerCommission}"
                                             Width="100"
                                             IsReadOnly="True"/>
+
+                        <!-- 操作 -->
                         <DataGridTemplateColumn Header="操作" Width="120">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -88,7 +113,7 @@
                                         <Button Content="编辑"
                                                 Command="{Binding DataContext.EditProductRowCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"
-                                                Style="{StaticResource EditButtonStyle}"
+                                                Style="{StaticResource BlueButtonStyle}"
                                                 Width="50"
                                                 Height="25"
                                                 Margin="2"/>

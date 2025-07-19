@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Sellsys.WpfClient.Views"
              mc:Ignorable="d"
              d:DesignHeight="700" d:DesignWidth="1400">
-    <Grid Margin="20">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/> <!-- Search and Filters -->
             <RowDefinition Height="*"/>    <!-- Data Grid -->
@@ -95,7 +95,7 @@
                         Margin="0,0,10,0"/>
                 <Button Content="重置"
                         Command="{Binding ResetFiltersCommand}"
-                        Style="{StaticResource EditButtonStyle}"
+                        Style="{StaticResource GrayButtonStyle}"
                         Width="60"
                         Height="32"
                         Margin="0"/>
@@ -110,7 +110,7 @@
             <DataGrid x:Name="OrdersDataGrid"
                       ItemsSource="{Binding Orders}"
                       SelectedItem="{Binding SelectedOrder}"
-                      Style="{StaticResource StandardDataGridStyle}"
+                      Style="{StaticResource BlueHeaderDataGridStyle}"
                       AutoGenerateColumns="False"
                       CanUserAddRows="False"
                       CanUserDeleteRows="False"
@@ -120,7 +120,7 @@
                       HeadersVisibility="Column">
 
                 <DataGrid.Columns>
-                    <!-- Row Number -->
+                    <!-- 序号 -->
                     <DataGridTextColumn Header="序号" Width="60" IsReadOnly="True">
                         <DataGridTextColumn.Binding>
                             <Binding RelativeSource="{RelativeSource AncestorType=DataGridRow}"
@@ -128,60 +128,46 @@
                         </DataGridTextColumn.Binding>
                     </DataGridTextColumn>
 
-                    <!-- Order Number -->
-                    <DataGridTextColumn Header="订单号" Binding="{Binding OrderNumber}" Width="150"/>
+                    <!-- 客户单位 -->
+                    <DataGridTextColumn Header="客户单位" Binding="{Binding CustomerName}" Width="200"/>
 
-                    <!-- Customer Name -->
-                    <DataGridTextColumn Header="客户名称" Binding="{Binding CustomerName}" Width="150"/>
+                    <!-- 产品名称 -->
+                    <DataGridTextColumn Header="产品名称" Binding="{Binding ProductName}" Width="150"/>
 
-                    <!-- Total Amount -->
+                    <!-- 型号规格 -->
+                    <DataGridTextColumn Header="型号规格" Binding="{Binding ModelSpecification}" Width="120"/>
+
+                    <!-- 产品单价 -->
+                    <DataGridTextColumn Header="产品单价" Binding="{Binding FormattedProductPrice}" Width="100"/>
+
+                    <!-- 实际单价 -->
+                    <DataGridTextColumn Header="实际单价" Binding="{Binding FormattedActualPrice}" Width="100"/>
+
+                    <!-- 数量 -->
+                    <DataGridTextColumn Header="数量" Binding="{Binding Quantity}" Width="80"/>
+
+                    <!-- 单位 -->
+                    <DataGridTextColumn Header="单位" Binding="{Binding Unit}" Width="60"/>
+
+                    <!-- 订单金额 -->
                     <DataGridTextColumn Header="订单金额" Binding="{Binding FormattedTotalAmount}" Width="120"/>
 
-                    <!-- Effective Date -->
+                    <!-- 生效日期 -->
                     <DataGridTextColumn Header="生效日期" Binding="{Binding FormattedEffectiveDate}" Width="100"/>
 
-                    <!-- Expiry Date -->
+                    <!-- 到期日期 -->
                     <DataGridTextColumn Header="到期日期" Binding="{Binding FormattedExpiryDate}" Width="100"/>
 
-                    <!-- Created Date -->
-                    <DataGridTextColumn Header="签单日期" Binding="{Binding FormattedCreatedAt}" Width="120"/>
+                    <!-- 签单时间 -->
+                    <DataGridTextColumn Header="签单时间" Binding="{Binding FormattedCreatedAt}" Width="140"/>
 
-                    <!-- Sales Person -->
-                    <DataGridTextColumn Header="销售人员" Binding="{Binding SalesPersonName}" Width="100"/>
+                    <!-- 管理人 -->
+                    <DataGridTextColumn Header="管理人" Binding="{Binding SalesPersonName}" Width="80"/>
 
-                    <!-- Status -->
+                    <!-- 订单状态 -->
                     <DataGridTextColumn Header="订单状态" Binding="{Binding Status}" Width="100"/>
 
-                    <!-- Action Buttons -->
-                    <DataGridTemplateColumn Header="操作" Width="200">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <Button Content="编辑"
-                                            Command="{Binding DataContext.EditOrderRowCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            CommandParameter="{Binding}"
-                                            Style="{StaticResource EditButtonStyle}"
-                                            Width="50"
-                                            Height="24"
-                                            Margin="2"/>
-                                    <Button Content="详情"
-                                            Command="{Binding DataContext.ViewOrderDetailsRowCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            CommandParameter="{Binding}"
-                                            Style="{StaticResource SecondaryButtonStyle}"
-                                            Width="50"
-                                            Height="24"
-                                            Margin="2"/>
-                                    <Button Content="删除"
-                                            Command="{Binding DataContext.DeleteOrderRowCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            CommandParameter="{Binding}"
-                                            Style="{StaticResource DeleteButtonStyle}"
-                                            Width="50"
-                                            Height="24"
-                                            Margin="2"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+
                 </DataGrid.Columns>
             </DataGrid>
         </Border>

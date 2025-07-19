@@ -15,6 +15,7 @@ namespace Sellsys.WpfClient.ViewModels
         private Customer? _selectedCustomer;
         private string _searchText = string.Empty;
         private bool _isLoading;
+        private bool _isAllSelected;
 
         // Filter properties
         private ObservableCollection<string> _industryTypes;
@@ -51,6 +52,12 @@ namespace Sellsys.WpfClient.ViewModels
         {
             get => _isLoading;
             set => SetProperty(ref _isLoading, value);
+        }
+
+        public bool IsAllSelected
+        {
+            get => _isAllSelected;
+            set => SetProperty(ref _isAllSelected, value);
         }
 
         // Filter Properties
@@ -155,6 +162,7 @@ namespace Sellsys.WpfClient.ViewModels
         public ICommand AssignSalesCommand { get; }
         public ICommand AssignSupportCommand { get; }
         public ICommand ViewContactsCommand { get; }
+        public ICommand SelectAllCommand { get; }
 
         // Row-level commands (for DataGrid buttons)
         public ICommand EditCustomerRowCommand { get; }
@@ -183,6 +191,7 @@ namespace Sellsys.WpfClient.ViewModels
             AssignSalesCommand = new RelayCommand(p => AssignSales(), p => SelectedCustomer != null);
             AssignSupportCommand = new RelayCommand(p => AssignSupport(), p => SelectedCustomer != null);
             ViewContactsCommand = new RelayCommand(p => ViewContacts(p as Customer));
+            SelectAllCommand = new RelayCommand(p => ToggleSelectAll());
 
             // Row-level commands
             EditCustomerRowCommand = new RelayCommand(p => EditCustomerRow(p as Customer), p => p is Customer);
@@ -303,19 +312,87 @@ namespace Sellsys.WpfClient.ViewModels
                 new Customer
                 {
                     Id = 1,
-                    Name = "示例客户公司",
-                    IndustryTypes = "教育",
-                    Province = "四川",
-                    City = "成都",
+                    Name = "广文学院职业技术学校",
+                    IndustryTypes = "应急",
+                    Province = "四川省",
+                    City = "成都市",
                     Address = "成都市高新区示例地址",
-                    Remarks = "这是一个示例客户",
+                    Remarks = "重点客户",
                     SalesPersonName = "张飞",
-                    CustomerIntention = "待分配",
-                    PendingTasks = "无",
-                    CreatedAt = DateTime.Now.AddDays(-1),
+                    SupportPersonName = "李客服",
+                    CustomerIntention = "等分配",
+                    CustomerRemarks = "重点客户",
+                    CustomerStatus = "已联系",
+                    CreatedAt = new DateTime(2025, 7, 9, 11, 24, 46),
                     Contacts = new System.Collections.ObjectModel.ObservableCollection<Contact>
                     {
-                        new Contact { Id = 1, Name = "示例联系人", Phone = "13800138000", IsPrimary = true }
+                        new Contact { Id = 1, Name = "李主任", Phone = "13800138001", IsPrimary = true },
+                        new Contact { Id = 2, Name = "王老师", Phone = "13800138002", IsPrimary = false },
+                        new Contact { Id = 3, Name = "陈校长", Phone = "13800138003", IsPrimary = false }
+                    }
+                },
+                new Customer
+                {
+                    Id = 2,
+                    Name = "广文学院职业技术学校",
+                    IndustryTypes = "应急",
+                    Province = "四川省",
+                    City = "成都市",
+                    Address = "成都市高新区示例地址",
+                    Remarks = "重点客户",
+                    SalesPersonName = "张飞",
+                    SupportPersonName = "王客服",
+                    CustomerIntention = "待联系",
+                    CustomerRemarks = "有合作意向",
+                    CustomerStatus = "跟进中",
+                    CreatedAt = new DateTime(2025, 7, 9, 11, 23, 46),
+                    Contacts = new System.Collections.ObjectModel.ObservableCollection<Contact>
+                    {
+                        new Contact { Id = 4, Name = "刘处长", Phone = "13800138004", IsPrimary = true }
+                    }
+                },
+                new Customer
+                {
+                    Id = 3,
+                    Name = "广文学院职业技术学校",
+                    IndustryTypes = "应急",
+                    Province = "四川省",
+                    City = "成都市",
+                    Address = "成都市高新区示例地址",
+                    Remarks = "重点客户",
+                    SalesPersonName = "张飞",
+                    SupportPersonName = "赵客服",
+                    CustomerIntention = "跟进中",
+                    CustomerRemarks = "无",
+                    CustomerStatus = "待联系",
+                    CreatedAt = new DateTime(2025, 7, 9, 11, 23, 46),
+                    Contacts = new System.Collections.ObjectModel.ObservableCollection<Contact>
+                    {
+                        new Contact { Id = 5, Name = "赵主任", Phone = "13800138005", IsPrimary = true },
+                        new Contact { Id = 6, Name = "钱老师", Phone = "13800138006", IsPrimary = false },
+                        new Contact { Id = 7, Name = "孙校长", Phone = "13800138007", IsPrimary = false }
+                    }
+                },
+                new Customer
+                {
+                    Id = 4,
+                    Name = "广文学院职业技术学校",
+                    IndustryTypes = "应急",
+                    Province = "四川省",
+                    City = "成都市",
+                    Address = "成都市高新区示例地址",
+                    Remarks = "重点客户",
+                    SalesPersonName = "张小二",
+                    SupportPersonName = "孙客服",
+                    CustomerIntention = "已成交",
+                    CustomerRemarks = "重点客户",
+                    CustomerStatus = "已成交",
+                    CreatedAt = new DateTime(2025, 7, 9, 11, 23, 46),
+                    Contacts = new System.Collections.ObjectModel.ObservableCollection<Contact>
+                    {
+                        new Contact { Id = 8, Name = "周主任", Phone = "13800138008", IsPrimary = true },
+                        new Contact { Id = 9, Name = "吴老师", Phone = "13800138009", IsPrimary = false },
+                        new Contact { Id = 10, Name = "郑校长", Phone = "13800138010", IsPrimary = false }
                     }
                 }
             };
@@ -633,6 +710,20 @@ namespace Sellsys.WpfClient.ViewModels
                 {
                     IsLoading = false;
                 }
+            }
+        }
+
+        private void ToggleSelectAll()
+        {
+            // 检查当前是否所有项都已选中
+            bool allSelected = Customers.All(c => c.IsSelected);
+
+            // 如果全部选中，则取消全选；否则全选
+            IsAllSelected = !allSelected;
+
+            foreach (var customer in Customers)
+            {
+                customer.IsSelected = IsAllSelected;
             }
         }
     }

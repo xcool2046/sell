@@ -12,7 +12,9 @@
         MinHeight="600" MinWidth="1000"
         WindowStartupLocation="CenterScreen"
         WindowState="Normal"
-        ShowInTaskbar="True">
+        ShowInTaskbar="True"
+        Visibility="Visible"
+        Topmost="False">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/> <!-- Top Bar -->

@@ -3,6 +3,7 @@ using Sellsys.WpfClient.Models;
 using Sellsys.WpfClient.Services;
 using Sellsys.WpfClient.Views.Dialogs;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using System.Windows;
 
@@ -16,6 +17,7 @@ namespace Sellsys.WpfClient.ViewModels
         private Customer? _selectedCustomer;
         private string _searchText = string.Empty;
         private bool _isLoading;
+        private bool _isAllSelected;
 
         // Filter properties
         private ObservableCollection<string> _industryTypes;
@@ -57,6 +59,12 @@ namespace Sellsys.WpfClient.ViewModels
         {
             get => _isLoading;
             set => SetProperty(ref _isLoading, value);
+        }
+
+        public bool IsAllSelected
+        {
+            get => _isAllSelected;
+            set => SetProperty(ref _isAllSelected, value);
         }
 
         // Filter collections
@@ -128,6 +136,9 @@ namespace Sellsys.WpfClient.ViewModels
         public ICommand ViewContactsCommand { get; }
         public ICommand EditCustomerCommand { get; }
         public ICommand ViewDetailsCommand { get; }
+        public ICommand SelectAllCommand { get; }
+        public ICommand ViewContactRecordsCommand { get; }
+        public ICommand ViewOrdersCommand { get; }
 
         public SalesManagementViewModel()
         {
@@ -147,6 +158,9 @@ namespace Sellsys.WpfClient.ViewModels
             ViewContactsCommand = new RelayCommand(p => ViewContacts(p as Customer));
             EditCustomerCommand = new RelayCommand(p => EditCustomer(p as Customer));
             ViewDetailsCommand = new RelayCommand(p => ViewDetails(p as Customer));
+            SelectAllCommand = new RelayCommand(p => ToggleSelectAll());
+            ViewContactRecordsCommand = new RelayCommand(p => ViewContactRecords(p as Customer));
+            ViewOrdersCommand = new RelayCommand(p => ViewOrders(p as Customer));
 
             // Initialize filter data
             InitializeFilters();
@@ -196,6 +210,9 @@ namespace Sellsys.WpfClient.ViewModels
             {
                 // Use the error handling service
                 ErrorHandlingService.HandleApiError(ex, "loading customer data");
+
+                // Load mock data as fallback
+                LoadMockData();
             }
             finally
             {
@@ -444,6 +461,106 @@ namespace Sellsys.WpfClient.ViewModels
             SelectedContactStatus = "全部";
             SelectedResponsiblePerson = "全部";
             SearchText = string.Empty;
+        }
+
+        private void ToggleSelectAll()
+        {
+            // 检查当前是否所有项都已选中
+            bool allSelected = Customers.All(c => c.IsSelected);
+
+            // 如果全部选中，则取消全选；否则全选
+            IsAllSelected = !allSelected;
+
+            foreach (var customer in Customers)
+            {
+                customer.IsSelected = IsAllSelected;
+            }
+        }
+
+        private void ViewContactRecords(Customer? customer)
+        {
+            if (customer == null) return;
+
+            // TODO: Show ContactRecordsDialog
+            MessageBox.Show($"查看联系记录: {customer.Name}", "联系记录", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void ViewOrders(Customer? customer)
+        {
+            if (customer == null) return;
+
+            // TODO: Show OrdersDialog
+            MessageBox.Show($"查看订单: {customer.Name}", "订单记录", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void LoadMockData()
+        {
+            Customers.Clear();
+
+            // 添加两行模拟数据
+            var mockCustomers = new List<Customer>
+            {
+                new Customer
+                {
+                    Id = 1,
+                    Name = "广文学院职业技术学校",
+                    IndustryTypes = "应急",
+                    Province = "四川省",
+                    City = "成都市",
+                    Address = "成都市高新区示例地址",
+                    Remarks = "重点客户",
+                    SalesPersonName = "张飞",
+                    SupportPersonName = "李客服",
+                    CustomerIntention = "待联系",
+                    CustomerRemarks = "重点客户",
+                    CustomerStatus = "已联系",
+                    Status = "待联系",
+                    ContactRecordCount = 3,
+                    OrderCount = 1,
+                    NextContactDate = DateTime.Now.AddDays(3),
+                    CreatedAt = new DateTime(2025, 7, 9, 11, 24, 46),
+                    UpdatedAt = new DateTime(2025, 7, 9, 11, 24, 46),
+                    Contacts = new System.Collections.ObjectModel.ObservableCollection<Contact>
+                    {
+                        new Contact { Id = 1, Name = "李主任", Phone = "13800138001", IsPrimary = true },
+                        new Contact { Id = 2, Name = "王老师", Phone = "13800138002", IsPrimary = false },
+                        new Contact { Id = 3, Name = "陈校长", Phone = "13800138003", IsPrimary = false }
+                    }
+                },
+                new Customer
+                {
+                    Id = 2,
+                    Name = "广文学院职业技术学校",
+                    IndustryTypes = "应急",
+                    Province = "四川省",
+                    City = "成都市",
+                    Address = "成都市高新区示例地址",
+                    Remarks = "重点客户",
+                    SalesPersonName = "张飞",
+                    SupportPersonName = "王客服",
+                    CustomerIntention = "跟进中",
+                    CustomerRemarks = "有合作意向",
+                    CustomerStatus = "跟进中",
+                    Status = "跟进中",
+                    ContactRecordCount = 2,
+                    OrderCount = 3,
+                    NextContactDate = DateTime.Now.AddDays(7),
+                    CreatedAt = new DateTime(2025, 7, 9, 11, 23, 46),
+                    UpdatedAt = new DateTime(2025, 7, 9, 11, 23, 46),
+                    Contacts = new System.Collections.ObjectModel.ObservableCollection<Contact>
+                    {
+                        new Contact { Id = 4, Name = "刘处长", Phone = "13800138004", IsPrimary = true }
+                    }
+                }
+            };
+
+            foreach (var customer in mockCustomers)
+            {
+                Customers.Add(customer);
+            }
+
+            // Update filter options
+            UpdateFilterOptions();
         }
     }
 }

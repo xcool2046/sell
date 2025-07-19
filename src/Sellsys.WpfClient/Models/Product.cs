@@ -13,6 +13,7 @@ namespace Sellsys.WpfClient.Models
         public decimal? SalesCommission { get; set; }
         public decimal? SupervisorCommission { get; set; }
         public decimal? ManagerCommission { get; set; }
+        public int SalesQuantity { get; set; } = 0;
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 

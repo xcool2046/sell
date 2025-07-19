@@ -67,8 +67,8 @@
                           Height="32"
                           Margin="0,0,15,0"/>
 
-                <!-- 负责人 (下拉框) -->
-                <TextBlock Text="负责人:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <!-- 销售人员 (下拉框) -->
+                <TextBlock Text="销售人员:" VerticalAlignment="Center" Margin="0,0,5,0"/>
                 <ComboBox SelectedItem="{Binding SelectedResponsiblePerson}"
                           ItemsSource="{Binding ResponsiblePersons}"
                           Style="{StaticResource StandardComboBoxStyle}"
@@ -85,7 +85,7 @@
                         Margin="0,0,10,0"/>
                 <Button Content="重置"
                         Command="{Binding ResetFiltersCommand}"
-                        Style="{StaticResource EditButtonStyle}"
+                        Style="{StaticResource GrayButtonStyle}"
                         Width="60"
                         Height="32"
                         Margin="0,0,15,0"/>
@@ -105,7 +105,7 @@
                         Margin="0,0,10,0"/>
                 <Button Content="分配给客服"
                         Command="{Binding AssignSupportCommand}"
-                        Style="{StaticResource EditButtonStyle}"
+                        Style="{StaticResource SupportButtonStyle}"
                         Width="100"
                         Height="32"
                         Margin="0"/>
@@ -137,10 +137,21 @@
                           SelectedItem="{Binding SelectedCustomer}"
                           Style="{StaticResource StandardDataGridStyle}"
                           ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
-                          RowStyle="{StaticResource DataGridRowStyle}">
+                          RowStyle="{StaticResource DataGridRowStyle}"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch"
+                          Background="White">
                     <DataGrid.Columns>
                         <!-- 复选框列 -->
-                        <DataGridTemplateColumn Header="" Width="40">
+                        <DataGridTemplateColumn Width="40">
+                            <DataGridTemplateColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <CheckBox IsChecked="{Binding DataContext.IsAllSelected, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                              Command="{Binding DataContext.SelectAllCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.HeaderTemplate>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <CheckBox IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
@@ -152,26 +163,26 @@
 
                         <!-- 行业类别 -->
                         <DataGridTextColumn Header="行业类别"
-                                            Binding="{Binding IndustryTypes}"
+                                            Binding="{Binding IndustryType}"
                                             Width="100"
                                             IsReadOnly="True"/>
 
                         <!-- 省份 -->
                         <DataGridTextColumn Header="省份"
                                             Binding="{Binding Province}"
-                                            Width="70"
+                                            Width="80"
                                             IsReadOnly="True"/>
 
                         <!-- 城市 -->
                         <DataGridTextColumn Header="城市"
                                             Binding="{Binding City}"
-                                            Width="70"
+                                            Width="80"
                                             IsReadOnly="True"/>
 
                         <!-- 客户单位名称 -->
                         <DataGridTextColumn Header="客户单位名称"
                                             Binding="{Binding Name}"
-                                            Width="250"
+                                            Width="200"
                                             IsReadOnly="True"/>
 
                         <!-- 联系人(蓝色数字) -->
@@ -212,49 +223,54 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <!-- 客户意向 -->
-                        <DataGridTextColumn Header="客户意向"
-                                            Binding="{Binding CustomerIntention}"
-                                            Width="90"
+                        <!-- 客户备注 -->
+                        <DataGridTextColumn Header="客户备注"
+                                            Binding="{Binding CustomerRemarks}"
+                                            Width="100"
                                             IsReadOnly="True"/>
 
-                        <!-- 待办 -->
-                        <DataGridTextColumn Header="待办"
-                                            Binding="{Binding PendingTasks}"
-                                            Width="90"
+                        <!-- 客户状态 -->
+                        <DataGridTextColumn Header="客户状态"
+                                            Binding="{Binding CustomerStatus}"
+                                            Width="80"
                                             IsReadOnly="True"/>
 
-                        <!-- 负责人 -->
-                        <DataGridTextColumn Header="负责人"
-                                            Binding="{Binding ResponsiblePersonName}"
-                                            Width="90"
+                        <!-- 销售 -->
+                        <DataGridTextColumn Header="销售"
+                                            Binding="{Binding SalesPersonDisplay}"
+                                            Width="80"
+                                            IsReadOnly="True"/>
+
+                        <!-- 客服 -->
+                        <DataGridTextColumn Header="客服"
+                                            Binding="{Binding SupportPersonDisplay}"
+                                            Width="80"
                                             IsReadOnly="True"/>
 
                         <!-- 创建时间 -->
                         <DataGridTextColumn Header="创建时间"
-                                            Binding="{Binding CreatedAt, StringFormat=yyyy-MM-dd}"
-                                            Width="100"
+                                            Binding="{Binding CreatedAt, StringFormat=yyyy-MM-dd HH:mm:ss}"
+                                            Width="140"
                                             IsReadOnly="True"/>
 
                         <!-- 操作列 -->
-                        <DataGridTemplateColumn Header="操作" Width="130">
+                        <DataGridTemplateColumn Header="操作" Width="120">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                         <Button Content="编辑"
-                                                Command="{Binding DataContext.EditCustomerRowCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                Command="{Binding DataContext.EditCustomerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"
-                                                Style="{StaticResource EditButtonStyle}"
+                                                Style="{StaticResource BlueButtonStyle}"
                                                 Width="50"
                                                 Height="28"
-                                                Margin="2"/>
+                                                Margin="0,0,5,0"/>
                                         <Button Content="删除"
-                                                Command="{Binding DataContext.DeleteCustomerRowCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                Command="{Binding DataContext.DeleteCustomerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"
                                                 Style="{StaticResource DeleteButtonStyle}"
                                                 Width="50"
-                                                Height="28"
-                                                Margin="2"/>
+                                                Height="28"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>

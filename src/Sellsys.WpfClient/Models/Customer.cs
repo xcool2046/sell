@@ -40,14 +40,41 @@ namespace Sellsys.WpfClient.Models
         // 客户意向
         public string CustomerIntention { get; set; } = "待分配";
 
+        // 客户备注
+        public string CustomerRemarks { get; set; } = "无";
+
+        // 客户状态
+        public string CustomerStatus { get; set; } = "待联系";
+
         // 待办事项
         public string PendingTasks { get; set; } = "无";
 
         // 下次联系日期
         public DateTime? NextContactDate { get; set; }
 
+        // 联系记录数量
+        public int ContactRecordCount { get; set; } = 0;
+
+        // 订单数量
+        public int OrderCount { get; set; } = 0;
+
+        // 更新时间
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+
         // 负责人姓名（优先显示销售，其次客服）
         public string ResponsiblePersonName => SalesPersonName ?? SupportPersonName ?? "未分配";
+
+        // 负责人（简化版本）
+        public string ResponsiblePerson => SalesPersonName ?? SupportPersonName ?? "未分配";
+
+        // 行业类型（简化版本）
+        public string IndustryType => IndustryTypes ?? "未分类";
+
+        // 销售人员（简化显示）
+        public string SalesPersonDisplay => SalesPersonName ?? "未分配";
+
+        // 客服人员（简化显示）
+        public string SupportPersonDisplay => SupportPersonName ?? "未分配";
 
         // 选中状态
         public bool IsSelected
