@@ -1,0 +1,12 @@
+E:\test-\sellsys\src\Sellsys.CrossCutting\bin\Debug\net8.0\Sellsys.CrossCutting.deps.json
+e:\test-\sellsys\src\Sellsys.CrossCutting\bin\Debug\net8.0\Sellsys.CrossCutting.dll
+e:\test-\sellsys\src\Sellsys.CrossCutting\bin\Debug\net8.0\Sellsys.CrossCutting.pdb
+e:\test-\sellsys\src\Sellsys.CrossCutting\obj\Debug\net8.0\Sellsys.CrossCutting.GeneratedMSBuildEditorConfig.editorconfig
+e:\test-\sellsys\src\Sellsys.CrossCutting\obj\Debug\net8.0\Sellsys.CrossCutting.AssemblyInfoInputs.cache
+e:\test-\sellsys\src\Sellsys.CrossCutting\obj\Debug\net8.0\Sellsys.CrossCutting.AssemblyInfo.cs
+e:\test-\sellsys\src\Sellsys.CrossCutting\obj\Debug\net8.0\Sellsys.CrossCutting.csproj.CoreCompileInputs.cache
+e:\test-\sellsys\src\Sellsys.CrossCutting\obj\Debug\net8.0\Sellsys.CrossCutting.sourcelink.json
+e:\test-\sellsys\src\Sellsys.CrossCutting\obj\Debug\net8.0\Sellsys.CrossCutting.dll
+e:\test-\sellsys\src\Sellsys.CrossCutting\obj\Debug\net8.0\refint\Sellsys.CrossCutting.dll
+e:\test-\sellsys\src\Sellsys.CrossCutting\obj\Debug\net8.0\Sellsys.CrossCutting.pdb
+E:\test-\sellsys\src\Sellsys.CrossCutting\obj\Debug\net8.0\ref\Sellsys.CrossCutting.dll

@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "AOuOHVht1Txdhy7yJouMwzrslr+M3nDnGgAWDacwFbw=",
+  "Source": "Sellsys.WebApi",
+  "BasePath": "_content/Sellsys.WebApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
