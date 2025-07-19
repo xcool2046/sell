@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Sellsys.Application.DTOs.Orders;
-using Sellsys.Application.Services;
+using Sellsys.Application.Interfaces;
 
 namespace Sellsys.WebApi.Controllers
 {
@@ -8,9 +8,9 @@ namespace Sellsys.WebApi.Controllers
     [Route("api/[controller]")]
     public class OrdersController : ControllerBase
     {
-        private readonly OrderService _orderService;
+        private readonly IOrderService _orderService;
 
-        public OrdersController(OrderService orderService)
+        public OrdersController(IOrderService orderService)
         {
             _orderService = orderService;
         }

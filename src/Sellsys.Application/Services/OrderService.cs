@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Sellsys.Application.DTOs.Orders;
+using Sellsys.Application.Interfaces;
 using Sellsys.CrossCutting.Common;
 using Sellsys.Domain.Entities;
 using Sellsys.Infrastructure.Data;
@@ -7,7 +8,7 @@ using System.Net;
 
 namespace Sellsys.Application.Services
 {
-    public class OrderService
+    public class OrderService : IOrderService
     {
         private readonly SellsysDbContext _context;
 

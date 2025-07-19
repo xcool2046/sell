@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Sellsys.Application.Services;
+using Sellsys.Application.Interfaces;
 using Sellsys.CrossCutting.Common;
 
 namespace Sellsys.WebApi.Controllers
@@ -8,9 +8,9 @@ namespace Sellsys.WebApi.Controllers
     [Route("api/[controller]")]
     public class DepartmentsController : ControllerBase
     {
-        private readonly DepartmentService _departmentService;
+        private readonly IDepartmentService _departmentService;
 
-        public DepartmentsController(DepartmentService departmentService)
+        public DepartmentsController(IDepartmentService departmentService)
         {
             _departmentService = departmentService;
         }

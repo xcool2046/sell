@@ -21,9 +21,9 @@ builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IAfterSalesService, AfterSalesService>();
 builder.Services.AddScoped<IFinanceService, FinanceService>();
-builder.Services.AddScoped<OrderService>();
-builder.Services.AddScoped<DepartmentService>();
-builder.Services.AddScoped<DepartmentGroupService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+builder.Services.AddScoped<IDepartmentGroupService, DepartmentGroupService>();
 
 
 var app = builder.Build();

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Sellsys.Application.Interfaces;
 using Sellsys.CrossCutting.Common;
 using Sellsys.Domain.Entities;
 using Sellsys.Infrastructure.Data;
@@ -6,7 +7,7 @@ using System.Net;
 
 namespace Sellsys.Application.Services
 {
-    public class DepartmentService
+    public class DepartmentService : IDepartmentService
     {
         private readonly SellsysDbContext _context;
 

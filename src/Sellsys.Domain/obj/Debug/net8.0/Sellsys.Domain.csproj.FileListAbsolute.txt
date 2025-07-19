@@ -1,0 +1,12 @@
+E:\test-\sellsys\src\Sellsys.Domain\bin\Debug\net8.0\Sellsys.Domain.deps.json
+E:\test-\sellsys\src\Sellsys.Domain\bin\Debug\net8.0\Sellsys.Domain.dll
+E:\test-\sellsys\src\Sellsys.Domain\bin\Debug\net8.0\Sellsys.Domain.pdb
+E:\test-\sellsys\src\Sellsys.Domain\obj\Debug\net8.0\Sellsys.Domain.GeneratedMSBuildEditorConfig.editorconfig
+E:\test-\sellsys\src\Sellsys.Domain\obj\Debug\net8.0\Sellsys.Domain.AssemblyInfoInputs.cache
+E:\test-\sellsys\src\Sellsys.Domain\obj\Debug\net8.0\Sellsys.Domain.AssemblyInfo.cs
+E:\test-\sellsys\src\Sellsys.Domain\obj\Debug\net8.0\Sellsys.Domain.csproj.CoreCompileInputs.cache
+E:\test-\sellsys\src\Sellsys.Domain\obj\Debug\net8.0\Sellsys.Domain.sourcelink.json
+E:\test-\sellsys\src\Sellsys.Domain\obj\Debug\net8.0\Sellsys.Domain.dll
+E:\test-\sellsys\src\Sellsys.Domain\obj\Debug\net8.0\refint\Sellsys.Domain.dll
+E:\test-\sellsys\src\Sellsys.Domain\obj\Debug\net8.0\Sellsys.Domain.pdb
+E:\test-\sellsys\src\Sellsys.Domain\obj\Debug\net8.0\ref\Sellsys.Domain.dll
