@@ -400,7 +400,7 @@ namespace Sellsys.WpfClient.ViewModels
             try
             {
                 var dialog = new AddCustomerDialog();
-                var viewModel = new AddCustomerDialogViewModel(_apiService);
+                var viewModel = new CustomerDialogViewModel(_apiService);
                 dialog.DataContext = viewModel;
 
                 // Set owner to main window for proper positioning
@@ -523,7 +523,7 @@ namespace Sellsys.WpfClient.ViewModels
             try
             {
                 var dialog = new Views.Dialogs.EditCustomerDialog();
-                var viewModel = new EditCustomerDialogViewModel(_apiService, customer);
+                var viewModel = new CustomerDialogViewModel(_apiService, customer);
                 dialog.DataContext = viewModel;
 
                 // Set owner to main window for proper positioning
@@ -584,7 +584,7 @@ namespace Sellsys.WpfClient.ViewModels
             try
             {
                 var dialog = new Views.Dialogs.EditCustomerDialog();
-                var viewModel = new EditCustomerDialogViewModel(_apiService, SelectedCustomer);
+                var viewModel = new CustomerDialogViewModel(_apiService, SelectedCustomer);
                 dialog.DataContext = viewModel;
 
                 viewModel.CustomerSaved += async (sender, args) =>

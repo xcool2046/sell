@@ -7,10 +7,11 @@ using System.Windows;
 
 namespace Sellsys.WpfClient.ViewModels
 {
-    public class EditCustomerDialogViewModel : ViewModelBase
+    public class CustomerDialogViewModel : ViewModelBase
     {
         private readonly ApiService _apiService;
-        private readonly Customer _originalCustomer;
+        private readonly Customer? _originalCustomer;
+        private readonly bool _isEditMode;
         
         // Basic properties
         private string _customerName = string.Empty;
@@ -86,21 +87,26 @@ namespace Sellsys.WpfClient.ViewModels
             set => SetProperty(ref _contacts, value);
         }
 
-        // Commands
-        public ICommand AddContactCommand { get; }
-        public ICommand RemoveContactCommand { get; }
         public ICommand SaveCommand { get; }
         public ICommand CancelCommand { get; }
+        public ICommand AddContactCommand { get; }
+        public ICommand RemoveContactCommand { get; }
 
-        // Events
         public event EventHandler? CustomerSaved;
         public event EventHandler? Cancelled;
 
-        public EditCustomerDialogViewModel(ApiService apiService, Customer customer)
+        // Constructor for adding new customer
+        public CustomerDialogViewModel(ApiService apiService) : this(apiService, null)
+        {
+        }
+
+        // Constructor for editing existing customer
+        public CustomerDialogViewModel(ApiService apiService, Customer? customer)
         {
             _apiService = apiService;
             _originalCustomer = customer;
-            
+            _isEditMode = customer != null;
+
             // Initialize collections
             _industryTypes = new ObservableCollection<string>();
             _provinces = new ObservableCollection<string>();
@@ -108,21 +114,28 @@ namespace Sellsys.WpfClient.ViewModels
             _contacts = new ObservableCollection<ContactModel>();
 
             // Initialize commands
-            AddContactCommand = new RelayCommand(p => AddContact());
-            RemoveContactCommand = new RelayCommand(p => RemoveContact(p as ContactModel));
             SaveCommand = new AsyncRelayCommand(async p => await SaveCustomerAsync());
             CancelCommand = new RelayCommand(p => Cancel());
+            AddContactCommand = new RelayCommand(p => AddContact());
+            RemoveContactCommand = new RelayCommand(p => RemoveContact(p as ContactModel));
 
             // Initialize data
             InitializeData();
-            LoadCustomerData();
+            
+            if (_isEditMode)
+            {
+                LoadCustomerData();
+            }
+            else
+            {
+                // Add initial contact for new customer
+                AddContact();
+            }
         }
 
         private void InitializeData()
         {
             // Initialize industry types
-            IndustryTypes.Add("教育");
-            IndustryTypes.Add("医疗");
             IndustryTypes.Add("制造业");
             IndustryTypes.Add("服务业");
             IndustryTypes.Add("科技");
@@ -148,6 +161,8 @@ namespace Sellsys.WpfClient.ViewModels
 
         private void LoadCustomerData()
         {
+            if (_originalCustomer == null) return;
+
             // Load customer data into form
             CustomerName = _originalCustomer.Name;
             SelectedIndustryType = _originalCustomer.IndustryTypes ?? string.Empty;
@@ -180,17 +195,12 @@ namespace Sellsys.WpfClient.ViewModels
 
         private void AddContact()
         {
-            Contacts.Add(new ContactModel
-            {
-                Name = string.Empty,
-                Phone = string.Empty,
-                IsPrimary = Contacts.Count == 0 // First contact is primary by default
-            });
+            Contacts.Add(new ContactModel());
         }
 
         private void RemoveContact(ContactModel? contact)
         {
-            if (contact != null && Contacts.Count > 1) // Keep at least one contact
+            if (contact != null && Contacts.Count > 1)
             {
                 Contacts.Remove(contact);
             }
@@ -200,32 +210,46 @@ namespace Sellsys.WpfClient.ViewModels
         {
             try
             {
-                // Validate input
+                // Validate required fields
                 if (string.IsNullOrWhiteSpace(CustomerName))
                 {
-                    MessageBox.Show("请输入客户单位名称", "验证错误", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("请输入客户名称", "验证错误", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                if (Contacts.Count == 0 || Contacts.All(c => string.IsNullOrWhiteSpace(c.Name)))
+                Customer customer;
+                if (_isEditMode && _originalCustomer != null)
                 {
-                    MessageBox.Show("请至少添加一位联系人", "验证错误", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
+                    // Update existing customer
+                    customer = _originalCustomer;
+                    customer.Name = CustomerName;
+                    customer.IndustryTypes = SelectedIndustryType;
+                    customer.Province = SelectedProvince;
+                    customer.City = SelectedCity;
+                    customer.Address = DetailedAddress;
+                    customer.Remarks = CustomerRemarks;
+
+                    // Update contacts
+                    customer.Contacts.Clear();
+                }
+                else
+                {
+                    // Create new customer
+                    customer = new Customer
+                    {
+                        Name = CustomerName,
+                        IndustryTypes = SelectedIndustryType,
+                        Province = SelectedProvince,
+                        City = SelectedCity,
+                        Address = DetailedAddress,
+                        Remarks = CustomerRemarks
+                    };
                 }
 
-                // Update customer object
-                _originalCustomer.Name = CustomerName;
-                _originalCustomer.IndustryTypes = SelectedIndustryType;
-                _originalCustomer.Province = SelectedProvince;
-                _originalCustomer.City = SelectedCity;
-                _originalCustomer.Address = DetailedAddress;
-                _originalCustomer.Remarks = CustomerRemarks;
-
-                // Update contacts
-                _originalCustomer.Contacts.Clear();
+                // Add contacts
                 foreach (var contactModel in Contacts.Where(c => !string.IsNullOrWhiteSpace(c.Name)))
                 {
-                    _originalCustomer.Contacts.Add(new Contact
+                    customer.Contacts.Add(new Contact
                     {
                         Name = contactModel.Name,
                         Phone = contactModel.Phone,
@@ -235,23 +259,52 @@ namespace Sellsys.WpfClient.ViewModels
 
                 // Save customer - for now just show success message
                 // TODO: Implement actual API call when backend is ready
-                // await _apiService.UpdateCustomerAsync(_originalCustomer);
-                
+                // if (_isEditMode)
+                //     await _apiService.UpdateCustomerAsync(customer);
+                // else
+                //     await _apiService.CreateCustomerAsync(customer);
+
                 // Simulate a brief delay to show loading state
                 await Task.Delay(500);
-                
-                MessageBox.Show($"客户 '{CustomerName}' 更新成功！", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                string action = _isEditMode ? "更新" : "添加";
+                MessageBox.Show($"客户 '{CustomerName}' {action}成功！", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
                 CustomerSaved?.Invoke(this, EventArgs.Empty);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"保存客户失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"保存客户时发生错误: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void Cancel()
         {
             Cancelled?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    public class ContactModel : ViewModelBase
+    {
+        private string _name = string.Empty;
+        private string _phone = string.Empty;
+        private bool _isPrimary;
+
+        public string Name
+        {
+            get => _name;
+            set => SetProperty(ref _name, value);
+        }
+
+        public string Phone
+        {
+            get => _phone;
+            set => SetProperty(ref _phone, value);
+        }
+
+        public bool IsPrimary
+        {
+            get => _isPrimary;
+            set => SetProperty(ref _isPrimary, value);
         }
     }
 }
