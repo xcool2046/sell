@@ -82,61 +82,114 @@
         </Style>
     </UserControl.Resources>
 
-    <Grid Background="White">
+    <Grid Margin="20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/> <!-- 标题 -->
+            <RowDefinition Height="Auto"/> <!-- 订单列表标签 -->
             <RowDefinition Height="Auto"/> <!-- 筛选区域 -->
             <RowDefinition Height="*"/>    <!-- 数据表格 -->
             <RowDefinition Height="Auto"/> <!-- 底部合计行 -->
         </Grid.RowDefinitions>
 
-        <!-- 标题区域 -->
+        <!-- 订单列表标签 -->
         <Border Grid.Row="0"
-                Background="{StaticResource LightBlueBrush}"
-                Padding="20,15">
-            <TextBlock Text="财务管理"
-                       FontSize="24"
+                Background="#007ACC"
+                CornerRadius="4,4,0,0"
+                Padding="15,8"
+                Margin="0,0,0,0"
+                HorizontalAlignment="Left">
+            <TextBlock Text="订单列表"
+                       FontSize="14"
                        FontWeight="Bold"
-                       Foreground="{StaticResource TextBrush}"/>
+                       Foreground="White"/>
         </Border>
 
         <!-- 筛选区域 -->
         <Border Grid.Row="1"
-                Background="White"
+                Background="#F8F9FA"
                 BorderBrush="{StaticResource BorderBrush}"
-                BorderThickness="0,1,0,1"
-                Padding="20,15">
+                BorderThickness="1"
+                CornerRadius="4"
+                Padding="15"
+                Margin="0,0,0,15">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="客户名称:"
-                           VerticalAlignment="Center"
-                           Margin="0,0,10,0"/>
-                <ComboBox Width="150"
-                          Height="32"
-                          Margin="0,0,20,0"
-                          ItemsSource="{Binding FilterOptions.Customers}"
-                          DisplayMemberPath="Text"/>
+                <!-- 输入客户名称 (输入框) -->
+                <TextBlock Text="输入客户名称:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBox Text="{Binding SearchCustomerName, UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource StandardTextBoxStyle}"
+                         Width="120"
+                         Height="32"
+                         Margin="0,0,15,0"/>
 
-                <TextBlock Text="产品名称:"
-                           VerticalAlignment="Center"
-                           Margin="0,0,10,0"/>
-                <ComboBox Width="150"
+                <!-- 产品名称 (下拉框) -->
+                <TextBlock Text="产品名称:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <ComboBox ItemsSource="{Binding FilterOptions.Products}"
+                          SelectedItem="{Binding SelectedProduct}"
+                          DisplayMemberPath="Text"
+                          Style="{StaticResource StandardComboBoxStyle}"
+                          Width="100"
                           Height="32"
-                          Margin="0,0,20,0"
-                          ItemsSource="{Binding FilterOptions.Products}"
-                          DisplayMemberPath="Text"/>
+                          Margin="0,0,15,0"/>
 
+                <!-- 生效日期 (下拉框) -->
+                <TextBlock Text="生效日期:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <ComboBox ItemsSource="{Binding EffectiveDateOptions}"
+                          SelectedItem="{Binding SelectedEffectiveDate}"
+                          Style="{StaticResource StandardComboBoxStyle}"
+                          Width="100"
+                          Height="32"
+                          Margin="0,0,15,0"/>
+
+                <!-- 到期日期 (下拉框) -->
+                <TextBlock Text="到期日期:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <ComboBox ItemsSource="{Binding ExpiryDateOptions}"
+                          SelectedItem="{Binding SelectedExpiryDate}"
+                          Style="{StaticResource StandardComboBoxStyle}"
+                          Width="100"
+                          Height="32"
+                          Margin="0,0,15,0"/>
+
+                <!-- 签单日期 (下拉框) -->
+                <TextBlock Text="签单日期:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <ComboBox ItemsSource="{Binding CreatedDateOptions}"
+                          SelectedItem="{Binding SelectedCreatedDate}"
+                          Style="{StaticResource StandardComboBoxStyle}"
+                          Width="100"
+                          Height="32"
+                          Margin="0,0,15,0"/>
+
+                <!-- 订单状态 (下拉框) -->
+                <TextBlock Text="订单状态:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <ComboBox ItemsSource="{Binding FilterOptions.OrderStatuses}"
+                          SelectedItem="{Binding SelectedOrderStatus}"
+                          DisplayMemberPath="Text"
+                          Style="{StaticResource StandardComboBoxStyle}"
+                          Width="100"
+                          Height="32"
+                          Margin="0,0,15,0"/>
+
+                <!-- 销售人员 (下拉框) -->
+                <TextBlock Text="销售人员:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <ComboBox ItemsSource="{Binding FilterOptions.SalesPersons}"
+                          SelectedItem="{Binding SelectedSalesPerson}"
+                          DisplayMemberPath="Text"
+                          Style="{StaticResource StandardComboBoxStyle}"
+                          Width="100"
+                          Height="32"
+                          Margin="0,0,15,0"/>
+
+                <!-- 查询和重置按钮 -->
                 <Button Content="查询"
                         Command="{Binding SearchCommand}"
-                        Style="{StaticResource BlueButtonStyle}"
-                        Width="80"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Width="60"
                         Height="32"
                         Margin="0,0,10,0"/>
-
                 <Button Content="重置"
                         Command="{Binding ResetFiltersCommand}"
-                        Style="{StaticResource GrayButtonStyle}"
-                        Width="80"
-                        Height="32"/>
+                        Style="{StaticResource EditButtonStyle}"
+                        Width="60"
+                        Height="32"
+                        Margin="0"/>
             </StackPanel>
         </Border>
 

@@ -8,126 +8,112 @@
              d:DesignHeight="600" d:DesignWidth="1000">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/> <!-- Title -->
             <RowDefinition Height="Auto"/> <!-- Search Filters -->
-            <RowDefinition Height="Auto"/> <!-- Action Buttons -->
             <RowDefinition Height="*"/>    <!-- Data Grid -->
         </Grid.RowDefinitions>
 
-        <!-- Title Section -->
-        <TextBlock Grid.Row="0"
-                   Text="客户管理"
-                   Style="{StaticResource ModuleTitleStyle}"
-                   Margin="0,0,0,15"/>
+
 
         <!-- Search and Filter Section -->
-        <Border Grid.Row="1"
+        <Border Grid.Row="0"
                 Background="#F8F9FA"
                 BorderBrush="{StaticResource BorderBrush}"
                 BorderThickness="1"
                 CornerRadius="4"
                 Padding="15"
                 Margin="0,0,0,15">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal">
+                <!-- 客户名称 (输入框) -->
+                <TextBlock Text="客户名称:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource StandardTextBoxStyle}"
+                         Width="120"
+                         Height="32"
+                         Margin="0,0,15,0"/>
 
-                <!-- First Row of Filters -->
-                <Grid Grid.Row="0" Margin="0,0,0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="150"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="120"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="120"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="150"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="120"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+                <!-- 行业类别 (下拉框) -->
+                <TextBlock Text="行业类别:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <ComboBox SelectedItem="{Binding SelectedIndustryType}"
+                          ItemsSource="{Binding IndustryTypes}"
+                          Style="{StaticResource StandardComboBoxStyle}"
+                          Width="100"
+                          Height="32"
+                          Margin="0,0,15,0"/>
 
-                    <TextBlock Grid.Column="0" Text="行业类别：" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                    <ComboBox Grid.Column="1"
-                              SelectedItem="{Binding SelectedIndustryType}"
-                              ItemsSource="{Binding IndustryTypes}"
-                              Style="{StaticResource StandardComboBoxStyle}"
-                              Margin="0,0,15,0"/>
+                <!-- 省份 (下拉框) -->
+                <TextBlock Text="省份:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <ComboBox SelectedItem="{Binding SelectedProvince}"
+                          ItemsSource="{Binding Provinces}"
+                          Style="{StaticResource StandardComboBoxStyle}"
+                          Width="80"
+                          Height="32"
+                          Margin="0,0,15,0"/>
 
-                    <TextBlock Grid.Column="2" Text="省份：" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                    <ComboBox Grid.Column="3"
-                              SelectedItem="{Binding SelectedProvince}"
-                              ItemsSource="{Binding Provinces}"
-                              Style="{StaticResource StandardComboBoxStyle}"
-                              Margin="0,0,15,0"/>
+                <!-- 城市 (下拉框) -->
+                <TextBlock Text="城市:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <ComboBox SelectedItem="{Binding SelectedCity}"
+                          ItemsSource="{Binding Cities}"
+                          Style="{StaticResource StandardComboBoxStyle}"
+                          Width="80"
+                          Height="32"
+                          Margin="0,0,15,0"/>
 
-                    <TextBlock Grid.Column="4" Text="城市：" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                    <ComboBox Grid.Column="5"
-                              SelectedItem="{Binding SelectedCity}"
-                              ItemsSource="{Binding Cities}"
-                              Style="{StaticResource StandardComboBoxStyle}"
-                              Margin="0,0,15,0"/>
+                <!-- 联系状态 (下拉框) -->
+                <TextBlock Text="联系状态:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <ComboBox SelectedItem="{Binding SelectedContactStatus}"
+                          ItemsSource="{Binding ContactStatuses}"
+                          Style="{StaticResource StandardComboBoxStyle}"
+                          Width="100"
+                          Height="32"
+                          Margin="0,0,15,0"/>
 
-                    <TextBlock Grid.Column="6" Text="联系状态：" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                    <ComboBox Grid.Column="7"
-                              SelectedItem="{Binding SelectedContactStatus}"
-                              ItemsSource="{Binding ContactStatuses}"
-                              Style="{StaticResource StandardComboBoxStyle}"
-                              Margin="0,0,15,0"/>
+                <!-- 负责人 (下拉框) -->
+                <TextBlock Text="负责人:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <ComboBox SelectedItem="{Binding SelectedResponsiblePerson}"
+                          ItemsSource="{Binding ResponsiblePersons}"
+                          Style="{StaticResource StandardComboBoxStyle}"
+                          Width="100"
+                          Height="32"
+                          Margin="0,0,15,0"/>
 
-                    <TextBlock Grid.Column="8" Text="负责人：" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                    <ComboBox Grid.Column="9"
-                              SelectedItem="{Binding SelectedResponsiblePerson}"
-                              ItemsSource="{Binding ResponsiblePersons}"
-                              Style="{StaticResource StandardComboBoxStyle}"
-                              Margin="0,0,15,0"/>
+                <!-- 查询和重置按钮 -->
+                <Button Content="查询"
+                        Command="{Binding SearchCommand}"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Width="60"
+                        Height="32"
+                        Margin="0,0,10,0"/>
+                <Button Content="重置"
+                        Command="{Binding ResetFiltersCommand}"
+                        Style="{StaticResource EditButtonStyle}"
+                        Width="60"
+                        Height="32"
+                        Margin="0,0,15,0"/>
 
-                    <StackPanel Grid.Column="11" Orientation="Horizontal">
-                        <Button Content="查询"
-                                Command="{Binding SearchCommand}"
-                                Style="{StaticResource PrimaryButtonStyle}"
-                                Width="60"
-                                Height="32"
-                                Margin="0,0,10,0"/>
-                        <Button Content="重置"
-                                Command="{Binding ResetFiltersCommand}"
-                                Style="{StaticResource EditButtonStyle}"
-                                Width="60"
-                                Height="32"
-                                Margin="0"/>
-                    </StackPanel>
-                </Grid>
-            </Grid>
+                <!-- 操作按钮 -->
+                <Button Content="添加客户"
+                        Command="{Binding AddCustomerCommand}"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Width="100"
+                        Height="32"
+                        Margin="0,0,10,0"/>
+                <Button Content="分配给销售"
+                        Command="{Binding AssignSalesCommand}"
+                        Style="{StaticResource EditButtonStyle}"
+                        Width="100"
+                        Height="32"
+                        Margin="0,0,10,0"/>
+                <Button Content="分配给客服"
+                        Command="{Binding AssignSupportCommand}"
+                        Style="{StaticResource EditButtonStyle}"
+                        Width="100"
+                        Height="32"
+                        Margin="0"/>
+            </StackPanel>
         </Border>
 
-        <!-- Action Buttons -->
-        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,15">
-            <Button Content="添加客户"
-                    Command="{Binding AddCustomerCommand}"
-                    Style="{StaticResource PrimaryButtonStyle}"
-                    Width="100"
-                    Height="35"
-                    Margin="0,0,10,0"/>
-            <Button Content="分配给销售"
-                    Command="{Binding AssignSalesCommand}"
-                    Style="{StaticResource EditButtonStyle}"
-                    Width="100"
-                    Height="35"
-                    Margin="0,0,10,0"/>
-            <Button Content="分配客服"
-                    Command="{Binding AssignSupportCommand}"
-                    Style="{StaticResource EditButtonStyle}"
-                    Width="100"
-                    Height="35"
-                    Margin="0,0,10,0"/>
-        </StackPanel>
-
         <!-- Data Grid -->
-        <Border Grid.Row="3"
+        <Border Grid.Row="1"
                 BorderBrush="{StaticResource BorderBrush}"
                 BorderThickness="1"
                 Background="White">

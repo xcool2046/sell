@@ -6,49 +6,15 @@
              xmlns:local="clr-namespace:Sellsys.WpfClient.Views"
              mc:Ignorable="d"
              d:DesignHeight="700" d:DesignWidth="1400">
-    <StackPanel Margin="20">
-        <!-- Title Section -->
-        <TextBlock Text="订单管理"
-                   Style="{StaticResource ModuleTitleStyle}"
-                   Margin="0,0,0,20"/>
-
-        <!-- Test Content -->
-        <TextBlock Text="订单管理模块已成功加载！"
-                   FontSize="16"
-                   Foreground="Green"
-                   Margin="0,0,0,20"/>
-
-        <!-- Simple Filter Section -->
-        <Border Background="#F8F9FA"
-                BorderBrush="{StaticResource BorderBrush}"
-                BorderThickness="1"
-                CornerRadius="4"
-                Padding="15"
-                Margin="0,0,0,20">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="客户名称:" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                <TextBox Text="{Binding SearchCustomerName, UpdateSourceTrigger=PropertyChanged}"
-                         Width="150"
-                         Height="32"
-                         Margin="0,0,15,0"/>
-
-                <TextBlock Text="订单状态:" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                <ComboBox ItemsSource="{Binding StatusOptions}"
-                          SelectedItem="{Binding SelectedStatus}"
-                          Width="120"
-                          Height="32"
-                          Margin="0,0,15,0"/>
-
-                <Button Content="查询"
-                        Command="{Binding SearchCommand}"
-                        Style="{StaticResource PrimaryButtonStyle}"
-                        Width="80"
-                        Height="32"/>
-            </StackPanel>
-        </Border>
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/> <!-- Search and Filters -->
+            <RowDefinition Height="*"/>    <!-- Data Grid -->
+            <RowDefinition Height="Auto"/> <!-- Summary -->
+        </Grid.RowDefinitions>
 
         <!-- Search and Filter Section -->
-        <Border Grid.Row="1"
+        <Border Grid.Row="0"
                 Background="#F8F9FA"
                 BorderBrush="{StaticResource BorderBrush}"
                 BorderThickness="1"
@@ -56,76 +22,88 @@
                 Padding="15"
                 Margin="0,0,0,15">
             <StackPanel Orientation="Horizontal">
-                <!-- Customer Name Filter -->
-                <TextBlock Text="客户名称:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <!-- 输入客户名称 (输入框) -->
+                <TextBlock Text="输入客户名称:" VerticalAlignment="Center" Margin="0,0,5,0"/>
                 <TextBox Text="{Binding SearchCustomerName, UpdateSourceTrigger=PropertyChanged}"
                          Style="{StaticResource StandardTextBoxStyle}"
-                         Width="150"
+                         Width="120"
+                         Height="32"
                          Margin="0,0,15,0"/>
 
-                <!-- Status Filter -->
-                <TextBlock Text="订单状态:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <!-- 产品名称 (下拉框) -->
+                <TextBlock Text="产品名称:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <ComboBox ItemsSource="{Binding ProductOptions}"
+                          SelectedItem="{Binding SelectedProduct}"
+                          Style="{StaticResource StandardComboBoxStyle}"
+                          Width="100"
+                          Height="32"
+                          Margin="0,0,15,0"/>
+
+                <!-- 生效日期 (下拉框) -->
+                <TextBlock Text="生效日期:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <ComboBox ItemsSource="{Binding EffectiveDateOptions}"
+                          SelectedItem="{Binding SelectedEffectiveDate}"
+                          Style="{StaticResource StandardComboBoxStyle}"
+                          Width="100"
+                          Height="32"
+                          Margin="0,0,15,0"/>
+
+                <!-- 到期日期 (下拉框) -->
+                <TextBlock Text="到期日期:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <ComboBox ItemsSource="{Binding ExpiryDateOptions}"
+                          SelectedItem="{Binding SelectedExpiryDate}"
+                          Style="{StaticResource StandardComboBoxStyle}"
+                          Width="100"
+                          Height="32"
+                          Margin="0,0,15,0"/>
+
+                <!-- 签单日期 (下拉框) -->
+                <TextBlock Text="签单日期:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <ComboBox ItemsSource="{Binding CreatedDateOptions}"
+                          SelectedItem="{Binding SelectedCreatedDate}"
+                          Style="{StaticResource StandardComboBoxStyle}"
+                          Width="100"
+                          Height="32"
+                          Margin="0,0,15,0"/>
+
+                <!-- 订单状态 (下拉框) -->
+                <TextBlock Text="订单状态:" VerticalAlignment="Center" Margin="0,0,5,0"/>
                 <ComboBox ItemsSource="{Binding StatusOptions}"
                           SelectedItem="{Binding SelectedStatus}"
                           Style="{StaticResource StandardComboBoxStyle}"
-                          Width="120"
+                          Width="100"
+                          Height="32"
                           Margin="0,0,15,0"/>
 
-                <!-- Sales Person Filter -->
-                <TextBlock Text="销售人员:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <!-- 销售人员 (下拉框) -->
+                <TextBlock Text="销售人员:" VerticalAlignment="Center" Margin="0,0,5,0"/>
                 <ComboBox ItemsSource="{Binding SalesPersonOptions}"
                           SelectedValue="{Binding SelectedSalesPersonId}"
                           SelectedValuePath="Id"
                           DisplayMemberPath="Name"
                           Style="{StaticResource StandardComboBoxStyle}"
-                          Width="120"/>
+                          Width="100"
+                          Height="32"
+                          Margin="0,0,15,0"/>
+
+                <!-- 查询和重置按钮 -->
+                <Button Content="查询"
+                        Command="{Binding SearchCommand}"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Width="60"
+                        Height="32"
+                        Margin="0,0,10,0"/>
+                <Button Content="重置"
+                        Command="{Binding ResetFiltersCommand}"
+                        Style="{StaticResource EditButtonStyle}"
+                        Width="60"
+                        Height="32"
+                        Margin="0"/>
             </StackPanel>
         </Border>
 
-        <!-- Action Buttons Section -->
-        <StackPanel Grid.Row="2" 
-                    Orientation="Horizontal" 
-                    HorizontalAlignment="Left"
-                    Margin="0,0,0,15">
-            <Button Content="查询"
-                    Command="{Binding SearchCommand}"
-                    Style="{StaticResource PrimaryButtonStyle}"
-                    Width="80"
-                    Height="32"
-                    Margin="0,0,10,0"/>
-            <Button Content="重置"
-                    Command="{Binding ResetFiltersCommand}"
-                    Style="{StaticResource SecondaryButtonStyle}"
-                    Width="80"
-                    Height="32"
-                    Margin="0,0,10,0"/>
-            <Button Content="新增订单"
-                    Command="{Binding AddOrderCommand}"
-                    Style="{StaticResource PrimaryButtonStyle}"
-                    Width="100"
-                    Height="32"
-                    Margin="0,0,10,0"/>
-            <Button Content="编辑"
-                    Command="{Binding EditOrderCommand}"
-                    Style="{StaticResource EditButtonStyle}"
-                    Width="80"
-                    Height="32"
-                    Margin="0,0,10,0"/>
-            <Button Content="删除"
-                    Command="{Binding DeleteOrderCommand}"
-                    Style="{StaticResource DeleteButtonStyle}"
-                    Width="80"
-                    Height="32"
-                    Margin="0,0,10,0"/>
-            <Button Content="刷新"
-                    Command="{Binding RefreshCommand}"
-                    Style="{StaticResource SecondaryButtonStyle}"
-                    Width="80"
-                    Height="32"/>
-        </StackPanel>
-
         <!-- Data Grid Section -->
-        <Border Grid.Row="3"
+        <Border Grid.Row="1"
                 BorderBrush="{StaticResource BorderBrush}"
                 BorderThickness="1"
                 CornerRadius="4">
@@ -209,7 +187,7 @@
         </Border>
 
         <!-- Summary Section -->
-        <Border Grid.Row="4"
+        <Border Grid.Row="2"
                 Background="#F8F9FA"
                 BorderBrush="{StaticResource BorderBrush}"
                 BorderThickness="1,0,1,1"
@@ -226,7 +204,7 @@
         </Border>
 
         <!-- Loading Overlay -->
-        <Border Grid.RowSpan="5"
+        <Border Grid.RowSpan="3"
                 Background="#80000000"
                 Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -234,5 +212,5 @@
                 <TextBlock Text="加载中..." Foreground="White" HorizontalAlignment="Center"/>
             </StackPanel>
         </Border>
-    </StackPanel>
+    </Grid>
 </UserControl>

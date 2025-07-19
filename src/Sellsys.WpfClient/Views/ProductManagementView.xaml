@@ -7,84 +7,23 @@
              d:DataContext="{d:DesignInstance Type=viewmodels:ProductManagementViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="1000">
-    <Grid>
+    <Grid Margin="20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/> <!-- Title and Search -->
-            <RowDefinition Height="Auto"/> <!-- Action Buttons -->
+            <RowDefinition Height="Auto"/> <!-- Action Button -->
             <RowDefinition Height="*"/>    <!-- Data Grid -->
         </Grid.RowDefinitions>
 
-        <!-- Title and Search Section -->
-        <Grid Grid.Row="0" Margin="0,0,0,20">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-
-            <!-- Title -->
-            <TextBlock Grid.Column="0"
-                       Text="产品管理"
-                       Style="{StaticResource ModuleTitleStyle}"
-                       VerticalAlignment="Center"/>
-
-            <!-- Search and Filter Section -->
-            <StackPanel Grid.Column="2" Orientation="Horizontal">
-                <TextBox x:Name="SearchTextBox"
-                         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
-                         Style="{StaticResource StandardTextBoxStyle}"
-                         Width="200"
-                         Margin="0,0,10,0"
-                         ToolTip="搜索产品名称或型号规格">
-                    <TextBox.InputBindings>
-                        <KeyBinding Key="Enter" Command="{Binding SearchCommand}"/>
-                    </TextBox.InputBindings>
-                </TextBox>
-                <Button Content="查询"
-                        Command="{Binding SearchCommand}"
-                        Style="{StaticResource PrimaryButtonStyle}"
-                        Width="80"
-                        Height="32"
-                        Margin="0,0,10,0"/>
-                <Button Content="重置"
-                        Command="{Binding ResetCommand}"
-                        Style="{StaticResource DeleteButtonStyle}"
-                        Width="80"
-                        Height="32"
-                        Margin="0"/>
-            </StackPanel>
-        </Grid>
-
-        <!-- Action Buttons -->
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,15">
+        <!-- Action Button Section -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,15">
             <Button Content="添加产品"
                     Command="{Binding AddProductCommand}"
                     Style="{StaticResource PrimaryButtonStyle}"
                     Width="100"
-                    Height="35"
-                    Margin="0,0,10,0"/>
-            <Button Content="编辑产品"
-                    Command="{Binding EditProductCommand}"
-                    Style="{StaticResource EditButtonStyle}"
-                    Width="100"
-                    Height="35"
-                    Margin="0,0,10,0"/>
-            <Button Content="删除产品"
-                    Command="{Binding DeleteProductCommand}"
-                    Style="{StaticResource DeleteButtonStyle}"
-                    Width="100"
-                    Height="35"
-                    Margin="0,0,10,0"/>
-            <Button Content="刷新"
-                    Command="{Binding RefreshCommand}"
-                    Style="{StaticResource PrimaryButtonStyle}"
-                    Width="80"
-                    Height="35"
-                    Margin="0,0,10,0"/>
+                    Height="35"/>
         </StackPanel>
 
         <!-- Data Grid -->
-        <Border Grid.Row="2"
+        <Border Grid.Row="1"
                 BorderBrush="{StaticResource BorderBrush}"
                 BorderThickness="1"
                 Background="White">

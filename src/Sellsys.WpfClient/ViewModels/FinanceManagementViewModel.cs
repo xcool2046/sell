@@ -31,6 +31,7 @@ namespace Sellsys.WpfClient.ViewModels
 
         // 搜索
         private string _searchKeyword = string.Empty;
+        private string _searchCustomerName = string.Empty;
 
         #region 属性
 
@@ -100,6 +101,56 @@ namespace Sellsys.WpfClient.ViewModels
                 Filter.SearchKeyword = value;
             }
         }
+
+        /// <summary>
+        /// 输入客户名称
+        /// </summary>
+        public string SearchCustomerName
+        {
+            get => _searchCustomerName;
+            set => SetProperty(ref _searchCustomerName, value);
+        }
+
+        /// <summary>
+        /// 生效日期选项
+        /// </summary>
+        public List<string> EffectiveDateOptions { get; } = new List<string>
+        {
+            "全部", "本月", "上月", "本季度", "上季度", "本年", "去年"
+        };
+
+        /// <summary>
+        /// 到期日期选项
+        /// </summary>
+        public List<string> ExpiryDateOptions { get; } = new List<string>
+        {
+            "全部", "本月", "上月", "本季度", "上季度", "本年", "去年"
+        };
+
+        /// <summary>
+        /// 签单日期选项
+        /// </summary>
+        public List<string> CreatedDateOptions { get; } = new List<string>
+        {
+            "全部", "本月", "上月", "本季度", "上季度", "本年", "去年"
+        };
+
+        /// <summary>
+        /// 选中的生效日期
+        /// </summary>
+        public string? SelectedEffectiveDate { get; set; }
+
+        /// <summary>
+        /// 选中的到期日期
+        /// </summary>
+        public string? SelectedExpiryDate { get; set; }
+
+        /// <summary>
+        /// 选中的签单日期
+        /// </summary>
+        public string? SelectedCreatedDate { get; set; }
+
+
 
         /// <summary>
         /// 当前页码

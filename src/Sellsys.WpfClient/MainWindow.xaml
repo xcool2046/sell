@@ -7,7 +7,7 @@
         xmlns:views="clr-namespace:Sellsys.WpfClient.Views"
         xmlns:viewmodels="clr-namespace:Sellsys.WpfClient.ViewModels"
         mc:Ignorable="d"
-        Title="销售信息管理系统"
+        Title="巨炜科技客户管理信息系统"
         Height="720" Width="1280"
         MinHeight="600" MinWidth="1000"
         WindowStartupLocation="CenterScreen"
@@ -21,7 +21,7 @@
 
         <!-- Top Bar -->
         <Grid Grid.Row="0" Background="{StaticResource TopBarBackgroundBrush}">
-            <TextBlock Text="销售信息管理系统"
+            <TextBlock Text="巨炜科技客户管理信息系统"
                        Style="{StaticResource TitleTextStyle}"
                        VerticalAlignment="Center"
                        Margin="20,0,0,0"/>
@@ -41,31 +41,31 @@
                         <!-- Navigation Buttons -->
                         <Button Content="客户管理"
                                 Command="{Binding ShowCustomerManagementViewCommand}"
-                                Style="{StaticResource NavigationButtonStyle}"/>
+                                Style="{Binding CurrentViewName, Converter={StaticResource NavigationButtonStyleConverter}, ConverterParameter=CustomerManagement}"/>
 
                         <Button Content="销售管理"
                                 Command="{Binding ShowSalesManagementViewCommand}"
-                                Style="{StaticResource NavigationButtonStyle}"/>
+                                Style="{Binding CurrentViewName, Converter={StaticResource NavigationButtonStyleConverter}, ConverterParameter=SalesManagement}"/>
 
                         <Button Content="订单管理"
                                 Command="{Binding ShowOrderManagementViewCommand}"
-                                Style="{StaticResource NavigationButtonStyle}"/>
+                                Style="{Binding CurrentViewName, Converter={StaticResource NavigationButtonStyleConverter}, ConverterParameter=OrderManagement}"/>
 
                         <Button Content="售后服务"
                                 Command="{Binding ShowAfterSalesViewCommand}"
-                                Style="{StaticResource NavigationButtonStyle}"/>
+                                Style="{Binding CurrentViewName, Converter={StaticResource NavigationButtonStyleConverter}, ConverterParameter=AfterSales}"/>
 
                         <Button Content="产品管理"
                                 Command="{Binding ShowProductManagementViewCommand}"
-                                Style="{StaticResource NavigationButtonStyle}"/>
+                                Style="{Binding CurrentViewName, Converter={StaticResource NavigationButtonStyleConverter}, ConverterParameter=ProductManagement}"/>
 
                         <Button Content="财务管理"
                                 Command="{Binding ShowFinanceManagementViewCommand}"
-                                Style="{StaticResource NavigationButtonStyle}"/>
+                                Style="{Binding CurrentViewName, Converter={StaticResource NavigationButtonStyleConverter}, ConverterParameter=FinanceManagement}"/>
 
                         <Button Content="系统设置"
                                 Command="{Binding ShowSystemSettingsViewCommand}"
-                                Style="{StaticResource NavigationButtonStyle}"/>
+                                Style="{Binding CurrentViewName, Converter={StaticResource NavigationButtonStyleConverter}, ConverterParameter=SystemSettings}"/>
                     </StackPanel>
                 </ScrollViewer>
             </Border>
