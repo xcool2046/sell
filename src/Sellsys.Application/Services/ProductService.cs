@@ -25,9 +25,13 @@ namespace Sellsys.Application.Services
             var product = new Product
             {
                 Name = productDto.Name,
-                Description = productDto.Description,
-                Price = productDto.Price,
-                StockQuantity = productDto.StockQuantity
+                Specification = productDto.Specification,
+                Unit = productDto.Unit,
+                ListPrice = productDto.ListPrice,
+                MinPrice = productDto.MinPrice,
+                SalesCommission = productDto.SalesCommission,
+                SupervisorCommission = productDto.SupervisorCommission,
+                ManagerCommission = productDto.ManagerCommission
             };
 
             _context.Products.Add(product);
@@ -37,10 +41,15 @@ namespace Sellsys.Application.Services
             {
                 Id = product.Id,
                 Name = product.Name,
-                Description = product.Description,
-                Price = product.Price,
-                StockQuantity = product.StockQuantity,
-                CreatedAt = product.CreatedAt
+                Specification = product.Specification,
+                Unit = product.Unit,
+                ListPrice = product.ListPrice,
+                MinPrice = product.MinPrice,
+                SalesCommission = product.SalesCommission,
+                SupervisorCommission = product.SupervisorCommission,
+                ManagerCommission = product.ManagerCommission,
+                CreatedAt = product.CreatedAt,
+                UpdatedAt = product.UpdatedAt
             };
 
             return ApiResponse<ProductDto>.Success(resultDto);
@@ -52,6 +61,13 @@ namespace Sellsys.Application.Services
             if (product == null)
             {
                 return ApiResponse.Fail("Product not found.", HttpStatusCode.NotFound);
+            }
+
+            // Check if product is referenced by any order items
+            var hasOrderItems = await _context.OrderItems.AnyAsync(oi => oi.ProductId == id);
+            if (hasOrderItems)
+            {
+                return ApiResponse.Fail("Cannot delete product because it is referenced by existing orders.", HttpStatusCode.BadRequest);
             }
 
             _context.Products.Remove(product);
@@ -66,10 +82,15 @@ namespace Sellsys.Application.Services
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    Description = p.Description,
-                    Price = p.Price,
-                    StockQuantity = p.StockQuantity,
-                    CreatedAt = p.CreatedAt
+                    Specification = p.Specification,
+                    Unit = p.Unit,
+                    ListPrice = p.ListPrice,
+                    MinPrice = p.MinPrice,
+                    SalesCommission = p.SalesCommission,
+                    SupervisorCommission = p.SupervisorCommission,
+                    ManagerCommission = p.ManagerCommission,
+                    CreatedAt = p.CreatedAt,
+                    UpdatedAt = p.UpdatedAt
                 })
                 .ToListAsync();
 
@@ -84,10 +105,15 @@ namespace Sellsys.Application.Services
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    Description = p.Description,
-                    Price = p.Price,
-                    StockQuantity = p.StockQuantity,
-                    CreatedAt = p.CreatedAt
+                    Specification = p.Specification,
+                    Unit = p.Unit,
+                    ListPrice = p.ListPrice,
+                    MinPrice = p.MinPrice,
+                    SalesCommission = p.SalesCommission,
+                    SupervisorCommission = p.SupervisorCommission,
+                    ManagerCommission = p.ManagerCommission,
+                    CreatedAt = p.CreatedAt,
+                    UpdatedAt = p.UpdatedAt
                 })
                 .FirstOrDefaultAsync();
 
@@ -108,9 +134,14 @@ namespace Sellsys.Application.Services
             }
 
             product.Name = productDto.Name;
-            product.Description = productDto.Description;
-            product.Price = productDto.Price;
-            product.StockQuantity = productDto.StockQuantity;
+            product.Specification = productDto.Specification;
+            product.Unit = productDto.Unit;
+            product.ListPrice = productDto.ListPrice;
+            product.MinPrice = productDto.MinPrice;
+            product.SalesCommission = productDto.SalesCommission;
+            product.SupervisorCommission = productDto.SupervisorCommission;
+            product.ManagerCommission = productDto.ManagerCommission;
+            product.UpdatedAt = DateTime.UtcNow;
 
             _context.Products.Update(product);
             await _context.SaveChangesAsync();

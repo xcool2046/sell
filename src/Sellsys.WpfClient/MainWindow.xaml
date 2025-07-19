@@ -4,9 +4,98 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Sellsys.WpfClient"
+        xmlns:views="clr-namespace:Sellsys.WpfClient.Views"
+        xmlns:viewmodels="clr-namespace:Sellsys.WpfClient.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="销售信息管理系统"
+        Height="720" Width="1280"
+        MinHeight="600" MinWidth="1000"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Normal"
+        ShowInTaskbar="True">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/> <!-- Top Bar -->
+            <RowDefinition Height="*"/>   <!-- Content -->
+        </Grid.RowDefinitions>
 
+        <!-- Top Bar -->
+        <Grid Grid.Row="0" Background="{StaticResource TopBarBackgroundBrush}">
+            <TextBlock Text="销售信息管理系统"
+                       Style="{StaticResource TitleTextStyle}"
+                       VerticalAlignment="Center"
+                       Margin="20,0,0,0"/>
+        </Grid>
+
+        <!-- Main Content Area -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/> <!-- Left Navigation -->
+                <ColumnDefinition Width="*"/>   <!-- Main View -->
+            </Grid.ColumnDefinitions>
+
+            <!-- Left Navigation Panel -->
+            <Border Grid.Column="0" Background="{StaticResource LeftMenuBackgroundBrush}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Margin="0,20,0,0">
+                        <!-- Navigation Buttons -->
+                        <Button Content="客户管理"
+                                Command="{Binding ShowCustomerManagementViewCommand}"
+                                Style="{StaticResource NavigationButtonStyle}"/>
+
+                        <Button Content="销售管理"
+                                Command="{Binding ShowSalesManagementViewCommand}"
+                                Style="{StaticResource NavigationButtonStyle}"/>
+
+                        <Button Content="订单管理"
+                                Command="{Binding ShowOrderManagementViewCommand}"
+                                Style="{StaticResource NavigationButtonStyle}"/>
+
+                        <Button Content="售后服务"
+                                Command="{Binding ShowAfterSalesViewCommand}"
+                                Style="{StaticResource NavigationButtonStyle}"/>
+
+                        <Button Content="产品管理"
+                                Command="{Binding ShowProductManagementViewCommand}"
+                                Style="{StaticResource NavigationButtonStyle}"/>
+
+                        <Button Content="财务管理"
+                                Command="{Binding ShowFinanceManagementViewCommand}"
+                                Style="{StaticResource NavigationButtonStyle}"/>
+
+                        <Button Content="系统设置"
+                                Command="{Binding ShowSystemSettingsViewCommand}"
+                                Style="{StaticResource NavigationButtonStyle}"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <!-- Content Display -->
+            <ContentControl Grid.Column="1"
+                            Content="{Binding CurrentView}"
+                            Margin="20"
+                            Background="White"/>
+        </Grid>
+
+        <!-- Dialog Layer -->
+        <Grid>
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding DialogViewModel}" Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding DialogViewModel, Converter={StaticResource NotNullToVisibleConverter}}">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <Border Background="#7F000000"/>
+            <ContentControl Content="{Binding DialogViewModel}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"/>
+        </Grid>
     </Grid>
 </Window>

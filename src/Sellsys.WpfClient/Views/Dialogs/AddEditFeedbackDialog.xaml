@@ -1,0 +1,189 @@
+<Window x:Class="Sellsys.WpfClient.Views.Dialogs.AddEditFeedbackDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="{Binding Title}" 
+        Height="500" 
+        Width="600"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="CanResize">
+    
+    <Window.Resources>
+        <!-- 标签样式 -->
+        <Style x:Key="FormLabelStyle" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="0,0,0,5"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+        </Style>
+        
+        <!-- 只读信息样式 -->
+        <Style x:Key="ReadOnlyInfoStyle" TargetType="TextBlock">
+            <Setter Property="Background" Value="#F5F5F5"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="Margin" Value="0,0,0,15"/>
+            <Setter Property="Border.BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="Border.BorderThickness" Value="1"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/> <!-- 标题 -->
+            <RowDefinition Height="Auto"/> <!-- 客户信息 -->
+            <RowDefinition Height="*"/>    <!-- 表单内容 -->
+            <RowDefinition Height="Auto"/> <!-- 底部按钮 -->
+        </Grid.RowDefinitions>
+
+        <!-- 标题 -->
+        <TextBlock Grid.Row="0" 
+                   Text="{Binding Title}" 
+                   FontSize="18" 
+                   FontWeight="Bold" 
+                   Margin="0,0,0,20"
+                   HorizontalAlignment="Center"/>
+
+        <!-- 客户信息（只读） -->
+        <Border Grid.Row="1" 
+                Background="{StaticResource TableHeaderBrush}" 
+                Padding="15,10"
+                Margin="0,0,0,20">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- 客户单位 -->
+                <TextBlock Grid.Row="0" Grid.Column="0" 
+                           Text="客户单位:" 
+                           Style="{StaticResource FormLabelStyle}"
+                           Margin="0,0,10,5"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" 
+                           Text="{Binding CustomerUnit}"
+                           Margin="0,0,0,5"/>
+
+                <!-- 客户姓名 -->
+                <TextBlock Grid.Row="1" Grid.Column="0" 
+                           Text="客户姓名:" 
+                           Style="{StaticResource FormLabelStyle}"
+                           Margin="0,0,10,5"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" 
+                           Text="{Binding CustomerName}"
+                           Margin="0,0,0,5"/>
+
+                <!-- 客户电话 -->
+                <TextBlock Grid.Row="2" Grid.Column="0" 
+                           Text="客户电话:" 
+                           Style="{StaticResource FormLabelStyle}"
+                           Margin="0,0,10,0"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" 
+                           Text="{Binding CustomerPhone}"/>
+            </Grid>
+        </Border>
+
+        <!-- 表单内容 -->
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- 客户反馈 -->
+                <TextBlock Grid.Row="0" 
+                           Text="客户反馈:" 
+                           Style="{StaticResource FormLabelStyle}"/>
+                <TextBox Grid.Row="1"
+                         Text="{Binding CustomerFeedback, UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource StandardTextBoxStyle}"
+                         TextWrapping="Wrap"
+                         AcceptsReturn="True"
+                         VerticalScrollBarVisibility="Auto"
+                         Height="120"
+                         Margin="0,0,0,15"/>
+
+                <!-- 反馈回复 -->
+                <TextBlock Grid.Row="2" 
+                           Text="反馈回复:" 
+                           Style="{StaticResource FormLabelStyle}"/>
+                <TextBox Grid.Row="3"
+                         Text="{Binding OurReply, UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource StandardTextBoxStyle}"
+                         TextWrapping="Wrap"
+                         AcceptsReturn="True"
+                         VerticalScrollBarVisibility="Auto"
+                         Height="120"
+                         Margin="0,0,0,15"/>
+
+                <!-- 处理状态 -->
+                <Grid Grid.Row="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" 
+                               Text="处理状态:" 
+                               Style="{StaticResource FormLabelStyle}"/>
+                    
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,15">
+                        <RadioButton Content="待处理" 
+                                     IsChecked="{Binding Status, Converter={StaticResource StringToBooleanConverter}, ConverterParameter=待处理}"
+                                     GroupName="Status"
+                                     Margin="0,0,20,0"/>
+                        <RadioButton Content="处理中" 
+                                     IsChecked="{Binding Status, Converter={StaticResource StringToBooleanConverter}, ConverterParameter=处理中}"
+                                     GroupName="Status"
+                                     Margin="0,0,20,0"/>
+                        <RadioButton Content="处理完成" 
+                                     IsChecked="{Binding Status, Converter={StaticResource StringToBooleanConverter}, ConverterParameter=处理完成}"
+                                     GroupName="Status"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </ScrollViewer>
+
+        <!-- 底部按钮 -->
+        <StackPanel Grid.Row="3" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right" 
+                    Margin="0,20,0,0">
+            <Button Content="{Binding SaveButtonText}" 
+                    Command="{Binding SaveCommand}"
+                    Style="{StaticResource PrimaryButtonStyle}"
+                    Width="80"
+                    Height="35"
+                    Margin="0,0,10,0"
+                    IsEnabled="{Binding IsSaving, Converter={StaticResource InverseBooleanConverter}}"/>
+            <Button Content="关闭" 
+                    Command="{Binding CloseCommand}"
+                    Style="{StaticResource DeleteButtonStyle}"
+                    Width="80"
+                    Height="35"/>
+        </StackPanel>
+
+        <!-- Loading Indicator -->
+        <Grid Grid.RowSpan="4" 
+              Visibility="{Binding IsSaving, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.Background>
+                <SolidColorBrush Color="White" Opacity="0.7"/>
+            </Grid.Background>
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar IsIndeterminate="True" Width="200" Height="20" Margin="0,0,0,10"/>
+                <TextBlock Text="正在保存..." 
+                           Style="{StaticResource GlobalTextStyle}"
+                           HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

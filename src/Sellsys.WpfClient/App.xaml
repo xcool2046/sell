@@ -2,13 +2,51 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Sellsys.WpfClient"
+             xmlns:views="clr-namespace:Sellsys.WpfClient.Views"
+             xmlns:viewmodels="clr-namespace:Sellsys.WpfClient.ViewModels"
+             xmlns:converters="clr-namespace:Sellsys.WpfClient.Converters"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resources/Styles/_Colors.xaml"/>
-                <ResourceDictionary Source="Resources/Styles/_Fonts.xaml"/>
+                <ResourceDictionary Source="Resources/Styles/GlobalStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- Converters -->
+            <converters:NavigationButtonStyleConverter x:Key="NavigationButtonStyleConverter"/>
+            <converters:NotNullToVisibleConverter x:Key="NotNullToVisibleConverter"/>
+            <converters:RowIndexConverter x:Key="RowIndexConverter"/>
+            <converters:OrderItemsToProductNamesConverter x:Key="OrderItemsToProductNamesConverter"/>
+            <converters:OrderItemsToSpecificationsConverter x:Key="OrderItemsToSpecificationsConverter"/>
+            <converters:OrderItemsToProductPricesConverter x:Key="OrderItemsToProductPricesConverter"/>
+            <converters:OrderItemsToActualPricesConverter x:Key="OrderItemsToActualPricesConverter"/>
+            <converters:OrderItemsToUnitsConverter x:Key="OrderItemsToUnitsConverter"/>
+            <converters:BoolToActiveBackgroundConverter x:Key="BoolToActiveBackgroundConverter"/>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
+            <!-- ViewModel to View mappings -->
+            <DataTemplate DataType="{x:Type viewmodels:ProductManagementViewModel}">
+                <views:ProductManagementView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:CustomerManagementViewModel}">
+                <views:CustomerManagementView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:SalesManagementViewModel}">
+                <views:SalesManagementView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:OrderManagementViewModel}">
+                <views:OrderManagementView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:AfterSalesViewModel}">
+                <views:AfterSalesView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:FinanceManagementViewModel}">
+                <views:FinanceManagementView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:SystemSettingsViewModel}">
+                <views:SystemSettingsView/>
+            </DataTemplate>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

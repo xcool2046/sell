@@ -25,7 +25,7 @@ namespace Sellsys.Application.Services
             var role = new Sellsys.Domain.Entities.Role
             {
                 Name = roleDto.Name,
-                Department = roleDto.Department
+                AccessibleModules = string.Join(",", roleDto.AccessibleModules)
             };
 
             _context.Roles.Add(role);
@@ -35,7 +35,7 @@ namespace Sellsys.Application.Services
             {
                 Id = role.Id,
                 Name = role.Name,
-                Department = role.Department,
+                AccessibleModules = role.AccessibleModules,
                 CreatedAt = role.CreatedAt
             };
 
@@ -62,7 +62,7 @@ namespace Sellsys.Application.Services
                 {
                     Id = r.Id,
                     Name = r.Name,
-                    Department = r.Department,
+                    AccessibleModules = r.AccessibleModules,
                     CreatedAt = r.CreatedAt
                 })
                 .ToListAsync();
@@ -78,7 +78,7 @@ namespace Sellsys.Application.Services
                 {
                     Id = r.Id,
                     Name = r.Name,
-                    Department = r.Department,
+                    AccessibleModules = r.AccessibleModules,
                     CreatedAt = r.CreatedAt
                 })
                 .FirstOrDefaultAsync();
@@ -100,7 +100,7 @@ namespace Sellsys.Application.Services
             }
 
             role.Name = roleDto.Name;
-            role.Department = roleDto.Department;
+            role.AccessibleModules = string.Join(",", roleDto.AccessibleModules);
 
             _context.Roles.Update(role);
             await _context.SaveChangesAsync();

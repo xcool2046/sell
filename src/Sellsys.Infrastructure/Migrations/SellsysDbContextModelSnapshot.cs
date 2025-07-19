@@ -17,6 +17,83 @@ namespace Sellsys.Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.6");
 
+            modelBuilder.Entity("Sellsys.Domain.Entities.AfterSalesRecord", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("ContactId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CustomerFeedback")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("OurReply")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("ProcessedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("SupportPersonId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContactId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("SupportPersonId");
+
+                    b.ToTable("AfterSalesRecords");
+                });
+
+            modelBuilder.Entity("Sellsys.Domain.Entities.Contact", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsPrimary")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("Contacts");
+                });
+
             modelBuilder.Entity("Sellsys.Domain.Entities.Customer", b =>
                 {
                     b.Property<int>("Id")
@@ -24,36 +101,90 @@ namespace Sellsys.Infrastructure.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Address")
+                        .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("AssignedToEmployeeId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("ContactPerson")
+                    b.Property<string>("City")
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Industry")
+                    b.Property<string>("IndustryTypes")
+                        .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("PhoneNumber")
+                    b.Property<string>("Province")
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Remarks")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("SalesPersonId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("SupportPersonId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name");
+
+                    b.HasIndex("SalesPersonId");
+
+                    b.HasIndex("SupportPersonId");
+
+                    b.ToTable("Customers");
+                });
+
+            modelBuilder.Entity("Sellsys.Domain.Entities.Department", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Source")
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AssignedToEmployeeId");
+                    b.ToTable("Departments");
+                });
 
-                    b.ToTable("Customers");
+            modelBuilder.Entity("Sellsys.Domain.Entities.DepartmentGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.ToTable("DepartmentGroups");
                 });
 
             modelBuilder.Entity("Sellsys.Domain.Entities.Employee", b =>
@@ -63,60 +194,139 @@ namespace Sellsys.Infrastructure.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("BranchAccount")
-                        .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Department")
-                        .IsRequired()
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("HashedPassword")
+                        .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Group")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("LoginAccount")
+                    b.Property<string>("LoginUsername")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
+                    b.Property<string>("Phone")
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Position")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int?>("RoleId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("LoginUsername")
+                        .IsUnique();
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("Sellsys.Domain.Entities.Permission", b =>
+            modelBuilder.Entity("Sellsys.Domain.Entities.Order", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Description")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Name")
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("EffectiveDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("ExpiryDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal?>("ManagerCommissionAmount")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.Property<string>("OrderNumber")
                         .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("PaymentReceivedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal?>("SalesCommissionAmount")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.Property<int>("SalesPersonId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal?>("SupervisorCommissionAmount")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Permissions");
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("OrderNumber")
+                        .IsUnique();
+
+                    b.HasIndex("SalesPersonId");
+
+                    b.HasIndex("Status");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("Sellsys.Domain.Entities.OrderItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("ActualPrice")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("Sellsys.Domain.Entities.Product", b =>
@@ -125,27 +335,36 @@ namespace Sellsys.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Category")
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("TEXT");
+                    b.Property<decimal>("ListPrice")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.Property<decimal?>("ManagerCommission")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.Property<decimal>("MinPrice")
+                        .HasColumnType("decimal(10, 2)");
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18, 2)");
+                    b.Property<decimal?>("SalesCommission")
+                        .HasColumnType("decimal(10, 2)");
 
-                    b.Property<string>("Sku")
+                    b.Property<string>("Specification")
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("StockQuantity")
-                        .HasColumnType("INTEGER");
+                    b.Property<decimal?>("SupervisorCommission")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.Property<string>("Unit")
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT");
@@ -161,15 +380,15 @@ namespace Sellsys.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<string>("AccessibleModules")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Department")
-                        .IsRequired()
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -177,157 +396,243 @@ namespace Sellsys.Infrastructure.Migrations
                     b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("Sellsys.Domain.Entities.RolePermission", b =>
-                {
-                    b.Property<int>("RoleId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("PermissionId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("RoleId", "PermissionId");
-
-                    b.HasIndex("PermissionId");
-
-                    b.ToTable("RolePermissions");
-                });
-
-            modelBuilder.Entity("Sellsys.Domain.Entities.SalesOrder", b =>
+            modelBuilder.Entity("Sellsys.Domain.Entities.SalesFollowUpLog", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<int?>("ContactId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("CustomerId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("OrderDate")
+                    b.Property<string>("CustomerIntention")
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("OrderNumber")
-                        .IsRequired()
+                    b.Property<DateTime?>("NextFollowUpDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("SalespersonId")
+                    b.Property<int?>("SalesPersonId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
+                    b.Property<string>("Summary")
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("TotalAmount")
-                        .HasColumnType("decimal(18, 2)");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("ContactId");
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("SalespersonId");
+                    b.HasIndex("SalesPersonId");
 
-                    b.ToTable("SalesOrders");
+                    b.ToTable("SalesFollowUpLogs");
                 });
 
-            modelBuilder.Entity("Sellsys.Domain.Entities.SalesOrderItem", b =>
+            modelBuilder.Entity("Sellsys.Domain.Entities.AfterSalesRecord", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.HasOne("Sellsys.Domain.Entities.Contact", "Contact")
+                        .WithMany("AfterSalesRecords")
+                        .HasForeignKey("ContactId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("SalesOrderId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<decimal>("UnitPrice")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("SalesOrderId");
-
-                    b.ToTable("SalesOrderItems");
-                });
-
-            modelBuilder.Entity("Sellsys.Domain.Entities.Customer", b =>
-                {
-                    b.HasOne("Sellsys.Domain.Entities.Employee", "AssignedToEmployee")
-                        .WithMany()
-                        .HasForeignKey("AssignedToEmployeeId");
-
-                    b.Navigation("AssignedToEmployee");
-                });
-
-            modelBuilder.Entity("Sellsys.Domain.Entities.RolePermission", b =>
-                {
-                    b.HasOne("Sellsys.Domain.Entities.Permission", "Permission")
-                        .WithMany()
-                        .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Sellsys.Domain.Entities.Role", "Role")
-                        .WithMany("Permissions")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Permission");
-
-                    b.Navigation("Role");
-                });
-
-            modelBuilder.Entity("Sellsys.Domain.Entities.SalesOrder", b =>
-                {
                     b.HasOne("Sellsys.Domain.Entities.Customer", "Customer")
-                        .WithMany()
+                        .WithMany("AfterSalesRecords")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Sellsys.Domain.Entities.Employee", "Salesperson")
-                        .WithMany()
-                        .HasForeignKey("SalespersonId")
+                    b.HasOne("Sellsys.Domain.Entities.Employee", "SupportPerson")
+                        .WithMany("AfterSalesRecords")
+                        .HasForeignKey("SupportPersonId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Contact");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("SupportPerson");
+                });
+
+            modelBuilder.Entity("Sellsys.Domain.Entities.Contact", b =>
+                {
+                    b.HasOne("Sellsys.Domain.Entities.Customer", "Customer")
+                        .WithMany("Contacts")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Customer");
-
-                    b.Navigation("Salesperson");
                 });
 
-            modelBuilder.Entity("Sellsys.Domain.Entities.SalesOrderItem", b =>
+            modelBuilder.Entity("Sellsys.Domain.Entities.Customer", b =>
                 {
-                    b.HasOne("Sellsys.Domain.Entities.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
+                    b.HasOne("Sellsys.Domain.Entities.Employee", "SalesPerson")
+                        .WithMany("SalesCustomers")
+                        .HasForeignKey("SalesPersonId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Sellsys.Domain.Entities.Employee", "SupportPerson")
+                        .WithMany("SupportCustomers")
+                        .HasForeignKey("SupportPersonId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("SalesPerson");
+
+                    b.Navigation("SupportPerson");
+                });
+
+            modelBuilder.Entity("Sellsys.Domain.Entities.DepartmentGroup", b =>
+                {
+                    b.HasOne("Sellsys.Domain.Entities.Department", "Department")
+                        .WithMany("Groups")
+                        .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Sellsys.Domain.Entities.SalesOrder", "SalesOrder")
-                        .WithMany("OrderItems")
-                        .HasForeignKey("SalesOrderId")
+                    b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("Sellsys.Domain.Entities.Employee", b =>
+                {
+                    b.HasOne("Sellsys.Domain.Entities.DepartmentGroup", "Group")
+                        .WithMany("Employees")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Sellsys.Domain.Entities.Role", "Role")
+                        .WithMany("Employees")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Group");
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("Sellsys.Domain.Entities.Order", b =>
+                {
+                    b.HasOne("Sellsys.Domain.Entities.Customer", "Customer")
+                        .WithMany("Orders")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Sellsys.Domain.Entities.Employee", "SalesPerson")
+                        .WithMany("Orders")
+                        .HasForeignKey("SalesPersonId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("SalesPerson");
+                });
+
+            modelBuilder.Entity("Sellsys.Domain.Entities.OrderItem", b =>
+                {
+                    b.HasOne("Sellsys.Domain.Entities.Order", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Sellsys.Domain.Entities.Product", "Product")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Order");
 
                     b.Navigation("Product");
+                });
 
-                    b.Navigation("SalesOrder");
+            modelBuilder.Entity("Sellsys.Domain.Entities.SalesFollowUpLog", b =>
+                {
+                    b.HasOne("Sellsys.Domain.Entities.Contact", "Contact")
+                        .WithMany("SalesFollowUpLogs")
+                        .HasForeignKey("ContactId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Sellsys.Domain.Entities.Customer", "Customer")
+                        .WithMany("SalesFollowUpLogs")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Sellsys.Domain.Entities.Employee", "SalesPerson")
+                        .WithMany("SalesFollowUpLogs")
+                        .HasForeignKey("SalesPersonId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Contact");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("SalesPerson");
+                });
+
+            modelBuilder.Entity("Sellsys.Domain.Entities.Contact", b =>
+                {
+                    b.Navigation("AfterSalesRecords");
+
+                    b.Navigation("SalesFollowUpLogs");
+                });
+
+            modelBuilder.Entity("Sellsys.Domain.Entities.Customer", b =>
+                {
+                    b.Navigation("AfterSalesRecords");
+
+                    b.Navigation("Contacts");
+
+                    b.Navigation("Orders");
+
+                    b.Navigation("SalesFollowUpLogs");
+                });
+
+            modelBuilder.Entity("Sellsys.Domain.Entities.Department", b =>
+                {
+                    b.Navigation("Groups");
+                });
+
+            modelBuilder.Entity("Sellsys.Domain.Entities.DepartmentGroup", b =>
+                {
+                    b.Navigation("Employees");
+                });
+
+            modelBuilder.Entity("Sellsys.Domain.Entities.Employee", b =>
+                {
+                    b.Navigation("AfterSalesRecords");
+
+                    b.Navigation("Orders");
+
+                    b.Navigation("SalesCustomers");
+
+                    b.Navigation("SalesFollowUpLogs");
+
+                    b.Navigation("SupportCustomers");
+                });
+
+            modelBuilder.Entity("Sellsys.Domain.Entities.Order", b =>
+                {
+                    b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("Sellsys.Domain.Entities.Product", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("Sellsys.Domain.Entities.Role", b =>
                 {
-                    b.Navigation("Permissions");
-                });
-
-            modelBuilder.Entity("Sellsys.Domain.Entities.SalesOrder", b =>
-                {
-                    b.Navigation("OrderItems");
+                    b.Navigation("Employees");
                 });
 #pragma warning restore 612, 618
         }

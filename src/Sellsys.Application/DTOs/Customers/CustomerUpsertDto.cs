@@ -5,17 +5,27 @@ namespace Sellsys.Application.DTOs.Customers
     public class CustomerUpsertDto
     {
         [Required]
-        [StringLength(100)]
-        public required string Name { get; set; }
+        [StringLength(255)]
+        public string Name { get; set; } = string.Empty;
 
         [StringLength(50)]
-        public string? ContactPerson { get; set; }
+        public string? Province { get; set; }
 
-        [Phone]
-        [StringLength(20)]
-        public string? PhoneNumber { get; set; }
+        [StringLength(50)]
+        public string? City { get; set; }
 
-        [StringLength(200)]
+        [StringLength(255)]
         public string? Address { get; set; }
+
+        public string? Remarks { get; set; }
+
+        [StringLength(255)]
+        public string? IndustryTypes { get; set; }
+
+        public int? SalesPersonId { get; set; }
+        public int? SupportPersonId { get; set; }
+
+        // 联系人列表
+        public List<ContactUpsertDto> Contacts { get; set; } = new List<ContactUpsertDto>();
     }
 }

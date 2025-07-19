@@ -2596,11 +2596,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "e:\\test-\\sellsys\\src\\Sellsys.Infrastructure\\Sellsys.Infrastructure.csproj",
+      "projectUniqueName": "E:\\test-\\sellsys\\src\\Sellsys.Infrastructure\\Sellsys.Infrastructure.csproj",
       "projectName": "Sellsys.Infrastructure",
-      "projectPath": "e:\\test-\\sellsys\\src\\Sellsys.Infrastructure\\Sellsys.Infrastructure.csproj",
+      "projectPath": "E:\\test-\\sellsys\\src\\Sellsys.Infrastructure\\Sellsys.Infrastructure.csproj",
       "packagesPath": "C:\\Users\\online\\.nuget\\packages\\",
-      "outputPath": "e:\\test-\\sellsys\\src\\Sellsys.Infrastructure\\obj\\",
+      "outputPath": "E:\\test-\\sellsys\\src\\Sellsys.Infrastructure\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -2622,8 +2622,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "e:\\test-\\sellsys\\src\\Sellsys.Domain\\Sellsys.Domain.csproj": {
-              "projectPath": "e:\\test-\\sellsys\\src\\Sellsys.Domain\\Sellsys.Domain.csproj"
+            "E:\\test-\\sellsys\\src\\Sellsys.Domain\\Sellsys.Domain.csproj": {
+              "projectPath": "E:\\test-\\sellsys\\src\\Sellsys.Domain\\Sellsys.Domain.csproj"
             }
           }
         }

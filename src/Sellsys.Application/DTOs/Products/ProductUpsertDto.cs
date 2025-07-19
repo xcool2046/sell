@@ -5,18 +5,30 @@ namespace Sellsys.Application.DTOs.Products
     public class ProductUpsertDto
     {
         [Required]
-        [StringLength(100)]
-        public required string Name { get; set; }
+        [StringLength(255)]
+        public string Name { get; set; } = string.Empty;
 
-        [StringLength(500)]
-        public string? Description { get; set; }
+        [StringLength(100)]
+        public string? Specification { get; set; }
+
+        [StringLength(20)]
+        public string? Unit { get; set; }
 
         [Required]
         [Range(0.01, 1000000)]
-        public decimal Price { get; set; }
+        public decimal ListPrice { get; set; }
 
         [Required]
-        [Range(0, int.MaxValue)]
-        public int StockQuantity { get; set; }
+        [Range(0.01, 1000000)]
+        public decimal MinPrice { get; set; }
+
+        [Range(0, 1000000)]
+        public decimal? SalesCommission { get; set; }
+
+        [Range(0, 1000000)]
+        public decimal? SupervisorCommission { get; set; }
+
+        [Range(0, 1000000)]
+        public decimal? ManagerCommission { get; set; }
     }
 }

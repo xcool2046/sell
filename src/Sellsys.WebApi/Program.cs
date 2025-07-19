@@ -18,8 +18,12 @@ builder.Services.AddDbContext<SellsysDbContext>(options =>
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
-builder.Services.AddScoped<ISalesOrderService, SalesOrderService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IAfterSalesService, AfterSalesService>();
+builder.Services.AddScoped<IFinanceService, FinanceService>();
+builder.Services.AddScoped<OrderService>();
+builder.Services.AddScoped<DepartmentService>();
+builder.Services.AddScoped<DepartmentGroupService>();
 
 
 var app = builder.Build();

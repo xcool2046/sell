@@ -1,7 +1,7 @@
 {
   "format": 1,
   "restore": {
-    "e:\\test-\\sellsys\\src\\Sellsys.WebApi\\Sellsys.WebApi.csproj": {}
+    "E:\\test-\\sellsys\\src\\Sellsys.WebApi\\Sellsys.WebApi.csproj": {}
   },
   "projects": {
     "E:\\test-\\sellsys\\src\\Sellsys.Application\\Sellsys.Application.csproj": {
@@ -36,11 +36,11 @@
               "E:\\test-\\sellsys\\src\\Sellsys.CrossCutting\\Sellsys.CrossCutting.csproj": {
                 "projectPath": "E:\\test-\\sellsys\\src\\Sellsys.CrossCutting\\Sellsys.CrossCutting.csproj"
               },
-              "e:\\test-\\sellsys\\src\\Sellsys.Domain\\Sellsys.Domain.csproj": {
-                "projectPath": "e:\\test-\\sellsys\\src\\Sellsys.Domain\\Sellsys.Domain.csproj"
+              "E:\\test-\\sellsys\\src\\Sellsys.Domain\\Sellsys.Domain.csproj": {
+                "projectPath": "E:\\test-\\sellsys\\src\\Sellsys.Domain\\Sellsys.Domain.csproj"
               },
-              "e:\\test-\\sellsys\\src\\Sellsys.Infrastructure\\Sellsys.Infrastructure.csproj": {
-                "projectPath": "e:\\test-\\sellsys\\src\\Sellsys.Infrastructure\\Sellsys.Infrastructure.csproj"
+              "E:\\test-\\sellsys\\src\\Sellsys.Infrastructure\\Sellsys.Infrastructure.csproj": {
+                "projectPath": "E:\\test-\\sellsys\\src\\Sellsys.Infrastructure\\Sellsys.Infrastructure.csproj"
               }
             }
           }
@@ -67,7 +67,7 @@
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[9.0.7, )"
+              "version": "[8.0.6, )"
             }
           },
           "imports": [
@@ -156,14 +156,14 @@
         }
       }
     },
-    "e:\\test-\\sellsys\\src\\Sellsys.Domain\\Sellsys.Domain.csproj": {
+    "E:\\test-\\sellsys\\src\\Sellsys.Domain\\Sellsys.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "e:\\test-\\sellsys\\src\\Sellsys.Domain\\Sellsys.Domain.csproj",
+        "projectUniqueName": "E:\\test-\\sellsys\\src\\Sellsys.Domain\\Sellsys.Domain.csproj",
         "projectName": "Sellsys.Domain",
-        "projectPath": "e:\\test-\\sellsys\\src\\Sellsys.Domain\\Sellsys.Domain.csproj",
+        "projectPath": "E:\\test-\\sellsys\\src\\Sellsys.Domain\\Sellsys.Domain.csproj",
         "packagesPath": "C:\\Users\\online\\.nuget\\packages\\",
-        "outputPath": "e:\\test-\\sellsys\\src\\Sellsys.Domain\\obj\\",
+        "outputPath": "E:\\test-\\sellsys\\src\\Sellsys.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -222,14 +222,14 @@
         }
       }
     },
-    "e:\\test-\\sellsys\\src\\Sellsys.Infrastructure\\Sellsys.Infrastructure.csproj": {
+    "E:\\test-\\sellsys\\src\\Sellsys.Infrastructure\\Sellsys.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "e:\\test-\\sellsys\\src\\Sellsys.Infrastructure\\Sellsys.Infrastructure.csproj",
+        "projectUniqueName": "E:\\test-\\sellsys\\src\\Sellsys.Infrastructure\\Sellsys.Infrastructure.csproj",
         "projectName": "Sellsys.Infrastructure",
-        "projectPath": "e:\\test-\\sellsys\\src\\Sellsys.Infrastructure\\Sellsys.Infrastructure.csproj",
+        "projectPath": "E:\\test-\\sellsys\\src\\Sellsys.Infrastructure\\Sellsys.Infrastructure.csproj",
         "packagesPath": "C:\\Users\\online\\.nuget\\packages\\",
-        "outputPath": "e:\\test-\\sellsys\\src\\Sellsys.Infrastructure\\obj\\",
+        "outputPath": "E:\\test-\\sellsys\\src\\Sellsys.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -251,8 +251,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "e:\\test-\\sellsys\\src\\Sellsys.Domain\\Sellsys.Domain.csproj": {
-                "projectPath": "e:\\test-\\sellsys\\src\\Sellsys.Domain\\Sellsys.Domain.csproj"
+              "E:\\test-\\sellsys\\src\\Sellsys.Domain\\Sellsys.Domain.csproj": {
+                "projectPath": "E:\\test-\\sellsys\\src\\Sellsys.Domain\\Sellsys.Domain.csproj"
               }
             }
           }
@@ -314,14 +314,14 @@
         }
       }
     },
-    "e:\\test-\\sellsys\\src\\Sellsys.WebApi\\Sellsys.WebApi.csproj": {
+    "E:\\test-\\sellsys\\src\\Sellsys.WebApi\\Sellsys.WebApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "e:\\test-\\sellsys\\src\\Sellsys.WebApi\\Sellsys.WebApi.csproj",
+        "projectUniqueName": "E:\\test-\\sellsys\\src\\Sellsys.WebApi\\Sellsys.WebApi.csproj",
         "projectName": "Sellsys.WebApi",
-        "projectPath": "e:\\test-\\sellsys\\src\\Sellsys.WebApi\\Sellsys.WebApi.csproj",
+        "projectPath": "E:\\test-\\sellsys\\src\\Sellsys.WebApi\\Sellsys.WebApi.csproj",
         "packagesPath": "C:\\Users\\online\\.nuget\\packages\\",
-        "outputPath": "e:\\test-\\sellsys\\src\\Sellsys.WebApi\\obj\\",
+        "outputPath": "E:\\test-\\sellsys\\src\\Sellsys.WebApi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -349,8 +349,8 @@
               "E:\\test-\\sellsys\\src\\Sellsys.CrossCutting\\Sellsys.CrossCutting.csproj": {
                 "projectPath": "E:\\test-\\sellsys\\src\\Sellsys.CrossCutting\\Sellsys.CrossCutting.csproj"
               },
-              "e:\\test-\\sellsys\\src\\Sellsys.Infrastructure\\Sellsys.Infrastructure.csproj": {
-                "projectPath": "e:\\test-\\sellsys\\src\\Sellsys.Infrastructure\\Sellsys.Infrastructure.csproj"
+              "E:\\test-\\sellsys\\src\\Sellsys.Infrastructure\\Sellsys.Infrastructure.csproj": {
+                "projectPath": "E:\\test-\\sellsys\\src\\Sellsys.Infrastructure\\Sellsys.Infrastructure.csproj"
               }
             }
           }

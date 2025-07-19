@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET9_0;NETCOREAPP
 e:\test-\sellsys\src\Sellsys.WpfClient\App.xaml
-3-229721944
+4-1368347789
 
-61923110915
+101472181250
 200-423684338
-MainWindow.xaml;Resources\Styles\_Colors.xaml;Resources\Styles\_Fonts.xaml;
+MainWindow.xaml;Resources\Styles\_Colors.xaml;Resources\Styles\_Fonts.xaml;Views\ProductManagementView.xaml;
 
 False
 

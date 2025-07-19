@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "e:\\test-\\sellsys\\src\\Sellsys.Domain\\Sellsys.Domain.csproj": {}
+    "E:\\test-\\sellsys\\src\\Sellsys.Domain\\Sellsys.Domain.csproj": {}
   },
   "projects": {
-    "e:\\test-\\sellsys\\src\\Sellsys.Domain\\Sellsys.Domain.csproj": {
+    "E:\\test-\\sellsys\\src\\Sellsys.Domain\\Sellsys.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "e:\\test-\\sellsys\\src\\Sellsys.Domain\\Sellsys.Domain.csproj",
+        "projectUniqueName": "E:\\test-\\sellsys\\src\\Sellsys.Domain\\Sellsys.Domain.csproj",
         "projectName": "Sellsys.Domain",
-        "projectPath": "e:\\test-\\sellsys\\src\\Sellsys.Domain\\Sellsys.Domain.csproj",
+        "projectPath": "E:\\test-\\sellsys\\src\\Sellsys.Domain\\Sellsys.Domain.csproj",
         "packagesPath": "C:\\Users\\online\\.nuget\\packages\\",
-        "outputPath": "e:\\test-\\sellsys\\src\\Sellsys.Domain\\obj\\",
+        "outputPath": "E:\\test-\\sellsys\\src\\Sellsys.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

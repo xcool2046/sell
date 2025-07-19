@@ -1,17 +1,17 @@
-using System;
-
 namespace Sellsys.Application.DTOs.Employees
 {
     public class EmployeeDto
     {
         public int Id { get; set; }
-        public required string Name { get; set; }
-        public required string Department { get; set; }
-        public string? Group { get; set; }
-        public required string Position { get; set; }
-        public required string PhoneNumber { get; set; }
-        public required string BranchAccount { get; set; }
-        public required string LoginAccount { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string LoginUsername { get; set; } = string.Empty;
+        public string? Phone { get; set; }
+        public string? BranchAccount { get; set; }
+        public int? GroupId { get; set; }
+        public string? GroupName { get; set; }
+        public string? DepartmentName { get; set; }
+        public int? RoleId { get; set; }
+        public string? RoleName { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

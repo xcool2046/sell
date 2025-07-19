@@ -28,38 +28,46 @@ namespace Sellsys.Application.Services
                 return new ApiResponse<EmployeeDto> { IsSuccess = false, Message = "Password is required for new employees.", StatusCode = HttpStatusCode.BadRequest };
             }
 
-            var existingUser = await _context.Employees.FirstOrDefaultAsync(e => e.LoginAccount == employeeDto.LoginAccount);
+            var existingUser = await _context.Employees.FirstOrDefaultAsync(e => e.LoginUsername == employeeDto.LoginUsername);
             if (existingUser != null)
             {
-                return new ApiResponse<EmployeeDto> { IsSuccess = false, Message = "Login account already exists.", StatusCode = HttpStatusCode.BadRequest };
+                return new ApiResponse<EmployeeDto> { IsSuccess = false, Message = "Login username already exists.", StatusCode = HttpStatusCode.BadRequest };
             }
 
             var employee = new Employee
             {
                 Name = employeeDto.Name,
-                Department = employeeDto.Department,
-                Group = employeeDto.Group,
-                Position = employeeDto.Position,
-                PhoneNumber = employeeDto.PhoneNumber,
+                LoginUsername = employeeDto.LoginUsername,
+                Phone = employeeDto.Phone,
                 BranchAccount = employeeDto.BranchAccount,
-                LoginAccount = employeeDto.LoginAccount,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(employeeDto.Password)
+                GroupId = employeeDto.GroupId,
+                RoleId = employeeDto.RoleId,
+                HashedPassword = BCrypt.Net.BCrypt.HashPassword(employeeDto.Password)
             };
 
             _context.Employees.Add(employee);
             await _context.SaveChangesAsync();
 
+            // 重新查询以获取关联数据
+            var createdEmployee = await _context.Employees
+                .Include(e => e.Group)
+                    .ThenInclude(g => g!.Department)
+                .Include(e => e.Role)
+                .FirstOrDefaultAsync(e => e.Id == employee.Id);
+
             var resultDto = new EmployeeDto
             {
-                Id = employee.Id,
-                Name = employee.Name,
-                Department = employee.Department,
-                Group = employee.Group,
-                Position = employee.Position,
-                PhoneNumber = employee.PhoneNumber,
-                BranchAccount = employee.BranchAccount,
-                LoginAccount = employee.LoginAccount,
-                CreatedAt = employee.CreatedAt
+                Id = createdEmployee!.Id,
+                Name = createdEmployee.Name,
+                LoginUsername = createdEmployee.LoginUsername,
+                Phone = createdEmployee.Phone,
+                BranchAccount = createdEmployee.BranchAccount,
+                GroupId = createdEmployee.GroupId,
+                GroupName = createdEmployee.Group?.Name,
+                DepartmentName = createdEmployee.Group?.Department?.Name,
+                RoleId = createdEmployee.RoleId,
+                RoleName = createdEmployee.Role?.Name,
+                CreatedAt = createdEmployee.CreatedAt
             };
 
             return ApiResponse<EmployeeDto>.Success(resultDto);
@@ -81,16 +89,21 @@ namespace Sellsys.Application.Services
         public async Task<ApiResponse<List<EmployeeDto>>> GetAllEmployeesAsync()
         {
             var employees = await _context.Employees
+                .Include(e => e.Group)
+                    .ThenInclude(g => g!.Department)
+                .Include(e => e.Role)
                 .Select(e => new EmployeeDto
                 {
                     Id = e.Id,
                     Name = e.Name,
-                    Department = e.Department,
-                    Group = e.Group,
-                    Position = e.Position,
-                    PhoneNumber = e.PhoneNumber,
+                    LoginUsername = e.LoginUsername,
+                    Phone = e.Phone,
                     BranchAccount = e.BranchAccount,
-                    LoginAccount = e.LoginAccount,
+                    GroupId = e.GroupId,
+                    GroupName = e.Group != null ? e.Group.Name : null,
+                    DepartmentName = e.Group != null && e.Group.Department != null ? e.Group.Department.Name : null,
+                    RoleId = e.RoleId,
+                    RoleName = e.Role != null ? e.Role.Name : null,
                     CreatedAt = e.CreatedAt
                 })
                 .ToListAsync();
@@ -101,17 +114,22 @@ namespace Sellsys.Application.Services
         public async Task<ApiResponse<EmployeeDto>> GetEmployeeByIdAsync(int id)
         {
             var employee = await _context.Employees
+                .Include(e => e.Group)
+                    .ThenInclude(g => g!.Department)
+                .Include(e => e.Role)
                 .Where(e => e.Id == id)
                 .Select(e => new EmployeeDto
                 {
                     Id = e.Id,
                     Name = e.Name,
-                    Department = e.Department,
-                    Group = e.Group,
-                    Position = e.Position,
-                    PhoneNumber = e.PhoneNumber,
+                    LoginUsername = e.LoginUsername,
+                    Phone = e.Phone,
                     BranchAccount = e.BranchAccount,
-                    LoginAccount = e.LoginAccount,
+                    GroupId = e.GroupId,
+                    GroupName = e.Group != null ? e.Group.Name : null,
+                    DepartmentName = e.Group != null && e.Group.Department != null ? e.Group.Department.Name : null,
+                    RoleId = e.RoleId,
+                    RoleName = e.Role != null ? e.Role.Name : null,
                     CreatedAt = e.CreatedAt
                 })
                 .FirstOrDefaultAsync();
@@ -132,26 +150,25 @@ namespace Sellsys.Application.Services
                 return ApiResponse.Fail("Employee not found.", HttpStatusCode.NotFound);
             }
 
-            if (employee.LoginAccount != employeeDto.LoginAccount)
+            if (employee.LoginUsername != employeeDto.LoginUsername)
             {
-                 var existingUser = await _context.Employees.FirstOrDefaultAsync(e => e.LoginAccount == employeeDto.LoginAccount);
+                 var existingUser = await _context.Employees.FirstOrDefaultAsync(e => e.LoginUsername == employeeDto.LoginUsername);
                  if (existingUser != null)
                  {
-                    return ApiResponse.Fail("Login account already exists.", HttpStatusCode.BadRequest);
+                    return ApiResponse.Fail("Login username already exists.", HttpStatusCode.BadRequest);
                  }
             }
 
             employee.Name = employeeDto.Name;
-            employee.Department = employeeDto.Department;
-            employee.Group = employeeDto.Group;
-            employee.Position = employeeDto.Position;
-            employee.PhoneNumber = employeeDto.PhoneNumber;
+            employee.LoginUsername = employeeDto.LoginUsername;
+            employee.Phone = employeeDto.Phone;
             employee.BranchAccount = employeeDto.BranchAccount;
-            employee.LoginAccount = employeeDto.LoginAccount;
+            employee.GroupId = employeeDto.GroupId;
+            employee.RoleId = employeeDto.RoleId;
 
             if (!string.IsNullOrEmpty(employeeDto.Password))
             {
-                employee.PasswordHash = BCrypt.Net.BCrypt.HashPassword(employeeDto.Password);
+                employee.HashedPassword = BCrypt.Net.BCrypt.HashPassword(employeeDto.Password);
             }
 
             _context.Employees.Update(employee);

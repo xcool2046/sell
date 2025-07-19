@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sellsys.Application.DTOs.Roles
@@ -6,14 +5,10 @@ namespace Sellsys.Application.DTOs.Roles
     public class RoleUpsertDto
     {
         [Required]
-        [StringLength(50)]
-        public required string Name { get; set; }
+        [StringLength(100)]
+        public string Name { get; set; } = string.Empty;
 
-        [Required]
-        [StringLength(50)]
-        public required string Department { get; set; }
-
-        // A list of permission NAMES to be assigned to the role
-        public List<string> Permissions { get; set; } = [];
+        // 可访问的模块名列表
+        public List<string> AccessibleModules { get; set; } = new List<string>();
     }
 }

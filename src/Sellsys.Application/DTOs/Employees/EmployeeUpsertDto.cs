@@ -6,30 +6,20 @@ namespace Sellsys.Application.DTOs.Employees
     {
         [Required]
         [StringLength(100)]
-        public required string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [Required]
         [StringLength(100)]
-        public required string Department { get; set; }
+        public string LoginUsername { get; set; } = string.Empty;
+
+        [StringLength(50)]
+        public string? Phone { get; set; }
 
         [StringLength(100)]
-        public string? Group { get; set; }
-        
-        [Required]
-        [StringLength(50)]
-        public required string Position { get; set; }
+        public string? BranchAccount { get; set; }
 
-        [Required]
-        [StringLength(20)]
-        public required string PhoneNumber { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public required string BranchAccount { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public required string LoginAccount { get; set; }
+        public int? GroupId { get; set; }
+        public int? RoleId { get; set; }
 
         [StringLength(100, MinimumLength = 6)]
         public string? Password { get; set; }

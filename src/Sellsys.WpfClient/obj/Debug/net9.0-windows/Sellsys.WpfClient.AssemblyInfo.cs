@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Sellsys.WpfClient")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b4aeac11a58a42e5cd96568482e19f9ba1432b7a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+39c2b02e34a819867b6bb032ab74a288b113d4a7")]
 [assembly: System.Reflection.AssemblyProductAttribute("Sellsys.WpfClient")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Sellsys.WpfClient")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

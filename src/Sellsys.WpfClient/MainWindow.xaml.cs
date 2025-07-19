@@ -1,23 +1,27 @@
-﻿using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
+using Sellsys.WpfClient.ViewModels;
 
-namespace Sellsys.WpfClient;
-
-/// <summary>
-/// Interaction logic for MainWindow.xaml
-/// </summary>
-public partial class MainWindow : Window
+namespace Sellsys.WpfClient
 {
-    public MainWindow()
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
     {
-        InitializeComponent();
+        public MainWindow()
+        {
+            InitializeComponent();
+            DataContext = new MainViewModel();
+
+            // 强制显示窗口
+            this.Show();
+            this.Activate();
+            this.Focus();
+            this.BringIntoView();
+
+            // 确保窗口在屏幕中央
+            this.Left = (SystemParameters.PrimaryScreenWidth - this.Width) / 2;
+            this.Top = (SystemParameters.PrimaryScreenHeight - this.Height) / 2;
+        }
     }
 }

@@ -23,5 +23,20 @@ namespace Sellsys.WpfClient.ViewModels
             OnPropertyChanged(propertyName);
             return true;
         }
+
+        // Virtual method for loading data when view becomes active
+        public virtual async Task LoadDataAsync()
+        {
+            // Default implementation does nothing
+            await Task.CompletedTask;
+        }
+
+        // Property to track if data has been loaded
+        private bool _isDataLoaded = false;
+        public bool IsDataLoaded
+        {
+            get => _isDataLoaded;
+            protected set => SetProperty(ref _isDataLoaded, value);
+        }
     }
 }
