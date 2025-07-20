@@ -216,12 +216,12 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="销售姓名：" VerticalAlignment="Center" FontWeight="Bold"/>
-                        <TextBox Grid.Column="1"
-                                 Text="{Binding SalesPersonName, Mode=OneWay}"
-                                 Style="{StaticResource StandardTextBoxStyle}"
-                                 IsReadOnly="True"
-                                 Background="#F5F5F5"
-                                 Height="32"/>
+                        <ComboBox Grid.Column="1"
+                                  ItemsSource="{Binding SalesPersons}"
+                                  SelectedItem="{Binding SelectedSalesPerson}"
+                                  DisplayMemberPath="Name"
+                                  Height="32"
+                                  Style="{StaticResource StandardComboBoxStyle}"/>
                     </Grid>
 
                     <!-- 签单时间 -->

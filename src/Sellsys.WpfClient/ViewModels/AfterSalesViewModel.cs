@@ -146,8 +146,16 @@ namespace Sellsys.WpfClient.ViewModels
 
                 // Update collections
                 AfterSalesRecords.Clear();
-                foreach (var record in recordsTask.Result.OrderByDescending(r => r.CreatedAt))
+                var records = recordsTask.Result.OrderByDescending(r => r.CreatedAt).ToList();
+
+                // 计算每个客户的记录数量
+                var customerRecordCounts = records.GroupBy(r => r.CustomerId)
+                    .ToDictionary(g => g.Key, g => g.Count());
+
+                foreach (var record in records)
                 {
+                    // 设置客服记录数量
+                    record.ServiceRecordCount = customerRecordCounts.GetValueOrDefault(record.CustomerId, 0);
                     AfterSalesRecords.Add(record);
                 }
 
@@ -203,8 +211,16 @@ namespace Sellsys.WpfClient.ViewModels
                 );
 
                 AfterSalesRecords.Clear();
-                foreach (var record in filteredRecords.OrderByDescending(r => r.CreatedAt))
+                var records = filteredRecords.OrderByDescending(r => r.CreatedAt).ToList();
+
+                // 计算每个客户的记录数量
+                var customerRecordCounts = records.GroupBy(r => r.CustomerId)
+                    .ToDictionary(g => g.Key, g => g.Count());
+
+                foreach (var record in records)
                 {
+                    // 设置客服记录数量
+                    record.ServiceRecordCount = customerRecordCounts.GetValueOrDefault(record.CustomerId, 0);
                     AfterSalesRecords.Add(record);
                 }
             }
@@ -260,8 +276,8 @@ namespace Sellsys.WpfClient.ViewModels
         {
             if (record == null) return;
 
-            // TODO: Show ServiceRecordsDialog
-            MessageBox.Show($"查看客服记录: {record.CustomerName}", "客服记录", MessageBoxButton.OK, MessageBoxImage.Information);
+            // 使用与ViewRecordsRow相同的逻辑
+            ViewRecordsRow(record);
         }
 
 

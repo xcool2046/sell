@@ -66,64 +66,12 @@ namespace Sellsys.WpfClient.ViewModels
             try
             {
                 IsLoading = true;
-                
-                // TODO: Call API to get order records for this customer
-                // For now, create some sample data
-                var orders = new List<Order>
+
+                // Call API to get order records for this customer
+                var orders = await _apiService.SearchOrdersAsync(new OrderSearchCriteria
                 {
-                    new Order
-                    {
-                        Id = 1,
-                        OrderNumber = "OR20250701",
-                        CustomerId = _customer.Id,
-                        CustomerName = _customer.Name,
-                        Status = "待收款",
-                        SalesPersonName = "张飞",
-                        EffectiveDate = DateTime.Now.AddDays(-30),
-                        ExpiryDate = DateTime.Now.AddDays(335),
-                        CreatedAt = DateTime.Now.AddDays(-30),
-                        OrderItems = new ObservableCollection<OrderItem>
-                        {
-                            new OrderItem
-                            {
-                                Id = 1,
-                                ProductName = "培训管理系统 (MIS)",
-                                ProductSpecification = "长期",
-                                ProductUnit = "套",
-                                ProductPrice = 46000.00m,
-                                ActualPrice = 42000.00m,
-                                Quantity = 1,
-                                TotalAmount = 42000.00m
-                            }
-                        }
-                    },
-                    new Order
-                    {
-                        Id = 2,
-                        OrderNumber = "OR20250702",
-                        CustomerId = _customer.Id,
-                        CustomerName = _customer.Name,
-                        Status = "已收款",
-                        SalesPersonName = "张飞",
-                        EffectiveDate = DateTime.Now.AddDays(-15),
-                        ExpiryDate = DateTime.Now.AddDays(350),
-                        CreatedAt = DateTime.Now.AddDays(-15),
-                        OrderItems = new ObservableCollection<OrderItem>
-                        {
-                            new OrderItem
-                            {
-                                Id = 2,
-                                ProductName = "学员照片处理工具",
-                                ProductSpecification = "1年",
-                                ProductUnit = "套",
-                                ProductPrice = 3600.00m,
-                                ActualPrice = 3000.00m,
-                                Quantity = 2,
-                                TotalAmount = 6000.00m
-                            }
-                        }
-                    }
-                };
+                    CustomerName = _customer.Name
+                });
 
                 OrderRecords.Clear();
                 foreach (var order in orders)

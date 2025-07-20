@@ -159,16 +159,8 @@ namespace Sellsys.WpfClient.ViewModels
         public ICommand LoadDataCommand { get; }
         public ICommand SearchCommand { get; }
         public ICommand ResetFiltersCommand { get; }
-        public ICommand AddOrderCommand { get; }
-        public ICommand EditOrderCommand { get; }
-        public ICommand DeleteOrderCommand { get; }
         public ICommand ViewOrderDetailsCommand { get; }
         public ICommand RefreshCommand { get; }
-
-        // Row-level commands (for DataGrid buttons)
-        public ICommand EditOrderRowCommand { get; }
-        public ICommand DeleteOrderRowCommand { get; }
-        public ICommand ViewOrderDetailsRowCommand { get; }
 
         #endregion
 
@@ -188,16 +180,8 @@ namespace Sellsys.WpfClient.ViewModels
             LoadDataCommand = new AsyncRelayCommand(async p => await LoadDataAsync());
             SearchCommand = new AsyncRelayCommand(async p => await SearchOrdersAsync());
             ResetFiltersCommand = new RelayCommand(p => ResetFilters());
-            AddOrderCommand = new RelayCommand(p => AddOrder());
-            EditOrderCommand = new RelayCommand(p => EditOrder(), p => SelectedOrder != null);
-            DeleteOrderCommand = new AsyncRelayCommand(async p => await DeleteOrderAsync(), p => SelectedOrder != null);
             ViewOrderDetailsCommand = new RelayCommand(p => ViewOrderDetails(), p => SelectedOrder != null);
             RefreshCommand = new AsyncRelayCommand(async p => await LoadOrdersAsync());
-
-            // Row-level commands
-            EditOrderRowCommand = new RelayCommand(p => EditOrderRow(p as Order), p => p is Order);
-            DeleteOrderRowCommand = new AsyncRelayCommand(async p => await DeleteOrderRowAsync(p as Order), p => p is Order);
-            ViewOrderDetailsRowCommand = new RelayCommand(p => ViewOrderDetailsRow(p as Order), p => p is Order);
 
             // Initialize filter data
             InitializeFilterData();

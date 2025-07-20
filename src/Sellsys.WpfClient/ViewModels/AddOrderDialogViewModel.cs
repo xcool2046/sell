@@ -1,6 +1,7 @@
 using Sellsys.WpfClient.Commands;
 using Sellsys.WpfClient.Models;
 using Sellsys.WpfClient.Services;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows;
 
@@ -25,6 +26,8 @@ namespace Sellsys.WpfClient.ViewModels
         private bool _isPendingPayment = true;
         private bool _isPaid;
         private Product? _selectedProduct;
+        private ObservableCollection<Employee> _salesPersons = new();
+        private Employee? _selectedSalesPerson;
 
         public AddOrderDialogViewModel(Customer customer)
         {
@@ -38,6 +41,9 @@ namespace Sellsys.WpfClient.ViewModels
 
             // Generate order number
             GenerateOrderNumber();
+
+            // Load sales persons
+            LoadSalesPersons();
         }
 
         public string CustomerName => _customer.Name;
@@ -138,6 +144,24 @@ namespace Sellsys.WpfClient.ViewModels
             set => SetProperty(ref _isPaid, value);
         }
 
+        public ObservableCollection<Employee> SalesPersons
+        {
+            get => _salesPersons;
+            set => SetProperty(ref _salesPersons, value);
+        }
+
+        public Employee? SelectedSalesPerson
+        {
+            get => _selectedSalesPerson;
+            set
+            {
+                if (SetProperty(ref _selectedSalesPerson, value))
+                {
+                    SalesPersonName = value?.Name ?? string.Empty;
+                }
+            }
+        }
+
         // Commands
         public ICommand SelectProductCommand { get; }
         public ICommand CancelCommand { get; }
@@ -199,7 +223,7 @@ namespace Sellsys.WpfClient.ViewModels
             TotalAmount = ActualPrice * Quantity;
         }
 
-        private void Save()
+        private async void Save()
         {
             try
             {
@@ -222,31 +246,80 @@ namespace Sellsys.WpfClient.ViewModels
                     return;
                 }
 
+                if (_selectedProduct == null)
+                {
+                    MessageBox.Show("请选择有效的产品", "验证错误", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
                 // Get order status
                 string orderStatus = IsPaid ? "已收款" : "待收款";
 
-                // Create order
-                var order = new Order
+                // Check if sales person is selected
+                if (SelectedSalesPerson == null)
                 {
-                    OrderNumber = OrderNumber,
+                    MessageBox.Show("请选择销售人员", "验证错误", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Create order DTO for API call
+                var orderDto = new OrderUpsertDto
+                {
                     CustomerId = _customer.Id,
-                    CustomerName = _customer.Name,
                     EffectiveDate = EffectiveDate,
                     ExpiryDate = ExpiryDate,
                     Status = orderStatus,
-                    SalesPersonName = SalesPersonName,
-                    CreatedAt = SignedTime
+                    SalesPersonId = SelectedSalesPerson.Id,
+                    PaymentReceivedDate = IsPaid ? DateTime.Now : null,
+                    OrderItems = new List<OrderItemUpsertDto>
+                    {
+                        new OrderItemUpsertDto
+                        {
+                            ProductId = _selectedProduct.Id,
+                            ActualPrice = ActualPrice,
+                            Quantity = Quantity,
+                            TotalAmount = ActualPrice * Quantity
+                        }
+                    }
                 };
 
-                // TODO: Call API to save the order
+                // Call API to save the order
+                await _apiService.CreateOrderAsync(orderDto);
                 MessageBox.Show("订单保存成功", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
-                
+
                 SaveCompleted?.Invoke(this, EventArgs.Empty);
                 Cancel();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"保存订单失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async void LoadSalesPersons()
+        {
+            try
+            {
+                var employees = await _apiService.GetEmployeesAsync();
+                SalesPersons.Clear();
+
+                // Add all employees to the list
+                foreach (var employee in employees)
+                {
+                    SalesPersons.Add(employee);
+                }
+
+                // Select the first sales person or the one from sales department
+                var defaultSalesPerson = employees.FirstOrDefault(e => e.DepartmentName == "销售部")
+                                        ?? employees.FirstOrDefault();
+                if (defaultSalesPerson != null)
+                {
+                    SelectedSalesPerson = defaultSalesPerson;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"加载销售人员失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

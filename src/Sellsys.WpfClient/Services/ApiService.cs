@@ -1924,6 +1924,7 @@ namespace Sellsys.WpfClient.Services
         public int ProductId { get; set; }
         public decimal ActualPrice { get; set; }
         public int Quantity { get; set; }
+        public decimal TotalAmount { get; set; }
     }
 
     // 订单搜索条件

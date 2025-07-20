@@ -133,7 +133,7 @@ namespace Sellsys.WpfClient.ViewModels
             }
         }
 
-        private void Save()
+        private async void Save()
         {
             try
             {
@@ -159,7 +159,25 @@ namespace Sellsys.WpfClient.ViewModels
                 _originalOrder.SalesPersonName = SalesPersonName;
                 _originalOrder.Status = orderStatus;
 
-                // TODO: Call API to update the order
+                // Call API to update the order
+                var orderDto = new OrderUpsertDto
+                {
+                    CustomerId = _originalOrder.CustomerId,
+                    EffectiveDate = EffectiveDate,
+                    ExpiryDate = ExpiryDate,
+                    Status = orderStatus,
+                    SalesPersonId = _originalOrder.SalesPersonId,
+                    PaymentReceivedDate = orderStatus == "已收款" ? DateTime.Now : null,
+                    OrderItems = _originalOrder.OrderItems.Select(item => new OrderItemUpsertDto
+                    {
+                        ProductId = item.ProductId,
+                        ActualPrice = item.ActualPrice,
+                        Quantity = item.Quantity,
+                        TotalAmount = item.ActualPrice * item.Quantity
+                    }).ToList()
+                };
+
+                await _apiService.UpdateOrderAsync(_originalOrder.Id, orderDto);
                 MessageBox.Show("订单更新成功", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
                 
                 SaveCompleted?.Invoke(this, EventArgs.Empty);

@@ -22,6 +22,8 @@
             <converters:OrderItemsToActualPricesConverter x:Key="OrderItemsToActualPricesConverter"/>
             <converters:OrderItemsToUnitsConverter x:Key="OrderItemsToUnitsConverter"/>
             <converters:BoolToActiveBackgroundConverter x:Key="BoolToActiveBackgroundConverter"/>
+            <converters:StringToBooleanConverter x:Key="StringToBooleanConverter"/>
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
             <!-- ViewModel to View mappings -->
