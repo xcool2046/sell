@@ -1,0 +1,194 @@
+<Window x:Class="Sellsys.WpfClient.Views.Dialogs.OrderRecordsDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="订单记录"
+        Height="600"
+        Width="1200"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="CanResize">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#409EFF" Padding="15">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="订单记录" 
+                               Foreground="White" 
+                               FontSize="18" 
+                               FontWeight="Bold"/>
+                    <TextBlock Text="{Binding CustomerName, StringFormat='客户单位：{0}'}" 
+                               Foreground="White" 
+                               FontSize="14" 
+                               Margin="0,5,0,0"/>
+                </StackPanel>
+                
+                <Button Grid.Column="1"
+                        Content="添加订单"
+                        Command="{Binding AddOrderCommand}"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Background="White"
+                        Foreground="#409EFF"
+                        Width="80"
+                        Height="32"/>
+            </Grid>
+        </Border>
+
+        <!-- Order Records List -->
+        <Border Grid.Row="1" 
+                BorderBrush="{StaticResource BorderBrush}" 
+                BorderThickness="1" 
+                Background="White"
+                Margin="0,10,0,10">
+            <Grid>
+                <!-- Loading Indicator -->
+                <Grid Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Grid.Background>
+                        <SolidColorBrush Color="White" Opacity="0.7"/>
+                    </Grid.Background>
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <ProgressBar IsIndeterminate="True" Width="200" Height="20" Margin="0,0,0,10"/>
+                        <TextBlock Text="正在加载..." 
+                                   Style="{StaticResource GlobalTextStyle}" 
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Data Grid -->
+                <DataGrid ItemsSource="{Binding OrderRecords}"
+                          SelectedItem="{Binding SelectedOrderRecord}"
+                          Style="{StaticResource StandardDataGridStyle}"
+                          ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
+                          RowStyle="{StaticResource DataGridRowStyle}">
+                    <DataGrid.Columns>
+                        <!-- 序号 -->
+                        <DataGridTextColumn Header="序号" Width="60" IsReadOnly="True">
+                            <DataGridTextColumn.Binding>
+                                <Binding RelativeSource="{RelativeSource AncestorType=DataGridRow}"
+                                         Converter="{StaticResource RowIndexConverter}"/>
+                            </DataGridTextColumn.Binding>
+                        </DataGridTextColumn>
+
+                        <!-- 订单编号 -->
+                        <DataGridTextColumn Header="订单编号" 
+                                            Binding="{Binding OrderNumber}" 
+                                            Width="120" 
+                                            IsReadOnly="True"/>
+
+                        <!-- 产品名称 -->
+                        <DataGridTextColumn Header="产品名称" 
+                                            Binding="{Binding ProductName}" 
+                                            Width="150" 
+                                            IsReadOnly="True"/>
+
+                        <!-- 型号规格 -->
+                        <DataGridTextColumn Header="型号规格" 
+                                            Binding="{Binding ModelSpecification}" 
+                                            Width="100" 
+                                            IsReadOnly="True"/>
+
+                        <!-- 产品定价 -->
+                        <DataGridTextColumn Header="产品定价" 
+                                            Binding="{Binding FormattedProductPrice}" 
+                                            Width="80" 
+                                            IsReadOnly="True"/>
+
+                        <!-- 实际售价 -->
+                        <DataGridTextColumn Header="实际售价" 
+                                            Binding="{Binding FormattedActualPrice}" 
+                                            Width="80" 
+                                            IsReadOnly="True"/>
+
+                        <!-- 数量 -->
+                        <DataGridTextColumn Header="数量" 
+                                            Binding="{Binding Quantity}" 
+                                            Width="60" 
+                                            IsReadOnly="True"/>
+
+                        <!-- 单位 -->
+                        <DataGridTextColumn Header="单位" 
+                                            Binding="{Binding Unit}" 
+                                            Width="60" 
+                                            IsReadOnly="True"/>
+
+                        <!-- 订单金额 -->
+                        <DataGridTextColumn Header="订单金额" 
+                                            Binding="{Binding FormattedTotalAmount}" 
+                                            Width="80" 
+                                            IsReadOnly="True"/>
+
+                        <!-- 生效日期 -->
+                        <DataGridTextColumn Header="生效日期" 
+                                            Binding="{Binding FormattedEffectiveDate}" 
+                                            Width="100" 
+                                            IsReadOnly="True"/>
+
+                        <!-- 到期日期 -->
+                        <DataGridTextColumn Header="到期日期" 
+                                            Binding="{Binding FormattedExpiryDate}" 
+                                            Width="100" 
+                                            IsReadOnly="True"/>
+
+                        <!-- 销售姓名 -->
+                        <DataGridTextColumn Header="销售姓名" 
+                                            Binding="{Binding SalesPersonName}" 
+                                            Width="80" 
+                                            IsReadOnly="True"/>
+
+                        <!-- 订单状态 -->
+                        <DataGridTextColumn Header="订单状态" 
+                                            Binding="{Binding Status}" 
+                                            Width="80" 
+                                            IsReadOnly="True"/>
+
+                        <!-- 操作 -->
+                        <DataGridTemplateColumn Header="操作" Width="120">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Content="编辑"
+                                                Command="{Binding DataContext.EditOrderCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                CommandParameter="{Binding}"
+                                                Style="{StaticResource BlueButtonStyle}"
+                                                Width="50"
+                                                Height="25"
+                                                Margin="0,0,5,0"/>
+                                        <Button Content="删除"
+                                                Command="{Binding DataContext.DeleteOrderCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                CommandParameter="{Binding}"
+                                                Style="{StaticResource DeleteButtonStyle}"
+                                                Width="50"
+                                                Height="25"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+
+        <!-- Footer -->
+        <Border Grid.Row="2" Padding="15">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="关闭"
+                        Command="{Binding CloseCommand}"
+                        Style="{StaticResource GrayButtonStyle}"
+                        Width="80"
+                        Height="32"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
