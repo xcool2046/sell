@@ -139,6 +139,7 @@ namespace Sellsys.WpfClient.ViewModels
         public ICommand SelectAllCommand { get; }
         public ICommand ViewContactRecordsCommand { get; }
         public ICommand ViewOrdersCommand { get; }
+        public ICommand ViewOrderRecordsCommand { get; }
 
         public SalesManagementViewModel()
         {
@@ -161,6 +162,7 @@ namespace Sellsys.WpfClient.ViewModels
             SelectAllCommand = new RelayCommand(p => ToggleSelectAll());
             ViewContactRecordsCommand = new RelayCommand(p => ViewContactRecords(p as Customer));
             ViewOrdersCommand = new RelayCommand(p => ViewOrders(p as Customer));
+            ViewOrderRecordsCommand = new RelayCommand(p => ViewOrderRecords(p as Customer));
 
             // Initialize filter data
             InitializeFilters();
@@ -478,8 +480,26 @@ namespace Sellsys.WpfClient.ViewModels
         {
             if (customer == null) return;
 
-            // TODO: Show ContactRecordsDialog
-            MessageBox.Show($"查看联系记录: {customer.Name}", "联系记录", MessageBoxButton.OK, MessageBoxImage.Information);
+            try
+            {
+                var dialog = new ContactRecordsDialog();
+                var viewModel = new ContactRecordsDialogViewModel(customer);
+                dialog.DataContext = viewModel;
+
+                // Set owner to main window for proper positioning
+                dialog.Owner = Application.Current.MainWindow;
+
+                viewModel.CloseRequested += (sender, args) =>
+                {
+                    dialog.Close();
+                };
+
+                dialog.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"打开联系记录对话框失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void ViewOrders(Customer? customer)
@@ -488,6 +508,32 @@ namespace Sellsys.WpfClient.ViewModels
 
             // TODO: Show OrdersDialog
             MessageBox.Show($"查看订单: {customer.Name}", "订单记录", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void ViewOrderRecords(Customer? customer)
+        {
+            if (customer == null) return;
+
+            try
+            {
+                var dialog = new OrderRecordsDialog();
+                var viewModel = new OrderRecordsDialogViewModel(customer);
+                dialog.DataContext = viewModel;
+
+                // Set owner to main window for proper positioning
+                dialog.Owner = Application.Current.MainWindow;
+
+                viewModel.CloseRequested += (sender, args) =>
+                {
+                    dialog.Close();
+                };
+
+                dialog.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"打开订单记录对话框失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
 

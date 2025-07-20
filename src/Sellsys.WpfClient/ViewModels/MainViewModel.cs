@@ -48,27 +48,59 @@ namespace Sellsys.WpfClient.ViewModels
 
         public MainViewModel()
         {
-            // Instantiate ViewModels
-            ProductManagementVM = new ProductManagementViewModel();
-            CustomerManagementVM = new CustomerManagementViewModel();
-            SalesManagementVM = new SalesManagementViewModel();
-            OrderManagementVM = new OrderManagementViewModel();
-            AfterSalesVM = new AfterSalesViewModel();
-            FinanceManagementVM = new FinanceManagementViewModel();
-            SystemSettingsVM = new SystemSettingsViewModel();
+            try
+            {
+                System.Diagnostics.Debug.WriteLine("MainViewModel: Starting initialization...");
 
-            // Instantiate Commands
-            ShowCustomerManagementViewCommand = new RelayCommand(p => SwitchView("CustomerManagement", CustomerManagementVM));
-            ShowSalesManagementViewCommand = new RelayCommand(p => SwitchView("SalesManagement", SalesManagementVM));
-            ShowOrderManagementViewCommand = new RelayCommand(p => SwitchView("OrderManagement", OrderManagementVM));
-            ShowAfterSalesViewCommand = new RelayCommand(p => SwitchView("AfterSales", AfterSalesVM));
-            ShowProductManagementViewCommand = new RelayCommand(p => SwitchView("ProductManagement", ProductManagementVM));
-            ShowFinanceManagementViewCommand = new RelayCommand(p => SwitchView("FinanceManagement", FinanceManagementVM));
-            ShowSystemSettingsViewCommand = new RelayCommand(p => SwitchView("SystemSettings", SystemSettingsVM));
+                // Instantiate ViewModels
+                System.Diagnostics.Debug.WriteLine("MainViewModel: Creating ProductManagementViewModel...");
+                ProductManagementVM = new ProductManagementViewModel();
 
-            // Set the initial view to Product Management for testing
-            CurrentView = ProductManagementVM;
-            CurrentViewName = "ProductManagement";
+                System.Diagnostics.Debug.WriteLine("MainViewModel: Creating CustomerManagementViewModel...");
+                CustomerManagementVM = new CustomerManagementViewModel();
+
+                System.Diagnostics.Debug.WriteLine("MainViewModel: Creating SalesManagementViewModel...");
+                SalesManagementVM = new SalesManagementViewModel();
+
+                System.Diagnostics.Debug.WriteLine("MainViewModel: Creating OrderManagementViewModel...");
+                OrderManagementVM = new OrderManagementViewModel();
+
+                System.Diagnostics.Debug.WriteLine("MainViewModel: Creating AfterSalesViewModel...");
+                AfterSalesVM = new AfterSalesViewModel();
+
+                System.Diagnostics.Debug.WriteLine("MainViewModel: Creating FinanceManagementViewModel...");
+                FinanceManagementVM = new FinanceManagementViewModel();
+
+                System.Diagnostics.Debug.WriteLine("MainViewModel: Creating SystemSettingsViewModel...");
+                SystemSettingsVM = new SystemSettingsViewModel();
+
+                System.Diagnostics.Debug.WriteLine("MainViewModel: All ViewModels created successfully");
+
+                // Instantiate Commands
+                System.Diagnostics.Debug.WriteLine("MainViewModel: Creating commands...");
+                ShowCustomerManagementViewCommand = new RelayCommand(p => SwitchView("CustomerManagement", CustomerManagementVM));
+                ShowSalesManagementViewCommand = new RelayCommand(p => SwitchView("SalesManagement", SalesManagementVM));
+                ShowOrderManagementViewCommand = new RelayCommand(p => SwitchView("OrderManagement", OrderManagementVM));
+                ShowAfterSalesViewCommand = new RelayCommand(p => SwitchView("AfterSales", AfterSalesVM));
+                ShowProductManagementViewCommand = new RelayCommand(p => SwitchView("ProductManagement", ProductManagementVM));
+                ShowFinanceManagementViewCommand = new RelayCommand(p => SwitchView("FinanceManagement", FinanceManagementVM));
+                ShowSystemSettingsViewCommand = new RelayCommand(p => SwitchView("SystemSettings", SystemSettingsVM));
+
+                System.Diagnostics.Debug.WriteLine("MainViewModel: Commands created successfully");
+
+                // Set the initial view to Product Management for testing
+                System.Diagnostics.Debug.WriteLine("MainViewModel: Setting initial view...");
+                CurrentView = ProductManagementVM;
+                CurrentViewName = "ProductManagement";
+
+                System.Diagnostics.Debug.WriteLine("MainViewModel: Initialization completed successfully");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"MainViewModel: Exception during initialization: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"MainViewModel: Stack trace: {ex.StackTrace}");
+                throw;
+            }
         }
 
         private async void SwitchView(string viewName, ViewModelBase viewModel)
