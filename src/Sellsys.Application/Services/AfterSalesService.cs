@@ -4,6 +4,7 @@ using Sellsys.Application.Interfaces;
 using Sellsys.CrossCutting.Common;
 using Sellsys.Domain.Entities;
 using Sellsys.Infrastructure.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -18,6 +19,167 @@ namespace Sellsys.Application.Services
         public AfterSalesService(SellsysDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<ApiResponse<List<CustomerAfterSalesDto>>> GetCustomersWithAfterSalesInfoAsync()
+        {
+            try
+            {
+                var customers = await _context.Customers
+                    .Include(c => c.Contacts)
+                    .Include(c => c.SalesPerson)
+                    .Include(c => c.SupportPerson)
+                    .Include(c => c.AfterSalesRecords)
+                    .Select(c => new CustomerAfterSalesDto
+                    {
+                        CustomerId = c.Id,
+                        CustomerName = c.Name,
+                        Province = c.Province,
+                        City = c.City,
+                        ContactName = c.Contacts.FirstOrDefault(contact => contact.IsPrimary) != null
+                            ? c.Contacts.FirstOrDefault(contact => contact.IsPrimary)!.Name
+                            : c.Contacts.FirstOrDefault() != null
+                                ? c.Contacts.FirstOrDefault()!.Name
+                                : null,
+                        ContactPhone = c.Contacts.FirstOrDefault(contact => contact.IsPrimary) != null
+                            ? c.Contacts.FirstOrDefault(contact => contact.IsPrimary)!.Phone
+                            : c.Contacts.FirstOrDefault() != null
+                                ? c.Contacts.FirstOrDefault()!.Phone
+                                : null,
+                        ContactCount = c.Contacts.Count,
+                        SalesPersonId = c.SalesPersonId,
+                        SalesPersonName = c.SalesPerson != null ? c.SalesPerson.Name : null,
+                        SupportPersonId = c.SupportPersonId,
+                        SupportPersonName = c.SupportPerson != null ? c.SupportPerson.Name : null,
+                        ServiceRecordCount = c.AfterSalesRecords.Count,
+                        UpdatedAt = c.AfterSalesRecords.Any()
+                            ? c.AfterSalesRecords.Max(r => r.UpdatedAt)
+                            : c.CreatedAt,
+                        CreatedAt = c.CreatedAt,
+                        LatestRecordStatus = c.AfterSalesRecords.Any()
+                            ? c.AfterSalesRecords.OrderByDescending(r => r.UpdatedAt).First().Status
+                            : null,
+                        PendingRecordCount = c.AfterSalesRecords.Count(r => r.Status == "待处理"),
+                        ProcessingRecordCount = c.AfterSalesRecords.Count(r => r.Status == "处理中"),
+                        CompletedRecordCount = c.AfterSalesRecords.Count(r => r.Status == "处理完成")
+                    })
+                    .OrderByDescending(c => c.UpdatedAt)
+                    .ToListAsync();
+
+                return new ApiResponse<List<CustomerAfterSalesDto>>
+                {
+                    IsSuccess = true,
+                    Data = customers,
+                    Message = "获取客户售后信息成功"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<List<CustomerAfterSalesDto>>
+                {
+                    IsSuccess = false,
+                    Message = $"获取客户售后信息失败: {ex.Message}",
+                    StatusCode = HttpStatusCode.InternalServerError
+                };
+            }
+        }
+
+        public async Task<ApiResponse<List<CustomerAfterSalesDto>>> SearchCustomersWithAfterSalesInfoAsync(
+            string? customerName = null,
+            string? supportPersonName = null,
+            string? status = null)
+        {
+            try
+            {
+                var query = _context.Customers
+                    .Include(c => c.Contacts)
+                    .Include(c => c.SalesPerson)
+                    .Include(c => c.SupportPerson)
+                    .Include(c => c.AfterSalesRecords)
+                    .AsQueryable();
+
+                // 按客户名称筛选
+                if (!string.IsNullOrWhiteSpace(customerName))
+                {
+                    query = query.Where(c => c.Name.Contains(customerName));
+                }
+
+                // 按客服人员筛选
+                if (!string.IsNullOrWhiteSpace(supportPersonName) && supportPersonName != "全部")
+                {
+                    query = query.Where(c => c.SupportPerson != null && c.SupportPerson.Name.Contains(supportPersonName));
+                }
+
+                // 按状态筛选
+                if (!string.IsNullOrWhiteSpace(status) && status != "全部")
+                {
+                    switch (status)
+                    {
+                        case "待处理":
+                            query = query.Where(c => c.AfterSalesRecords.Any(r => r.Status == "待处理"));
+                            break;
+                        case "处理中":
+                            query = query.Where(c => c.AfterSalesRecords.Any(r => r.Status == "处理中"));
+                            break;
+                        case "处理完成":
+                            query = query.Where(c => c.AfterSalesRecords.Any(r => r.Status == "处理完成"));
+                            break;
+                    }
+                }
+
+                var customers = await query
+                    .Select(c => new CustomerAfterSalesDto
+                    {
+                        CustomerId = c.Id,
+                        CustomerName = c.Name,
+                        Province = c.Province,
+                        City = c.City,
+                        ContactName = c.Contacts.FirstOrDefault(contact => contact.IsPrimary) != null
+                            ? c.Contacts.FirstOrDefault(contact => contact.IsPrimary)!.Name
+                            : c.Contacts.FirstOrDefault() != null
+                                ? c.Contacts.FirstOrDefault()!.Name
+                                : null,
+                        ContactPhone = c.Contacts.FirstOrDefault(contact => contact.IsPrimary) != null
+                            ? c.Contacts.FirstOrDefault(contact => contact.IsPrimary)!.Phone
+                            : c.Contacts.FirstOrDefault() != null
+                                ? c.Contacts.FirstOrDefault()!.Phone
+                                : null,
+                        ContactCount = c.Contacts.Count,
+                        SalesPersonId = c.SalesPersonId,
+                        SalesPersonName = c.SalesPerson != null ? c.SalesPerson.Name : null,
+                        SupportPersonId = c.SupportPersonId,
+                        SupportPersonName = c.SupportPerson != null ? c.SupportPerson.Name : null,
+                        ServiceRecordCount = c.AfterSalesRecords.Count,
+                        UpdatedAt = c.AfterSalesRecords.Any()
+                            ? c.AfterSalesRecords.Max(r => r.UpdatedAt)
+                            : c.CreatedAt,
+                        CreatedAt = c.CreatedAt,
+                        LatestRecordStatus = c.AfterSalesRecords.Any()
+                            ? c.AfterSalesRecords.OrderByDescending(r => r.UpdatedAt).First().Status
+                            : null,
+                        PendingRecordCount = c.AfterSalesRecords.Count(r => r.Status == "待处理"),
+                        ProcessingRecordCount = c.AfterSalesRecords.Count(r => r.Status == "处理中"),
+                        CompletedRecordCount = c.AfterSalesRecords.Count(r => r.Status == "处理完成")
+                    })
+                    .OrderByDescending(c => c.UpdatedAt)
+                    .ToListAsync();
+
+                return new ApiResponse<List<CustomerAfterSalesDto>>
+                {
+                    IsSuccess = true,
+                    Data = customers,
+                    Message = "搜索客户售后信息成功"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<List<CustomerAfterSalesDto>>
+                {
+                    IsSuccess = false,
+                    Message = $"搜索客户售后信息失败: {ex.Message}",
+                    StatusCode = HttpStatusCode.InternalServerError
+                };
+            }
         }
 
         public async Task<ApiResponse<AfterSalesRecordDto>> CreateAfterSalesRecordAsync(AfterSalesRecordUpsertDto recordDto)

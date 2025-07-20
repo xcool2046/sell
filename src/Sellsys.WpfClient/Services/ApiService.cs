@@ -804,6 +804,53 @@ namespace Sellsys.WpfClient.Services
         }
 
         // After Sales API methods
+        public async Task<List<CustomerAfterSales>> GetCustomersWithAfterSalesInfoAsync()
+        {
+            try
+            {
+                var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<CustomerAfterSalesDto>>>($"{BaseUrl}/aftersales/customers");
+                if (response != null && response.IsSuccess && response.Data != null)
+                {
+                    return response.Data.Select(MapToCustomerAfterSales).ToList();
+                }
+                throw new Exception(response?.Message ?? "获取客户售后信息失败");
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new Exception($"网络请求失败: {ex.Message}");
+            }
+        }
+
+        public async Task<List<CustomerAfterSales>> SearchCustomersWithAfterSalesInfoAsync(
+            string? customerName = null,
+            string? supportPersonName = null,
+            string? status = null)
+        {
+            try
+            {
+                var queryParams = new List<string>();
+                if (!string.IsNullOrWhiteSpace(customerName))
+                    queryParams.Add($"customerName={Uri.EscapeDataString(customerName)}");
+                if (!string.IsNullOrWhiteSpace(supportPersonName))
+                    queryParams.Add($"supportPersonName={Uri.EscapeDataString(supportPersonName)}");
+                if (!string.IsNullOrWhiteSpace(status))
+                    queryParams.Add($"status={Uri.EscapeDataString(status)}");
+
+                var queryString = queryParams.Count > 0 ? "?" + string.Join("&", queryParams) : "";
+                var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<CustomerAfterSalesDto>>>($"{BaseUrl}/aftersales/customers/search{queryString}");
+
+                if (response != null && response.IsSuccess && response.Data != null)
+                {
+                    return response.Data.Select(MapToCustomerAfterSales).ToList();
+                }
+                throw new Exception(response?.Message ?? "搜索客户售后信息失败");
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new Exception($"网络请求失败: {ex.Message}");
+            }
+        }
+
         public async Task<List<AfterSalesRecord>> GetAfterSalesRecordsAsync()
         {
             try
@@ -1552,6 +1599,31 @@ namespace Sellsys.WpfClient.Services
             };
         }
 
+        private static CustomerAfterSales MapToCustomerAfterSales(CustomerAfterSalesDto dto)
+        {
+            return new CustomerAfterSales
+            {
+                CustomerId = dto.CustomerId,
+                CustomerName = dto.CustomerName,
+                Province = dto.Province,
+                City = dto.City,
+                ContactName = dto.ContactName,
+                ContactPhone = dto.ContactPhone,
+                ContactCount = dto.ContactCount,
+                SalesPersonId = dto.SalesPersonId,
+                SalesPersonName = dto.SalesPersonName,
+                SupportPersonId = dto.SupportPersonId,
+                SupportPersonName = dto.SupportPersonName,
+                ServiceRecordCount = dto.ServiceRecordCount,
+                UpdatedAt = dto.UpdatedAt,
+                CreatedAt = dto.CreatedAt,
+                LatestRecordStatus = dto.LatestRecordStatus,
+                PendingRecordCount = dto.PendingRecordCount,
+                ProcessingRecordCount = dto.ProcessingRecordCount,
+                CompletedRecordCount = dto.CompletedRecordCount
+            };
+        }
+
         private static AfterSalesRecord MapToAfterSalesRecord(AfterSalesRecordDto dto)
         {
             return new AfterSalesRecord
@@ -1953,6 +2025,28 @@ namespace Sellsys.WpfClient.Services
     }
 
     // After Sales DTO classes
+    public class CustomerAfterSalesDto
+    {
+        public int CustomerId { get; set; }
+        public string CustomerName { get; set; } = string.Empty;
+        public string? Province { get; set; }
+        public string? City { get; set; }
+        public string? ContactName { get; set; }
+        public string? ContactPhone { get; set; }
+        public int ContactCount { get; set; }
+        public int? SalesPersonId { get; set; }
+        public string? SalesPersonName { get; set; }
+        public int? SupportPersonId { get; set; }
+        public string? SupportPersonName { get; set; }
+        public int ServiceRecordCount { get; set; }
+        public DateTime UpdatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public string? LatestRecordStatus { get; set; }
+        public int PendingRecordCount { get; set; }
+        public int ProcessingRecordCount { get; set; }
+        public int CompletedRecordCount { get; set; }
+    }
+
     public class AfterSalesRecordDto
     {
         public int Id { get; set; }

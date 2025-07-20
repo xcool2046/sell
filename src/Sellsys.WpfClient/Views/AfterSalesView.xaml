@@ -82,10 +82,10 @@
                     </StackPanel>
                 </Grid>
 
-                <!-- After Sales Records Data Grid -->
-                <DataGrid x:Name="AfterSalesRecordsDataGrid"
-                          ItemsSource="{Binding AfterSalesRecords}"
-                          SelectedItem="{Binding SelectedRecord}"
+                <!-- Customer After Sales Data Grid -->
+                <DataGrid x:Name="CustomerAfterSalesDataGrid"
+                          ItemsSource="{Binding CustomerAfterSales}"
+                          SelectedItem="{Binding SelectedCustomer}"
                           Style="{StaticResource BlueHeaderDataGridStyle}"
                           AutoGenerateColumns="False">
                     <DataGrid.Columns>
@@ -118,20 +118,30 @@
                                             IsReadOnly="True"/>
 
                         <!-- 联系人 -->
-                        <DataGridTextColumn Header="联系人"
-                                            Binding="{Binding ContactName}"
-                                            Width="80"
-                                            IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="联系人" Width="100">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0} ({1}人)">
+                                                <Binding Path="ContactName" TargetNullValue="主联系人"/>
+                                                <Binding Path="ContactCount"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
                         <!-- 销售 -->
                         <DataGridTextColumn Header="销售"
-                                            Binding="{Binding SalesPersonName}"
+                                            Binding="{Binding SalesPersonDisplay}"
                                             Width="80"
                                             IsReadOnly="True"/>
 
                         <!-- 客服 -->
                         <DataGridTextColumn Header="客服"
-                                            Binding="{Binding SupportPersonName}"
+                                            Binding="{Binding SupportPersonDisplay}"
                                             Width="80"
                                             IsReadOnly="True"/>
 

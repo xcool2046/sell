@@ -3,21 +3,22 @@ using Sellsys.WpfClient.Models;
 using Sellsys.WpfClient.Services;
 using Sellsys.WpfClient.ViewModels.Dialogs;
 using Sellsys.WpfClient.Views.Dialogs;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows;
 
 namespace Sellsys.WpfClient.ViewModels
 {
     public class AfterSalesViewModel : ViewModelBase
     {
         private readonly ApiService _apiService;
-        private ObservableCollection<AfterSalesRecord> _afterSalesRecords;
+        private ObservableCollection<CustomerAfterSales> _customerAfterSales;
         private ObservableCollection<Customer> _customers;
         private ObservableCollection<Employee> _employees;
-        private AfterSalesRecord? _selectedRecord;
+        private CustomerAfterSales? _selectedCustomer;
         private bool _isLoading;
 
         // 搜索过滤字段
@@ -25,10 +26,10 @@ namespace Sellsys.WpfClient.ViewModels
         private string? _selectedCustomerService;
         private string? _selectedStatus;
 
-        public ObservableCollection<AfterSalesRecord> AfterSalesRecords
+        public ObservableCollection<CustomerAfterSales> CustomerAfterSales
         {
-            get => _afterSalesRecords;
-            set => SetProperty(ref _afterSalesRecords, value);
+            get => _customerAfterSales;
+            set => SetProperty(ref _customerAfterSales, value);
         }
 
         public ObservableCollection<Customer> Customers
@@ -45,10 +46,10 @@ namespace Sellsys.WpfClient.ViewModels
 
 
 
-        public AfterSalesRecord? SelectedRecord
+        public CustomerAfterSales? SelectedCustomer
         {
-            get => _selectedRecord;
-            set => SetProperty(ref _selectedRecord, value);
+            get => _selectedCustomer;
+            set => SetProperty(ref _selectedCustomer, value);
         }
 
         public bool IsLoading
@@ -105,7 +106,7 @@ namespace Sellsys.WpfClient.ViewModels
         public AfterSalesViewModel()
         {
             _apiService = new ApiService();
-            _afterSalesRecords = new ObservableCollection<AfterSalesRecord>();
+            _customerAfterSales = new ObservableCollection<CustomerAfterSales>();
             _customers = new ObservableCollection<Customer>();
             _employees = new ObservableCollection<Employee>();
 
@@ -113,12 +114,12 @@ namespace Sellsys.WpfClient.ViewModels
             LoadDataCommand = new AsyncRelayCommand(async p => await LoadAfterSalesDataAsync());
             SearchCommand = new AsyncRelayCommand(async p => await SearchRecordsAsync());
             ResetFiltersCommand = new RelayCommand(p => ResetFilters());
-            ViewRecordsCommand = new RelayCommand(p => ViewRecords(), p => SelectedRecord != null);
+            ViewRecordsCommand = new RelayCommand(p => ViewRecords(), p => SelectedCustomer != null);
             RefreshCommand = new AsyncRelayCommand(async p => await LoadAfterSalesDataAsync());
 
             // Row-level commands
-            ViewRecordsRowCommand = new RelayCommand(p => ViewRecordsRow(p as AfterSalesRecord), p => p is AfterSalesRecord);
-            ViewServiceRecordsCommand = new RelayCommand(p => ViewServiceRecords(p as AfterSalesRecord), p => p is AfterSalesRecord);
+            ViewRecordsRowCommand = new RelayCommand(p => ViewRecordsRow(p as CustomerAfterSales), p => p is CustomerAfterSales);
+            ViewServiceRecordsCommand = new RelayCommand(p => ViewServiceRecords(p as CustomerAfterSales), p => p is CustomerAfterSales);
 
             // Note: Data loading is now triggered manually or when view becomes active
             // This prevents API calls during application startup
@@ -138,25 +139,17 @@ namespace Sellsys.WpfClient.ViewModels
                 IsLoading = true;
 
                 // Load all required data
-                var recordsTask = _apiService.GetAfterSalesRecordsAsync();
+                var customerAfterSalesTask = _apiService.GetCustomersWithAfterSalesInfoAsync();
                 var customersTask = _apiService.GetCustomersAsync();
                 var employeesTask = _apiService.GetEmployeesAsync();
 
-                await Task.WhenAll(recordsTask, customersTask, employeesTask);
+                await Task.WhenAll(customerAfterSalesTask, customersTask, employeesTask);
 
                 // Update collections
-                AfterSalesRecords.Clear();
-                var records = recordsTask.Result.OrderByDescending(r => r.CreatedAt).ToList();
-
-                // 计算每个客户的记录数量
-                var customerRecordCounts = records.GroupBy(r => r.CustomerId)
-                    .ToDictionary(g => g.Key, g => g.Count());
-
-                foreach (var record in records)
+                CustomerAfterSales.Clear();
+                foreach (var customerAfterSales in customerAfterSalesTask.Result)
                 {
-                    // 设置客服记录数量
-                    record.ServiceRecordCount = customerRecordCounts.GetValueOrDefault(record.CustomerId, 0);
-                    AfterSalesRecords.Add(record);
+                    CustomerAfterSales.Add(customerAfterSales);
                 }
 
                 Customers.Clear();
@@ -203,30 +196,21 @@ namespace Sellsys.WpfClient.ViewModels
                 IsLoading = true;
 
                 // 使用后端搜索API
-                var filteredRecords = await _apiService.SearchAfterSalesRecordsAsync(
+                var filteredCustomers = await _apiService.SearchCustomersWithAfterSalesInfoAsync(
                     customerName: SelectedCustomerName,
-                    province: null,
-                    city: null,
+                    supportPersonName: SelectedCustomerService,
                     status: SelectedStatus
                 );
 
-                AfterSalesRecords.Clear();
-                var records = filteredRecords.OrderByDescending(r => r.CreatedAt).ToList();
-
-                // 计算每个客户的记录数量
-                var customerRecordCounts = records.GroupBy(r => r.CustomerId)
-                    .ToDictionary(g => g.Key, g => g.Count());
-
-                foreach (var record in records)
+                CustomerAfterSales.Clear();
+                foreach (var customer in filteredCustomers)
                 {
-                    // 设置客服记录数量
-                    record.ServiceRecordCount = customerRecordCounts.GetValueOrDefault(record.CustomerId, 0);
-                    AfterSalesRecords.Add(record);
+                    CustomerAfterSales.Add(customer);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"搜索售后记录失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"搜索客户售后信息失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally
             {
@@ -236,16 +220,16 @@ namespace Sellsys.WpfClient.ViewModels
 
         private void ViewRecords()
         {
-            if (SelectedRecord == null) return;
-            ViewRecordsRow(SelectedRecord);
+            if (SelectedCustomer == null) return;
+            ViewRecordsRow(SelectedCustomer);
         }
 
-        private void ViewRecordsRow(AfterSalesRecord? record)
+        private void ViewRecordsRow(CustomerAfterSales? customerAfterSales)
         {
-            if (record == null) return;
+            if (customerAfterSales == null) return;
 
             // 找到对应的客户
-            var customer = Customers.FirstOrDefault(c => c.Id == record.CustomerId);
+            var customer = Customers.FirstOrDefault(c => c.Id == customerAfterSales.CustomerId);
             if (customer == null)
             {
                 MessageBox.Show("未找到对应的客户信息", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -272,12 +256,12 @@ namespace Sellsys.WpfClient.ViewModels
             SelectedStatus = null;
         }
 
-        private void ViewServiceRecords(AfterSalesRecord? record)
+        private void ViewServiceRecords(CustomerAfterSales? customerAfterSales)
         {
-            if (record == null) return;
+            if (customerAfterSales == null) return;
 
             // 使用与ViewRecordsRow相同的逻辑
-            ViewRecordsRow(record);
+            ViewRecordsRow(customerAfterSales);
         }
 
 

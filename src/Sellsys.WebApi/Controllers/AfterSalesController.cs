@@ -17,6 +17,34 @@ namespace Sellsys.WebApi.Controllers
         }
 
         /// <summary>
+        /// 获取客户售后服务聚合信息（用于售后服务主界面）
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("customers")]
+        public async Task<ActionResult<ApiResponse<List<CustomerAfterSalesDto>>>> GetCustomersWithAfterSalesInfo()
+        {
+            var response = await _afterSalesService.GetCustomersWithAfterSalesInfoAsync();
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// 搜索客户售后服务聚合信息
+        /// </summary>
+        /// <param name="customerName">客户名称</param>
+        /// <param name="supportPersonName">客服人员名称</param>
+        /// <param name="status">处理状态</param>
+        /// <returns></returns>
+        [HttpGet("customers/search")]
+        public async Task<ActionResult<ApiResponse<List<CustomerAfterSalesDto>>>> SearchCustomersWithAfterSalesInfo(
+            [FromQuery] string? customerName = null,
+            [FromQuery] string? supportPersonName = null,
+            [FromQuery] string? status = null)
+        {
+            var response = await _afterSalesService.SearchCustomersWithAfterSalesInfoAsync(customerName, supportPersonName, status);
+            return Ok(response);
+        }
+
+        /// <summary>
         /// 获取所有售后记录
         /// </summary>
         /// <returns></returns>
