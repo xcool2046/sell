@@ -182,20 +182,22 @@ namespace Sellsys.WebApi.Controllers
         /// 确认收款（兼容原有API）
         /// </summary>
         /// <param name="orderId">订单ID</param>
-        /// <param name="paymentDate">收款日期</param>
+        /// <param name="request">收款请求</param>
         /// <returns>操作结果</returns>
         [HttpPost("orders/{orderId}/confirm-payment")]
-        public async Task<IActionResult> ConfirmPayment(int orderId, [FromBody] DateTime? paymentDate = null)
+        public async Task<IActionResult> ConfirmPayment(int orderId, [FromBody] ConfirmPaymentRequest request)
         {
-            var updateDto = new UpdatePaymentInfoDto
-            {
-                OrderId = orderId,
-                PaymentReceivedDate = paymentDate ?? DateTime.Now,
-                ReceivedAmount = 0 // 这里需要根据实际业务逻辑来设置
-            };
-
-            var response = await _financeService.UpdatePaymentInfoAsync(updateDto);
+            var paymentDate = request?.PaymentDate ?? DateTime.Now;
+            var response = await _financeService.ConfirmFullPaymentAsync(orderId, paymentDate);
             return new ObjectResult(response) { StatusCode = (int)response.StatusCode };
         }
+    }
+
+    /// <summary>
+    /// 确认收款请求
+    /// </summary>
+    public class ConfirmPaymentRequest
+    {
+        public DateTime PaymentDate { get; set; }
     }
 }

@@ -22,6 +22,14 @@ namespace Sellsys.Application.Interfaces
         Task<ApiResponse<FinanceFilterOptionsDto>> GetFilterOptionsAsync();
 
         /// <summary>
+        /// 确认全额收款
+        /// </summary>
+        /// <param name="orderId">订单ID</param>
+        /// <param name="paymentDate">收款日期</param>
+        /// <returns>操作结果</returns>
+        Task<ApiResponse<FinanceOperationResultDto>> ConfirmFullPaymentAsync(int orderId, DateTime paymentDate);
+
+        /// <summary>
         /// 更新收款信息
         /// </summary>
         /// <param name="updateDto">更新信息</param>

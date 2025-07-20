@@ -208,6 +208,60 @@ namespace Sellsys.Application.Services
         }
 
         /// <summary>
+        /// 确认全额收款
+        /// </summary>
+        public async Task<ApiResponse<FinanceOperationResultDto>> ConfirmFullPaymentAsync(int orderId, DateTime paymentDate)
+        {
+            try
+            {
+                var order = await _context.Orders
+                    .Include(o => o.OrderItems)
+                    .FirstOrDefaultAsync(o => o.Id == orderId);
+
+                if (order == null)
+                {
+                    return new ApiResponse<FinanceOperationResultDto>
+                    {
+                        IsSuccess = false,
+                        Message = "订单不存在",
+                        StatusCode = HttpStatusCode.NotFound
+                    };
+                }
+
+                // 确认全额收款
+                order.PaymentReceivedDate = paymentDate;
+                order.Status = "已收款";
+                order.UpdatedAt = DateTime.UtcNow;
+
+                await _context.SaveChangesAsync();
+
+                var result = new FinanceOperationResultDto
+                {
+                    IsSuccess = true,
+                    Message = "确认收款成功",
+                    AffectedOrderCount = 1
+                };
+
+                return new ApiResponse<FinanceOperationResultDto>
+                {
+                    IsSuccess = true,
+                    Data = result,
+                    Message = "确认收款成功",
+                    StatusCode = HttpStatusCode.OK
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse<FinanceOperationResultDto>
+                {
+                    IsSuccess = false,
+                    Message = $"确认收款失败: {ex.Message}",
+                    StatusCode = HttpStatusCode.InternalServerError
+                };
+            }
+        }
+
+        /// <summary>
         /// 更新收款信息
         /// </summary>
         public async Task<ApiResponse<FinanceOperationResultDto>> UpdatePaymentInfoAsync(UpdatePaymentInfoDto updateDto)

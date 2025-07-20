@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Sellsys.WpfClient.Views"
+             xmlns:converters="clr-namespace:Sellsys.WpfClient.Converters"
              mc:Ignorable="d"
              d:DesignHeight="800" d:DesignWidth="1600">
 
@@ -11,6 +12,7 @@
     <UserControl.Resources>
         <!-- 转换器 -->
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
 
         <!-- 蓝色主题样式 -->
         <SolidColorBrush x:Key="PrimaryBlueBrush" Color="#409EFF"/>
@@ -515,14 +517,16 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <Button Content="编辑"
-                                                Command="{Binding DataContext.EditPaymentCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        <!-- 确认收款按钮 - 仅在待收款状态显示 -->
+                                        <Button Content="确认收款"
+                                                Command="{Binding DataContext.ConfirmPaymentCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                                 CommandParameter="{Binding}"
                                                 Style="{StaticResource BlueButtonStyle}"
-                                                Width="60"
+                                                Width="70"
                                                 Height="28"
                                                 FontSize="12"
-                                                Margin="2"/>
+                                                Margin="2"
+                                                Visibility="{Binding OrderStatus, Converter={StaticResource StringToVisibilityConverter}, ConverterParameter=待收款}"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>

@@ -23,6 +23,7 @@
             <converters:OrderItemsToUnitsConverter x:Key="OrderItemsToUnitsConverter"/>
             <converters:BoolToActiveBackgroundConverter x:Key="BoolToActiveBackgroundConverter"/>
             <converters:StringToBooleanConverter x:Key="StringToBooleanConverter"/>
+            <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
             <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 

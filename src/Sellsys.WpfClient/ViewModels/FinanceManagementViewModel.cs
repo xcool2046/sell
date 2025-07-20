@@ -338,6 +338,7 @@ namespace Sellsys.WpfClient.ViewModels
         public ICommand SearchCommand { get; }
         public ICommand ResetFiltersCommand { get; }
         public ICommand EditPaymentCommand { get; }
+        public ICommand ConfirmPaymentCommand { get; }
         public ICommand RefreshCommand { get; }
         public ICommand PreviousPageCommand { get; }
         public ICommand NextPageCommand { get; }
@@ -367,6 +368,7 @@ namespace Sellsys.WpfClient.ViewModels
             SearchCommand = new AsyncRelayCommand(async p => await SearchAsync());
             ResetFiltersCommand = new RelayCommand(p => ResetFilters());
             EditPaymentCommand = new AsyncRelayCommand(async p => await EditPaymentAsync(), p => SelectedOrderDetail?.CanEditPayment == true);
+            ConfirmPaymentCommand = new AsyncRelayCommand(async p => await ConfirmPaymentAsync(), p => SelectedOrderDetail?.OrderStatus == "待收款");
             RefreshCommand = new AsyncRelayCommand(async p => await RefreshAsync());
             PreviousPageCommand = new RelayCommand(p => PreviousPage(), p => HasPreviousPage);
             NextPageCommand = new RelayCommand(p => NextPage(), p => HasNextPage);
@@ -503,6 +505,39 @@ namespace Sellsys.WpfClient.ViewModels
             catch (Exception ex)
             {
                 MessageBox.Show($"打开编辑对话框失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        /// <summary>
+        /// 确认收款
+        /// </summary>
+        private async Task ConfirmPaymentAsync()
+        {
+            if (SelectedOrderDetail == null) return;
+
+            try
+            {
+                // 确认对话框
+                var result = MessageBox.Show(
+                    $"确认收款订单：{SelectedOrderDetail.OrderNumber}？\n收款后状态将变更为\"已收款\"。",
+                    "确认收款",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+
+                if (result != MessageBoxResult.Yes) return;
+
+                // 调用API确认收款
+                await _apiService.ConfirmPaymentAsync(SelectedOrderDetail.OrderId, DateTime.Now);
+
+                // 显示成功消息
+                MessageBox.Show("收款确认成功！", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                // 刷新数据
+                await RefreshAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"确认收款失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
