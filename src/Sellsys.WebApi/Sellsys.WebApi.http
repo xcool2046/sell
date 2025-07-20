@@ -1,0 +1,6 @@
+@Sellsys.WebApi_HostAddress = http://localhost:5078
+
+GET {{Sellsys.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

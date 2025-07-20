@@ -1,0 +1,136 @@
+<UserControl x:Class="Sellsys.WpfClient.Views.ProductManagementView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewmodels="clr-namespace:Sellsys.WpfClient.ViewModels"
+             d:DataContext="{d:DesignInstance Type=viewmodels:ProductManagementViewModel}"
+             mc:Ignorable="d"
+             d:DesignHeight="600" d:DesignWidth="1000">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/> <!-- Action Button -->
+            <RowDefinition Height="*"/>    <!-- Data Grid -->
+        </Grid.RowDefinitions>
+
+        <!-- Action Button Section -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,15">
+            <Button Content="添加产品"
+                    Command="{Binding AddProductCommand}"
+                    Style="{StaticResource BlueButtonStyle}"
+                    Width="100"
+                    Height="35"/>
+        </StackPanel>
+
+        <!-- Data Grid -->
+        <Border Grid.Row="1"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="1"
+                Background="White">
+            <Grid>
+                <!-- Loading Indicator -->
+                <Grid Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Grid.Background>
+                        <SolidColorBrush Color="White" Opacity="0.7"/>
+                    </Grid.Background>
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <ProgressBar IsIndeterminate="True" Width="200" Height="20" Margin="0,0,0,10"/>
+                        <TextBlock Text="正在加载..."
+                                   Style="{StaticResource GlobalTextStyle}"
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Products Data Grid -->
+                <DataGrid x:Name="ProductsDataGrid"
+                          ItemsSource="{Binding Products}"
+                          SelectedItem="{Binding SelectedProduct}"
+                          Style="{StaticResource BlueHeaderDataGridStyle}">
+                    <DataGrid.Columns>
+                        <!-- 序号 -->
+                        <DataGridTextColumn Header="序号"
+                                            Width="60"
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.Binding>
+                                <Binding RelativeSource="{RelativeSource AncestorType=DataGridRow}"
+                                         Converter="{StaticResource RowIndexConverter}"/>
+                            </DataGridTextColumn.Binding>
+                        </DataGridTextColumn>
+
+                        <!-- 产品名称 -->
+                        <DataGridTextColumn Header="产品名称"
+                                            Binding="{Binding Name}"
+                                            Width="180"
+                                            IsReadOnly="True"/>
+
+                        <!-- 型号规格 -->
+                        <DataGridTextColumn Header="型号规格"
+                                            Binding="{Binding SpecificationDisplay}"
+                                            Width="120"
+                                            IsReadOnly="True"/>
+
+                        <!-- 计量单位 -->
+                        <DataGridTextColumn Header="计量单位"
+                                            Binding="{Binding UnitDisplay}"
+                                            Width="80"
+                                            IsReadOnly="True"/>
+
+                        <!-- 产品定价 -->
+                        <DataGridTextColumn Header="产品定价"
+                                            Binding="{Binding FormattedListPrice}"
+                                            Width="100"
+                                            IsReadOnly="True"/>
+
+                        <!-- 最低控价 -->
+                        <DataGridTextColumn Header="最低控价"
+                                            Binding="{Binding FormattedMinPrice}"
+                                            Width="100"
+                                            IsReadOnly="True"/>
+
+                        <!-- 销售提成 -->
+                        <DataGridTextColumn Header="销售提成"
+                                            Binding="{Binding FormattedSalesCommission}"
+                                            Width="100"
+                                            IsReadOnly="True"/>
+
+                        <!-- 主管提成 -->
+                        <DataGridTextColumn Header="主管提成"
+                                            Binding="{Binding FormattedSupervisorCommission}"
+                                            Width="100"
+                                            IsReadOnly="True"/>
+
+                        <!-- 经理提成 -->
+                        <DataGridTextColumn Header="经理提成"
+                                            Binding="{Binding FormattedManagerCommission}"
+                                            Width="100"
+                                            IsReadOnly="True"/>
+
+                        <!-- 操作 -->
+                        <DataGridTemplateColumn Header="操作" Width="120">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Content="编辑"
+                                                Command="{Binding DataContext.EditProductRowCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"
+                                                Style="{StaticResource BlueButtonStyle}"
+                                                Width="50"
+                                                Height="25"
+                                                Margin="2"/>
+                                        <Button Content="删除"
+                                                Command="{Binding DataContext.DeleteProductRowCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"
+                                                Style="{StaticResource DeleteButtonStyle}"
+                                                Width="50"
+                                                Height="25"
+                                                Margin="2"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
