@@ -48,8 +48,8 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="订单编号：" VerticalAlignment="Center" FontWeight="Bold"/>
-                        <TextBox Grid.Column="1" 
-                                 Text="{Binding OrderNumber}" 
+                        <TextBox Grid.Column="1"
+                                 Text="{Binding OrderNumber, Mode=OneWay}"
                                  Style="{StaticResource StandardTextBoxStyle}"
                                  IsReadOnly="True"
                                  Background="#F5F5F5"
@@ -63,8 +63,8 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="客户名称：" VerticalAlignment="Center" FontWeight="Bold"/>
-                        <TextBox Grid.Column="1" 
-                                 Text="{Binding CustomerName}" 
+                        <TextBox Grid.Column="1"
+                                 Text="{Binding CustomerName, Mode=OneWay}"
                                  Style="{StaticResource StandardTextBoxStyle}"
                                  IsReadOnly="True"
                                  Background="#F5F5F5"
@@ -79,8 +79,8 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="产品名称：" VerticalAlignment="Center" FontWeight="Bold"/>
-                        <TextBox Grid.Column="1" 
-                                 Text="{Binding SelectedProductName}" 
+                        <TextBox Grid.Column="1"
+                                 Text="{Binding SelectedProductName, Mode=OneWay}"
                                  Style="{StaticResource StandardTextBoxStyle}"
                                  IsReadOnly="True"
                                  Background="#F5F5F5"
@@ -101,8 +101,8 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="型号规格：" VerticalAlignment="Center" FontWeight="Bold"/>
-                        <TextBox Grid.Column="1" 
-                                 Text="{Binding ProductSpecification}" 
+                        <TextBox Grid.Column="1"
+                                 Text="{Binding ProductSpecification, Mode=OneWay}"
                                  Style="{StaticResource StandardTextBoxStyle}"
                                  IsReadOnly="True"
                                  Background="#F5F5F5"
@@ -116,8 +116,8 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="计量单位：" VerticalAlignment="Center" FontWeight="Bold"/>
-                        <TextBox Grid.Column="1" 
-                                 Text="{Binding ProductUnit}" 
+                        <TextBox Grid.Column="1"
+                                 Text="{Binding ProductUnit, Mode=OneWay}"
                                  Style="{StaticResource StandardTextBoxStyle}"
                                  IsReadOnly="True"
                                  Background="#F5F5F5"
@@ -160,8 +160,8 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="产品定价：" VerticalAlignment="Center" FontWeight="Bold"/>
-                        <TextBox Grid.Column="1" 
-                                 Text="{Binding ProductListPrice, StringFormat=F2}" 
+                        <TextBox Grid.Column="1"
+                                 Text="{Binding ProductListPrice, StringFormat=F2, Mode=OneWay}"
                                  Style="{StaticResource StandardTextBoxStyle}"
                                  IsReadOnly="True"
                                  Background="#F5F5F5"
@@ -201,8 +201,8 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="订单金额：" VerticalAlignment="Center" FontWeight="Bold"/>
-                        <TextBox Grid.Column="1" 
-                                 Text="{Binding TotalAmount, StringFormat=F2}" 
+                        <TextBox Grid.Column="1"
+                                 Text="{Binding TotalAmount, StringFormat=F2, Mode=OneWay}"
                                  Style="{StaticResource StandardTextBoxStyle}"
                                  IsReadOnly="True"
                                  Background="#F5F5F5"
@@ -216,8 +216,8 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="销售姓名：" VerticalAlignment="Center" FontWeight="Bold"/>
-                        <TextBox Grid.Column="1" 
-                                 Text="{Binding SalesPersonName}" 
+                        <TextBox Grid.Column="1"
+                                 Text="{Binding SalesPersonName, Mode=OneWay}"
                                  Style="{StaticResource StandardTextBoxStyle}"
                                  IsReadOnly="True"
                                  Background="#F5F5F5"
@@ -232,7 +232,7 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="签单时间：" VerticalAlignment="Center" FontWeight="Bold"/>
                         <TextBox Grid.Column="1"
-                                 Text="{Binding SignedTime, StringFormat='yyyy-MM-dd HH:mm:ss'}"
+                                 Text="{Binding SignedTime, StringFormat='yyyy-MM-dd HH:mm:ss', Mode=OneWay}"
                                  Style="{StaticResource StandardTextBoxStyle}"
                                  IsReadOnly="True"
                                  Background="#F5F5F5"

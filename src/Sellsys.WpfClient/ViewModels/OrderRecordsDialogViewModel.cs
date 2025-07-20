@@ -177,8 +177,25 @@ namespace Sellsys.WpfClient.ViewModels
 
             try
             {
-                // TODO: Show EditOrderDialog
-                MessageBox.Show($"编辑订单功能开发中: {order.OrderNumber}", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                var dialog = new EditOrderDialog();
+                var viewModel = new EditOrderDialogViewModel(_customer, order);
+                dialog.DataContext = viewModel;
+
+                // Set owner to main window for proper positioning
+                dialog.Owner = Application.Current.MainWindow;
+
+                viewModel.CloseRequested += (sender, args) =>
+                {
+                    dialog.Close();
+                };
+
+                viewModel.SaveCompleted += async (sender, args) =>
+                {
+                    // Reload order records after saving
+                    await LoadOrderRecordsAsync();
+                };
+
+                dialog.ShowDialog();
             }
             catch (Exception ex)
             {

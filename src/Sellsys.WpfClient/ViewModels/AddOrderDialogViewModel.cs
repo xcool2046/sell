@@ -156,8 +156,37 @@ namespace Sellsys.WpfClient.ViewModels
         {
             try
             {
-                // TODO: Show ProductSelectionDialog
-                MessageBox.Show("产品选择功能开发中", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                var dialog = new Views.Dialogs.SelectProductDialog();
+                var viewModel = new SelectProductDialogViewModel();
+                dialog.DataContext = viewModel;
+
+                // Set owner to main window for proper positioning
+                dialog.Owner = Application.Current.MainWindow;
+
+                viewModel.CloseRequested += (sender, args) =>
+                {
+                    dialog.Close();
+                };
+
+                viewModel.ProductSelected += (sender, product) =>
+                {
+                    // Update product information
+                    _selectedProduct = product;
+                    SelectedProductName = product.Name;
+                    ProductSpecification = product.SpecificationDisplay;
+                    ProductUnit = product.UnitDisplay;
+                    ProductListPrice = product.ListPrice;
+
+                    // Set default actual price to list price
+                    ActualPrice = product.ListPrice;
+
+                    // Recalculate total amount
+                    CalculateTotalAmount();
+
+                    dialog.Close();
+                };
+
+                dialog.ShowDialog();
             }
             catch (Exception ex)
             {

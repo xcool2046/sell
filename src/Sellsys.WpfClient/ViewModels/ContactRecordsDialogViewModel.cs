@@ -149,8 +149,25 @@ namespace Sellsys.WpfClient.ViewModels
 
             try
             {
-                // TODO: Show EditContactRecordDialog
-                MessageBox.Show($"编辑联系记录功能开发中: {record.Summary}", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                var dialog = new EditContactRecordDialog();
+                var viewModel = new EditContactRecordDialogViewModel(_customer, record);
+                dialog.DataContext = viewModel;
+
+                // Set owner to main window for proper positioning
+                dialog.Owner = Application.Current.MainWindow;
+
+                viewModel.CloseRequested += (sender, args) =>
+                {
+                    dialog.Close();
+                };
+
+                viewModel.SaveCompleted += async (sender, args) =>
+                {
+                    // Reload contact records after saving
+                    await LoadContactRecordsAsync();
+                };
+
+                dialog.ShowDialog();
             }
             catch (Exception ex)
             {
