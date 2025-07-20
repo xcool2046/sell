@@ -8,7 +8,7 @@ namespace Sellsys.WpfClient.ViewModels
     {
         private ViewModelBase? _currentView;
         private ViewModelBase? _dialogViewModel;
-        private string _currentViewName = "ProductManagement";
+        private string _currentViewName = "CustomerManagement";
 
         public ViewModelBase? CurrentView
         {
@@ -88,10 +88,10 @@ namespace Sellsys.WpfClient.ViewModels
 
                 System.Diagnostics.Debug.WriteLine("MainViewModel: Commands created successfully");
 
-                // Set the initial view to Product Management for testing
+                // Set the initial view to Customer Management
                 System.Diagnostics.Debug.WriteLine("MainViewModel: Setting initial view...");
-                CurrentView = ProductManagementVM;
-                CurrentViewName = "ProductManagement";
+                CurrentView = CustomerManagementVM;
+                CurrentViewName = "CustomerManagement";
 
                 System.Diagnostics.Debug.WriteLine("MainViewModel: Initialization completed successfully");
             }

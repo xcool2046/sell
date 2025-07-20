@@ -259,7 +259,7 @@
                                 </Trigger>
                                 <Trigger Property="IsSelected" Value="True">
                                     <Setter Property="Background" Value="#F0F8FF"/>
-                                    <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+                                    <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
@@ -284,12 +284,7 @@
                                     </ControlTemplate>
                                 </Setter.Value>
                             </Setter>
-                            <Style.Triggers>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="Transparent"/>
-                                    <Setter Property="Foreground" Value="White"/>
-                                </Trigger>
-                            </Style.Triggers>
+
                         </Style>
                     </DataGrid.CellStyle>
 

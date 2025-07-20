@@ -329,6 +329,7 @@
         <Setter Property="CanUserResizeRows" Value="False"/>
         <Setter Property="SelectionMode" Value="Single"/>
         <Setter Property="AlternatingRowBackground" Value="Transparent"/>
+        <Setter Property="RowStyle" Value="{StaticResource DataGridRowStyle}"/>
     </Style>
 
     <!-- 蓝色表头DataGrid样式 -->
