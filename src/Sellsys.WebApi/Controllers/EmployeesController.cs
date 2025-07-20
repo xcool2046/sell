@@ -23,6 +23,13 @@ namespace Sellsys.WebApi.Controllers
             return new ObjectResult(response) { StatusCode = (int)response.StatusCode };
         }
 
+        [HttpGet("by-department/{departmentName}")]
+        public async Task<IActionResult> GetEmployeesByDepartment(string departmentName)
+        {
+            var response = await _employeeService.GetEmployeesByDepartmentNameAsync(departmentName);
+            return new ObjectResult(response) { StatusCode = (int)response.StatusCode };
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEmployee(int id)
         {

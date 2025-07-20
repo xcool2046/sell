@@ -11,12 +11,12 @@ namespace Sellsys.WpfClient.ViewModels
     {
         private readonly ApiService _apiService;
         private readonly Customer _customer;
-        
+
         private string _departmentName = "销售部";
-        private ObservableCollection<GroupModel> _groups;
-        private ObservableCollection<SalesPersonModel> _salesPersons;
-        private GroupModel? _selectedGroup;
-        private SalesPersonModel? _selectedSalesPerson;
+        private ObservableCollection<DepartmentGroup> _groups;
+        private ObservableCollection<Employee> _salesPersons;
+        private DepartmentGroup? _selectedGroup;
+        private Employee? _selectedSalesPerson;
         private bool _isLoading = false;
 
         public string DepartmentName
@@ -25,29 +25,29 @@ namespace Sellsys.WpfClient.ViewModels
             set => SetProperty(ref _departmentName, value);
         }
 
-        public ObservableCollection<GroupModel> Groups
+        public ObservableCollection<DepartmentGroup> Groups
         {
             get => _groups;
             set => SetProperty(ref _groups, value);
         }
 
-        public ObservableCollection<SalesPersonModel> SalesPersons
+        public ObservableCollection<Employee> SalesPersons
         {
             get => _salesPersons;
             set => SetProperty(ref _salesPersons, value);
         }
 
-        public GroupModel? SelectedGroup
+        public DepartmentGroup? SelectedGroup
         {
             get => _selectedGroup;
-            set 
-            { 
+            set
+            {
                 SetProperty(ref _selectedGroup, value);
-                LoadSalesPersonsForGroup();
+                _ = LoadSalesPersonsForGroupAsync();
             }
         }
 
-        public SalesPersonModel? SelectedSalesPerson
+        public Employee? SelectedSalesPerson
         {
             get => _selectedSalesPerson;
             set => SetProperty(ref _selectedSalesPerson, value);
@@ -71,54 +71,82 @@ namespace Sellsys.WpfClient.ViewModels
         {
             _apiService = apiService;
             _customer = customer;
-            
+
             // Initialize collections
-            _groups = new ObservableCollection<GroupModel>();
-            _salesPersons = new ObservableCollection<SalesPersonModel>();
+            _groups = new ObservableCollection<DepartmentGroup>();
+            _salesPersons = new ObservableCollection<Employee>();
 
             // Initialize commands
             AssignCommand = new AsyncRelayCommand(async p => await AssignSalesAsync());
             CancelCommand = new RelayCommand(p => Cancel());
 
             // Initialize data
-            InitializeData();
+            _ = InitializeDataAsync();
         }
 
-        private void InitializeData()
+        private async Task InitializeDataAsync()
         {
-            // Initialize groups
-            Groups.Add(new GroupModel { Id = 1, Name = "销售一组" });
-            Groups.Add(new GroupModel { Id = 2, Name = "销售二组" });
-            Groups.Add(new GroupModel { Id = 3, Name = "销售三组" });
-
-            // Set default selection
-            SelectedGroup = Groups.FirstOrDefault();
-        }
-
-        private void LoadSalesPersonsForGroup()
-        {
-            SalesPersons.Clear();
-            
-            if (SelectedGroup == null) return;
-
-            // Mock data based on selected group
-            switch (SelectedGroup.Id)
+            try
             {
-                case 1:
-                    SalesPersons.Add(new SalesPersonModel { Id = 1, Name = "张飞" });
-                    SalesPersons.Add(new SalesPersonModel { Id = 2, Name = "李逵" });
-                    break;
-                case 2:
-                    SalesPersons.Add(new SalesPersonModel { Id = 3, Name = "陈小二" });
-                    SalesPersons.Add(new SalesPersonModel { Id = 4, Name = "王五" });
-                    break;
-                case 3:
-                    SalesPersons.Add(new SalesPersonModel { Id = 5, Name = "赵六" });
-                    SalesPersons.Add(new SalesPersonModel { Id = 6, Name = "孙七" });
-                    break;
-            }
+                IsLoading = true;
 
-            SelectedSalesPerson = SalesPersons.FirstOrDefault();
+                // Get all departments to find sales department ID
+                var departments = await _apiService.GetDepartmentsAsync();
+                var salesDepartment = departments.FirstOrDefault(d => d.Name == "销售部");
+
+                if (salesDepartment != null)
+                {
+                    // Load groups for sales department
+                    var groups = await _apiService.GetDepartmentGroupsByDepartmentIdAsync(salesDepartment.Id);
+                    Groups.Clear();
+                    foreach (var group in groups)
+                    {
+                        Groups.Add(group);
+                    }
+
+                    // Set default selection
+                    SelectedGroup = Groups.FirstOrDefault();
+                }
+                else
+                {
+                    MessageBox.Show("未找到销售部门，请先在系统设置中创建销售部门", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"加载数据失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
+        private async Task LoadSalesPersonsForGroupAsync()
+        {
+            try
+            {
+                SalesPersons.Clear();
+
+                if (SelectedGroup == null) return;
+
+                // Load employees from sales department
+                var employees = await _apiService.GetEmployeesByDepartmentAsync("销售部");
+
+                // Filter employees by selected group if needed
+                var filteredEmployees = employees.Where(e => e.GroupId == SelectedGroup.Id).ToList();
+
+                foreach (var employee in filteredEmployees)
+                {
+                    SalesPersons.Add(employee);
+                }
+
+                SelectedSalesPerson = SalesPersons.FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"加载销售人员失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private async Task AssignSalesAsync()
@@ -171,17 +199,5 @@ namespace Sellsys.WpfClient.ViewModels
         {
             Cancelled?.Invoke(this, EventArgs.Empty);
         }
-    }
-
-    public class GroupModel
-    {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-    }
-
-    public class SalesPersonModel
-    {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
     }
 }

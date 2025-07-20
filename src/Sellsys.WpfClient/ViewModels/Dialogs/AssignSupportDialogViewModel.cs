@@ -11,12 +11,12 @@ namespace Sellsys.WpfClient.ViewModels
     {
         private readonly ApiService _apiService;
         private readonly Customer _customer;
-        
+
         private string _departmentName = "客服部";
-        private ObservableCollection<GroupModel> _groups;
-        private ObservableCollection<SupportPersonModel> _supportPersons;
-        private GroupModel? _selectedGroup;
-        private SupportPersonModel? _selectedSupportPerson;
+        private ObservableCollection<DepartmentGroup> _groups;
+        private ObservableCollection<Employee> _supportPersons;
+        private DepartmentGroup? _selectedGroup;
+        private Employee? _selectedSupportPerson;
         private bool _isLoading = false;
 
         public string DepartmentName
@@ -25,29 +25,29 @@ namespace Sellsys.WpfClient.ViewModels
             set => SetProperty(ref _departmentName, value);
         }
 
-        public ObservableCollection<GroupModel> Groups
+        public ObservableCollection<DepartmentGroup> Groups
         {
             get => _groups;
             set => SetProperty(ref _groups, value);
         }
 
-        public ObservableCollection<SupportPersonModel> SupportPersons
+        public ObservableCollection<Employee> SupportPersons
         {
             get => _supportPersons;
             set => SetProperty(ref _supportPersons, value);
         }
 
-        public GroupModel? SelectedGroup
+        public DepartmentGroup? SelectedGroup
         {
             get => _selectedGroup;
-            set 
-            { 
+            set
+            {
                 SetProperty(ref _selectedGroup, value);
-                LoadSupportPersonsForGroup();
+                _ = LoadSupportPersonsForGroupAsync();
             }
         }
 
-        public SupportPersonModel? SelectedSupportPerson
+        public Employee? SelectedSupportPerson
         {
             get => _selectedSupportPerson;
             set => SetProperty(ref _selectedSupportPerson, value);
@@ -71,54 +71,82 @@ namespace Sellsys.WpfClient.ViewModels
         {
             _apiService = apiService;
             _customer = customer;
-            
+
             // Initialize collections
-            _groups = new ObservableCollection<GroupModel>();
-            _supportPersons = new ObservableCollection<SupportPersonModel>();
+            _groups = new ObservableCollection<DepartmentGroup>();
+            _supportPersons = new ObservableCollection<Employee>();
 
             // Initialize commands
             SaveCommand = new AsyncRelayCommand(async p => await AssignSupportAsync());
             CancelCommand = new RelayCommand(p => Cancel());
 
             // Initialize data
-            InitializeData();
+            _ = InitializeDataAsync();
         }
 
-        private void InitializeData()
+        private async Task InitializeDataAsync()
         {
-            // Initialize groups
-            Groups.Add(new GroupModel { Id = 1, Name = "客服一组" });
-            Groups.Add(new GroupModel { Id = 2, Name = "客服二组" });
-            Groups.Add(new GroupModel { Id = 3, Name = "客服三组" });
-
-            // Set default selection
-            SelectedGroup = Groups.FirstOrDefault();
-        }
-
-        private void LoadSupportPersonsForGroup()
-        {
-            SupportPersons.Clear();
-            
-            if (SelectedGroup == null) return;
-
-            // Mock data based on selected group
-            switch (SelectedGroup.Id)
+            try
             {
-                case 1:
-                    SupportPersons.Add(new SupportPersonModel { Id = 1, Name = "陈小二" });
-                    SupportPersons.Add(new SupportPersonModel { Id = 2, Name = "李小花" });
-                    break;
-                case 2:
-                    SupportPersons.Add(new SupportPersonModel { Id = 3, Name = "王小明" });
-                    SupportPersons.Add(new SupportPersonModel { Id = 4, Name = "张小红" });
-                    break;
-                case 3:
-                    SupportPersons.Add(new SupportPersonModel { Id = 5, Name = "刘小强" });
-                    SupportPersons.Add(new SupportPersonModel { Id = 6, Name = "赵小美" });
-                    break;
-            }
+                IsLoading = true;
 
-            SelectedSupportPerson = SupportPersons.FirstOrDefault();
+                // Get all departments to find support department ID
+                var departments = await _apiService.GetDepartmentsAsync();
+                var supportDepartment = departments.FirstOrDefault(d => d.Name == "客服部");
+
+                if (supportDepartment != null)
+                {
+                    // Load groups for support department
+                    var groups = await _apiService.GetDepartmentGroupsByDepartmentIdAsync(supportDepartment.Id);
+                    Groups.Clear();
+                    foreach (var group in groups)
+                    {
+                        Groups.Add(group);
+                    }
+
+                    // Set default selection
+                    SelectedGroup = Groups.FirstOrDefault();
+                }
+                else
+                {
+                    MessageBox.Show("未找到客服部门，请先在系统设置中创建客服部门", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"加载数据失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
+        private async Task LoadSupportPersonsForGroupAsync()
+        {
+            try
+            {
+                SupportPersons.Clear();
+
+                if (SelectedGroup == null) return;
+
+                // Load employees from support department
+                var employees = await _apiService.GetEmployeesByDepartmentAsync("客服部");
+
+                // Filter employees by selected group if needed
+                var filteredEmployees = employees.Where(e => e.GroupId == SelectedGroup.Id).ToList();
+
+                foreach (var employee in filteredEmployees)
+                {
+                    SupportPersons.Add(employee);
+                }
+
+                SelectedSupportPerson = SupportPersons.FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"加载客服人员失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private async Task AssignSupportAsync()
@@ -171,11 +199,5 @@ namespace Sellsys.WpfClient.ViewModels
         {
             Cancelled?.Invoke(this, EventArgs.Empty);
         }
-    }
-
-    public class SupportPersonModel
-    {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
     }
 }

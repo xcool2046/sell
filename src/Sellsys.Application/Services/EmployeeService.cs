@@ -111,6 +111,32 @@ namespace Sellsys.Application.Services
             return ApiResponse<List<EmployeeDto>>.Success(employees);
         }
 
+        public async Task<ApiResponse<List<EmployeeDto>>> GetEmployeesByDepartmentNameAsync(string departmentName)
+        {
+            var employees = await _context.Employees
+                .Include(e => e.Group)
+                    .ThenInclude(g => g!.Department)
+                .Include(e => e.Role)
+                .Where(e => e.Group != null && e.Group.Department != null && e.Group.Department.Name == departmentName)
+                .Select(e => new EmployeeDto
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    LoginUsername = e.LoginUsername,
+                    Phone = e.Phone,
+                    BranchAccount = e.BranchAccount,
+                    GroupId = e.GroupId,
+                    GroupName = e.Group != null ? e.Group.Name : null,
+                    DepartmentName = e.Group != null && e.Group.Department != null ? e.Group.Department.Name : null,
+                    RoleId = e.RoleId,
+                    RoleName = e.Role != null ? e.Role.Name : null,
+                    CreatedAt = e.CreatedAt
+                })
+                .ToListAsync();
+
+            return ApiResponse<List<EmployeeDto>>.Success(employees);
+        }
+
         public async Task<ApiResponse<EmployeeDto>> GetEmployeeByIdAsync(int id)
         {
             var employee = await _context.Employees

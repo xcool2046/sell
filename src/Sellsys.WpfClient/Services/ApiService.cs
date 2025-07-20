@@ -540,6 +540,23 @@ namespace Sellsys.WpfClient.Services
             }
         }
 
+        public async Task<List<Employee>> GetEmployeesByDepartmentAsync(string departmentName)
+        {
+            try
+            {
+                var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<EmployeeDto>>>($"{BaseUrl}/employees/by-department/{Uri.EscapeDataString(departmentName)}");
+                if (response != null && response.IsSuccess && response.Data != null)
+                {
+                    return response.Data.Select(MapToEmployee).ToList();
+                }
+                throw new Exception(response?.Message ?? "获取部门员工列表失败");
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new Exception($"网络请求失败: {ex.Message}");
+            }
+        }
+
         public async Task<Employee> GetEmployeeByIdAsync(int id)
         {
             try
