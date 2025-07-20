@@ -17,6 +17,7 @@ namespace Sellsys.WpfClient.ViewModels
         private ObservableCollection<SalesPersonModel> _salesPersons;
         private GroupModel? _selectedGroup;
         private SalesPersonModel? _selectedSalesPerson;
+        private bool _isLoading = false;
 
         public string DepartmentName
         {
@@ -50,6 +51,12 @@ namespace Sellsys.WpfClient.ViewModels
         {
             get => _selectedSalesPerson;
             set => SetProperty(ref _selectedSalesPerson, value);
+        }
+
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set => SetProperty(ref _isLoading, value);
         }
 
         // Commands
@@ -116,18 +123,22 @@ namespace Sellsys.WpfClient.ViewModels
 
         private async Task AssignSalesAsync()
         {
+            if (IsLoading) return; // Prevent multiple simultaneous assignments
+
             try
             {
+                IsLoading = true;
                 if (SelectedSalesPerson == null)
                 {
                     MessageBox.Show("请选择销售人员", "验证错误", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                // TODO: Call API to assign sales person to customer
-                // await _apiService.AssignSalesPersonAsync(_customer.Id, SelectedSalesPerson.Id);
+                // Call API to assign sales person to customer
+                await _apiService.AssignSalesPersonAsync(_customer.Id, SelectedSalesPerson.Id);
 
                 // Update customer's sales person
+                _customer.SalesPersonId = SelectedSalesPerson.Id;
                 _customer.SalesPersonName = SelectedSalesPerson.Name;
 
                 // Publish assignment event for other modules
@@ -149,6 +160,10 @@ namespace Sellsys.WpfClient.ViewModels
             catch (Exception ex)
             {
                 MessageBox.Show($"分配销售失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                IsLoading = false;
             }
         }
 

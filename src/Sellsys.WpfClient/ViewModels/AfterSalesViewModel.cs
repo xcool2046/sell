@@ -169,9 +169,6 @@ namespace Sellsys.WpfClient.ViewModels
             catch (Exception ex)
             {
                 MessageBox.Show($"加载数据失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
-
-                // Load mock data as fallback
-                LoadMockAfterSalesData();
             }
             finally
             {
@@ -267,62 +264,6 @@ namespace Sellsys.WpfClient.ViewModels
             MessageBox.Show($"查看客服记录: {record.CustomerName}", "客服记录", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        private void LoadMockAfterSalesData()
-        {
-            AfterSalesRecords.Clear();
 
-            // 添加模拟售后服务数据
-            var mockRecords = new List<AfterSalesRecord>
-            {
-                new AfterSalesRecord
-                {
-                    Id = 1,
-                    CustomerId = 1,
-                    CustomerName = "广文学院职业技术学校",
-                    CustomerProvince = "四川省",
-                    CustomerCity = "成都市",
-                    ContactName = "李主任",
-                    ContactPhone = "13800138001",
-                    SalesPersonName = "张飞",
-                    Quantity = 2,
-                    ServiceRecordCount = 3,
-                    CustomerFeedback = "系统运行良好，需要培训支持",
-                    OurReply = "已安排培训计划",
-                    Status = "InProgress",
-                    ProcessedDate = DateTime.Now.AddDays(-1),
-                    SupportPersonName = "李客服",
-                    CreatedAt = new DateTime(2025, 7, 9, 10, 30, 0),
-                    UpdatedAt = new DateTime(2025, 7, 9, 14, 20, 0)
-                },
-                new AfterSalesRecord
-                {
-                    Id = 2,
-                    CustomerId = 2,
-                    CustomerName = "某某技术学院",
-                    CustomerProvince = "四川省",
-                    CustomerCity = "成都市",
-                    ContactName = "王老师",
-                    ContactPhone = "13800138002",
-                    SalesPersonName = "张飞",
-                    Quantity = 1,
-                    ServiceRecordCount = 1,
-                    CustomerFeedback = "需要技术支持",
-                    OurReply = "技术人员已联系",
-                    Status = "Resolved",
-                    ProcessedDate = DateTime.Now.AddDays(-2),
-                    SupportPersonName = "王客服",
-                    CreatedAt = new DateTime(2025, 7, 8, 9, 15, 0),
-                    UpdatedAt = new DateTime(2025, 7, 8, 16, 45, 0)
-                }
-            };
-
-            foreach (var record in mockRecords.OrderByDescending(r => r.CreatedAt))
-            {
-                AfterSalesRecords.Add(record);
-            }
-
-            // Initialize filter options
-            InitializeFilterOptions();
-        }
     }
 }

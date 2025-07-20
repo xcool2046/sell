@@ -143,10 +143,6 @@
                                         </Border>
                                         
                                         <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0,0,0">
-                                            <CheckBox IsChecked="{Binding IsSupport}"
-                                                      Content="支持人"
-                                                      VerticalAlignment="Center"
-                                                      Margin="0,0,15,0"/>
                                             <CheckBox IsChecked="{Binding IsPrimary}"
                                                       Content="关键人"
                                                       VerticalAlignment="Center"/>
@@ -162,19 +158,14 @@
 
         <!-- Button Area -->
         <Border Grid.Row="2" Background="#F8F9FA" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="20,15">
-                <Button Content="关闭"
-                        Command="{Binding CloseCommand}"
-                        Style="{StaticResource DeleteButtonStyle}"
-                        Width="80"
-                        Height="35"
-                        Margin="0,0,15,0"/>
-                <Button Content="确认修改"
-                        Command="{Binding SaveCommand}"
-                        Style="{StaticResource PrimaryButtonStyle}"
-                        Width="100"
-                        Height="35"/>
-            </StackPanel>
+            <Button Content="关闭"
+                    Command="{Binding CloseCommand}"
+                    Style="{StaticResource DeleteButtonStyle}"
+                    Width="80"
+                    Height="35"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Margin="20"/>
         </Border>
     </Grid>
 </Window>

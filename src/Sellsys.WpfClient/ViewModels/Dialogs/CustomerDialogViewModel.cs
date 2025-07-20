@@ -2,6 +2,7 @@ using Sellsys.WpfClient.Commands;
 using Sellsys.WpfClient.Models;
 using Sellsys.WpfClient.Services;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using System.Windows;
 
@@ -20,7 +21,8 @@ namespace Sellsys.WpfClient.ViewModels
         private string _selectedCity = string.Empty;
         private string _detailedAddress = string.Empty;
         private string _customerRemarks = string.Empty;
-        
+        private bool _isLoading = false;
+
         // Collections
         private ObservableCollection<string> _industryTypes;
         private ObservableCollection<string> _provinces;
@@ -61,6 +63,12 @@ namespace Sellsys.WpfClient.ViewModels
         {
             get => _customerRemarks;
             set => SetProperty(ref _customerRemarks, value);
+        }
+
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set => SetProperty(ref _isLoading, value);
         }
 
         public ObservableCollection<string> IndustryTypes
@@ -208,12 +216,40 @@ namespace Sellsys.WpfClient.ViewModels
 
         private async Task SaveCustomerAsync()
         {
+            if (IsLoading) return; // Prevent multiple simultaneous saves
+
             try
             {
+                IsLoading = true;
                 // Validate required fields
                 if (string.IsNullOrWhiteSpace(CustomerName))
                 {
                     MessageBox.Show("请输入客户名称", "验证错误", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Validate at least one contact
+                var validContacts = Contacts.Where(c => !string.IsNullOrWhiteSpace(c.Name)).ToList();
+                if (validContacts.Count == 0)
+                {
+                    MessageBox.Show("请至少添加一位联系人", "验证错误", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Validate contact phone numbers
+                foreach (var contact in validContacts)
+                {
+                    if (!string.IsNullOrWhiteSpace(contact.Phone) && contact.Phone.Length < 11)
+                    {
+                        MessageBox.Show($"联系人 '{contact.Name}' 的电话号码格式不正确", "验证错误", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+                }
+
+                // Check API availability before proceeding
+                if (!await _apiService.IsApiAvailableAsync())
+                {
+                    MessageBox.Show("无法连接到服务器，请检查网络连接后重试", "网络错误", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
@@ -257,15 +293,35 @@ namespace Sellsys.WpfClient.ViewModels
                     });
                 }
 
-                // Save customer - for now just show success message
-                // TODO: Implement actual API call when backend is ready
-                // if (_isEditMode)
-                //     await _apiService.UpdateCustomerAsync(customer);
-                // else
-                //     await _apiService.CreateCustomerAsync(customer);
+                // Create DTO for API call
+                var customerDto = new CustomerUpsertDto
+                {
+                    Name = CustomerName,
+                    Province = SelectedProvince,
+                    City = SelectedCity,
+                    Address = DetailedAddress,
+                    Remarks = CustomerRemarks,
+                    IndustryTypes = SelectedIndustryType,
+                    SalesPersonId = customer.SalesPersonId,
+                    SupportPersonId = customer.SupportPersonId,
+                    Contacts = Contacts.Where(c => !string.IsNullOrWhiteSpace(c.Name))
+                        .Select(c => new ContactUpsertDto
+                        {
+                            Name = c.Name,
+                            Phone = c.Phone,
+                            IsPrimary = c.IsPrimary
+                        }).ToList()
+                };
 
-                // Simulate a brief delay to show loading state
-                await Task.Delay(500);
+                // Save customer via API
+                if (_isEditMode && _originalCustomer != null)
+                {
+                    await _apiService.UpdateCustomerAsync(_originalCustomer.Id, customerDto);
+                }
+                else
+                {
+                    await _apiService.CreateCustomerAsync(customerDto);
+                }
 
                 string action = _isEditMode ? "更新" : "添加";
                 MessageBox.Show($"客户 '{CustomerName}' {action}成功！", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -273,7 +329,30 @@ namespace Sellsys.WpfClient.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"保存客户时发生错误: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                string errorMessage = "保存客户时发生错误";
+
+                if (ex.Message.Contains("网络请求失败"))
+                {
+                    errorMessage = "网络连接失败，请检查网络连接后重试";
+                }
+                else if (ex.Message.Contains("请至少添加一位联系人"))
+                {
+                    errorMessage = "请至少添加一位联系人";
+                }
+                else if (ex.Message.Contains("timeout"))
+                {
+                    errorMessage = "请求超时，请稍后重试";
+                }
+                else
+                {
+                    errorMessage = $"保存失败: {ex.Message}";
+                }
+
+                MessageBox.Show(errorMessage, "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                IsLoading = false;
             }
         }
 

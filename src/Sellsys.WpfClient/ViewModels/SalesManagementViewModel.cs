@@ -210,9 +210,6 @@ namespace Sellsys.WpfClient.ViewModels
             {
                 // Use the error handling service
                 ErrorHandlingService.HandleApiError(ex, "loading customer data");
-
-                // Load mock data as fallback
-                LoadMockData();
             }
             finally
             {
@@ -493,74 +490,6 @@ namespace Sellsys.WpfClient.ViewModels
             MessageBox.Show($"查看订单: {customer.Name}", "订单记录", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        private void LoadMockData()
-        {
-            Customers.Clear();
 
-            // 添加两行模拟数据
-            var mockCustomers = new List<Customer>
-            {
-                new Customer
-                {
-                    Id = 1,
-                    Name = "广文学院职业技术学校",
-                    IndustryTypes = "应急",
-                    Province = "四川省",
-                    City = "成都市",
-                    Address = "成都市高新区示例地址",
-                    Remarks = "重点客户",
-                    SalesPersonName = "张飞",
-                    SupportPersonName = "李客服",
-                    CustomerIntention = "待联系",
-                    CustomerRemarks = "重点客户",
-                    CustomerStatus = "已联系",
-                    Status = "待联系",
-                    ContactRecordCount = 3,
-                    OrderCount = 1,
-                    NextContactDate = DateTime.Now.AddDays(3),
-                    CreatedAt = new DateTime(2025, 7, 9, 11, 24, 46),
-                    UpdatedAt = new DateTime(2025, 7, 9, 11, 24, 46),
-                    Contacts = new System.Collections.ObjectModel.ObservableCollection<Contact>
-                    {
-                        new Contact { Id = 1, Name = "李主任", Phone = "13800138001", IsPrimary = true },
-                        new Contact { Id = 2, Name = "王老师", Phone = "13800138002", IsPrimary = false },
-                        new Contact { Id = 3, Name = "陈校长", Phone = "13800138003", IsPrimary = false }
-                    }
-                },
-                new Customer
-                {
-                    Id = 2,
-                    Name = "广文学院职业技术学校",
-                    IndustryTypes = "应急",
-                    Province = "四川省",
-                    City = "成都市",
-                    Address = "成都市高新区示例地址",
-                    Remarks = "重点客户",
-                    SalesPersonName = "张飞",
-                    SupportPersonName = "王客服",
-                    CustomerIntention = "跟进中",
-                    CustomerRemarks = "有合作意向",
-                    CustomerStatus = "跟进中",
-                    Status = "跟进中",
-                    ContactRecordCount = 2,
-                    OrderCount = 3,
-                    NextContactDate = DateTime.Now.AddDays(7),
-                    CreatedAt = new DateTime(2025, 7, 9, 11, 23, 46),
-                    UpdatedAt = new DateTime(2025, 7, 9, 11, 23, 46),
-                    Contacts = new System.Collections.ObjectModel.ObservableCollection<Contact>
-                    {
-                        new Contact { Id = 4, Name = "刘处长", Phone = "13800138004", IsPrimary = true }
-                    }
-                }
-            };
-
-            foreach (var customer in mockCustomers)
-            {
-                Customers.Add(customer);
-            }
-
-            // Update filter options
-            UpdateFilterOptions();
-        }
     }
 }

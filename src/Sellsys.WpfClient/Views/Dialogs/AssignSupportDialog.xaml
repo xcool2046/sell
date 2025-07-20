@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="分配客服"
-        Height="450" Width="500"
-        MinHeight="400" MinWidth="450"
-        MaxHeight="600"
+        Height="550" Width="500"
+        MinHeight="500" MinWidth="450"
+        MaxHeight="700"
         WindowStartupLocation="CenterOwner"
         ResizeMode="CanResize"
         ShowInTaskbar="False">
@@ -44,7 +44,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/> <!-- Title Bar -->
             <RowDefinition Height="*"/>  <!-- Content -->
-            <RowDefinition Height="70"/> <!-- Buttons -->
+            <RowDefinition Height="80" MinHeight="80"/> <!-- Buttons -->
         </Grid.RowDefinitions>
 
         <!-- Title Bar -->
@@ -53,8 +53,12 @@
         </Border>
 
         <!-- Content Area -->
-        <Grid Grid.Row="1" Margin="40,30">
-            <Grid.RowDefinitions>
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      Margin="30,20,30,20">
+            <Grid>
+                <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -107,22 +111,36 @@
                           DisplayMemberPath="Name"
                           Style="{StaticResource StandardComboBoxStyle}"/>
             </Grid>
-        </Grid>
+            </Grid>
+        </ScrollViewer>
 
         <!-- Button Area -->
         <Border Grid.Row="2" Background="#F8F9FA" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20,18,20,18">
-                <Button Content="取消" 
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20,22,20,22" VerticalAlignment="Center">
+                <Button Content="取消"
                         Command="{Binding CancelCommand}"
                         Style="{StaticResource DeleteButtonStyle}"
                         Width="80"
                         Height="35"
-                        Margin="0,0,10,0"/>
-                <Button Content="保存" 
-                        Command="{Binding SaveCommand}"
-                        Style="{StaticResource PrimaryButtonStyle}"
+                        Margin="0,0,10,0"
+                        VerticalAlignment="Center"/>
+                <Button Command="{Binding SaveCommand}"
                         Width="80"
-                        Height="35"/>
+                        Height="35"
+                        Margin="0"
+                        VerticalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+                            <Setter Property="Content" Value="分配"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                                    <Setter Property="Content" Value="分配中..."/>
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
             </StackPanel>
         </Border>
     </Grid>

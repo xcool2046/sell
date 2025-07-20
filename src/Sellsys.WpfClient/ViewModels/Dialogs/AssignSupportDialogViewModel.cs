@@ -17,6 +17,7 @@ namespace Sellsys.WpfClient.ViewModels
         private ObservableCollection<SupportPersonModel> _supportPersons;
         private GroupModel? _selectedGroup;
         private SupportPersonModel? _selectedSupportPerson;
+        private bool _isLoading = false;
 
         public string DepartmentName
         {
@@ -50,6 +51,12 @@ namespace Sellsys.WpfClient.ViewModels
         {
             get => _selectedSupportPerson;
             set => SetProperty(ref _selectedSupportPerson, value);
+        }
+
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set => SetProperty(ref _isLoading, value);
         }
 
         // Commands
@@ -116,18 +123,22 @@ namespace Sellsys.WpfClient.ViewModels
 
         private async Task AssignSupportAsync()
         {
+            if (IsLoading) return; // Prevent multiple simultaneous assignments
+
             try
             {
+                IsLoading = true;
                 if (SelectedSupportPerson == null)
                 {
                     MessageBox.Show("请选择客服人员", "验证错误", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                // TODO: Call API to assign support person to customer
-                // await _apiService.AssignSupportPersonAsync(_customer.Id, SelectedSupportPerson.Id);
+                // Call API to assign support person to customer
+                await _apiService.AssignSupportPersonAsync(_customer.Id, SelectedSupportPerson.Id);
 
                 // Update customer's support person
+                _customer.SupportPersonId = SelectedSupportPerson.Id;
                 _customer.SupportPersonName = SelectedSupportPerson.Name;
 
                 // Publish assignment event for other modules
@@ -149,6 +160,10 @@ namespace Sellsys.WpfClient.ViewModels
             catch (Exception ex)
             {
                 MessageBox.Show($"分配客服失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                IsLoading = false;
             }
         }
 

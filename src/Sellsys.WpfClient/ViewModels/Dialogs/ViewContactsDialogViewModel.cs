@@ -41,11 +41,9 @@ namespace Sellsys.WpfClient.ViewModels
 
         // Commands
         public ICommand CloseCommand { get; }
-        public ICommand SaveCommand { get; }
 
         // Events
         public event EventHandler? CloseRequested;
-        public event EventHandler? ContactsUpdated;
 
         public ViewContactsDialogViewModel(Customer customer)
         {
@@ -54,7 +52,6 @@ namespace Sellsys.WpfClient.ViewModels
 
             // Initialize commands
             CloseCommand = new RelayCommand(p => Close());
-            SaveCommand = new RelayCommand(p => SaveChanges());
 
             // Initialize data
             InitializeData();
@@ -88,15 +85,13 @@ namespace Sellsys.WpfClient.ViewModels
                 {
                     Name = "刘蛇立",
                     Phone = "15862184966",
-                    IsPrimary = true,
-                    IsSupport = false
+                    IsPrimary = true
                 });
                 Contacts.Add(new ContactDisplayModel
                 {
                     Name = "李逵",
                     Phone = "13956774892",
-                    IsPrimary = false,
-                    IsSupport = true
+                    IsPrimary = false
                 });
             }
         }
@@ -106,22 +101,7 @@ namespace Sellsys.WpfClient.ViewModels
             CloseRequested?.Invoke(this, EventArgs.Empty);
         }
 
-        private void SaveChanges()
-        {
-            try
-            {
-                // TODO: 实际保存联系人的支持人/关键人标识到数据库
-                // 这里可以调用API来更新联系人信息
 
-                MessageBox.Show("联系人信息已更新", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
-                ContactsUpdated?.Invoke(this, EventArgs.Empty);
-                CloseRequested?.Invoke(this, EventArgs.Empty);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"保存失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
     }
 
     public class ContactDisplayModel : ViewModelBase
@@ -129,7 +109,6 @@ namespace Sellsys.WpfClient.ViewModels
         private string _name = string.Empty;
         private string _phone = string.Empty;
         private bool _isPrimary;
-        private bool _isSupport;
 
         public string Name
         {
@@ -147,12 +126,6 @@ namespace Sellsys.WpfClient.ViewModels
         {
             get => _isPrimary;
             set => SetProperty(ref _isPrimary, value);
-        }
-
-        public bool IsSupport
-        {
-            get => _isSupport;
-            set => SetProperty(ref _isSupport, value);
         }
     }
 }

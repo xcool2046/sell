@@ -227,6 +227,77 @@ namespace Sellsys.WpfClient.Services
             }
         }
 
+        // Customer assignment methods
+        public async Task AssignSalesPersonAsync(int customerId, int salesPersonId)
+        {
+            try
+            {
+                // Get current customer data
+                var customer = await GetCustomerByIdAsync(customerId);
+
+                // Create update DTO with new sales person assignment
+                var updateDto = new CustomerUpsertDto
+                {
+                    Name = customer.Name,
+                    Province = customer.Province,
+                    City = customer.City,
+                    Address = customer.Address,
+                    Remarks = customer.Remarks,
+                    IndustryTypes = customer.IndustryTypes,
+                    SalesPersonId = salesPersonId,
+                    SupportPersonId = customer.SupportPersonId,
+                    Contacts = customer.Contacts.Select(c => new ContactUpsertDto
+                    {
+                        Id = c.Id,
+                        Name = c.Name,
+                        Phone = c.Phone,
+                        IsPrimary = c.IsPrimary
+                    }).ToList()
+                };
+
+                await UpdateCustomerAsync(customerId, updateDto);
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new Exception($"网络请求失败: {ex.Message}");
+            }
+        }
+
+        public async Task AssignSupportPersonAsync(int customerId, int supportPersonId)
+        {
+            try
+            {
+                // Get current customer data
+                var customer = await GetCustomerByIdAsync(customerId);
+
+                // Create update DTO with new support person assignment
+                var updateDto = new CustomerUpsertDto
+                {
+                    Name = customer.Name,
+                    Province = customer.Province,
+                    City = customer.City,
+                    Address = customer.Address,
+                    Remarks = customer.Remarks,
+                    IndustryTypes = customer.IndustryTypes,
+                    SalesPersonId = customer.SalesPersonId,
+                    SupportPersonId = supportPersonId,
+                    Contacts = customer.Contacts.Select(c => new ContactUpsertDto
+                    {
+                        Id = c.Id,
+                        Name = c.Name,
+                        Phone = c.Phone,
+                        IsPrimary = c.IsPrimary
+                    }).ToList()
+                };
+
+                await UpdateCustomerAsync(customerId, updateDto);
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new Exception($"网络请求失败: {ex.Message}");
+            }
+        }
+
         // Sales Follow-up API methods
         public async Task<List<SalesFollowUpLog>> GetSalesFollowUpLogsAsync()
         {

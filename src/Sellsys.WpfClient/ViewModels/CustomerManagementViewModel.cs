@@ -283,17 +283,20 @@ namespace Sellsys.WpfClient.ViewModels
             {
                 IsLoading = true;
 
-                // For now, use mock data since API might not be ready
-                var customers = GetMockCustomers();
+                // Use real API call
+                var customers = await _apiService.GetCustomersAsync();
 
                 Customers.Clear();
-                foreach (var customer in customers)
+                if (customers != null)
                 {
-                    Customers.Add(customer);
+                    foreach (var customer in customers)
+                    {
+                        Customers.Add(customer);
+                    }
                 }
 
-                // TODO: Replace with actual API call when backend is ready
-                // var customers = await _apiService.GetCustomersAsync();
+                // Update filter options based on loaded data
+                UpdateFilterOptions();
             }
             catch (Exception ex)
             {
@@ -305,98 +308,95 @@ namespace Sellsys.WpfClient.ViewModels
             }
         }
 
-        private List<Customer> GetMockCustomers()
+        private void UpdateFilterOptions()
         {
-            return new List<Customer>
+            // Update industry types
+            var industryTypes = Customers
+                .Where(c => !string.IsNullOrEmpty(c.IndustryTypes))
+                .SelectMany(c => c.IndustryTypes.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                .Select(t => t.Trim())
+                .Distinct()
+                .OrderBy(t => t)
+                .ToList();
+
+            IndustryTypes.Clear();
+            IndustryTypes.Add("全部");
+            foreach (var type in industryTypes)
             {
-                new Customer
-                {
-                    Id = 1,
-                    Name = "广文学院职业技术学校",
-                    IndustryTypes = "应急",
-                    Province = "四川省",
-                    City = "成都市",
-                    Address = "成都市高新区示例地址",
-                    Remarks = "重点客户",
-                    SalesPersonName = "张飞",
-                    SupportPersonName = "李客服",
-                    CustomerIntention = "等分配",
-                    CustomerRemarks = "重点客户",
-                    CustomerStatus = "已联系",
-                    CreatedAt = new DateTime(2025, 7, 9, 11, 24, 46),
-                    Contacts = new System.Collections.ObjectModel.ObservableCollection<Contact>
-                    {
-                        new Contact { Id = 1, Name = "李主任", Phone = "13800138001", IsPrimary = true },
-                        new Contact { Id = 2, Name = "王老师", Phone = "13800138002", IsPrimary = false },
-                        new Contact { Id = 3, Name = "陈校长", Phone = "13800138003", IsPrimary = false }
-                    }
-                },
-                new Customer
-                {
-                    Id = 2,
-                    Name = "广文学院职业技术学校",
-                    IndustryTypes = "应急",
-                    Province = "四川省",
-                    City = "成都市",
-                    Address = "成都市高新区示例地址",
-                    Remarks = "重点客户",
-                    SalesPersonName = "张飞",
-                    SupportPersonName = "王客服",
-                    CustomerIntention = "待联系",
-                    CustomerRemarks = "有合作意向",
-                    CustomerStatus = "跟进中",
-                    CreatedAt = new DateTime(2025, 7, 9, 11, 23, 46),
-                    Contacts = new System.Collections.ObjectModel.ObservableCollection<Contact>
-                    {
-                        new Contact { Id = 4, Name = "刘处长", Phone = "13800138004", IsPrimary = true }
-                    }
-                },
-                new Customer
-                {
-                    Id = 3,
-                    Name = "广文学院职业技术学校",
-                    IndustryTypes = "应急",
-                    Province = "四川省",
-                    City = "成都市",
-                    Address = "成都市高新区示例地址",
-                    Remarks = "重点客户",
-                    SalesPersonName = "张飞",
-                    SupportPersonName = "赵客服",
-                    CustomerIntention = "跟进中",
-                    CustomerRemarks = "无",
-                    CustomerStatus = "待联系",
-                    CreatedAt = new DateTime(2025, 7, 9, 11, 23, 46),
-                    Contacts = new System.Collections.ObjectModel.ObservableCollection<Contact>
-                    {
-                        new Contact { Id = 5, Name = "赵主任", Phone = "13800138005", IsPrimary = true },
-                        new Contact { Id = 6, Name = "钱老师", Phone = "13800138006", IsPrimary = false },
-                        new Contact { Id = 7, Name = "孙校长", Phone = "13800138007", IsPrimary = false }
-                    }
-                },
-                new Customer
-                {
-                    Id = 4,
-                    Name = "广文学院职业技术学校",
-                    IndustryTypes = "应急",
-                    Province = "四川省",
-                    City = "成都市",
-                    Address = "成都市高新区示例地址",
-                    Remarks = "重点客户",
-                    SalesPersonName = "张小二",
-                    SupportPersonName = "孙客服",
-                    CustomerIntention = "已成交",
-                    CustomerRemarks = "重点客户",
-                    CustomerStatus = "已成交",
-                    CreatedAt = new DateTime(2025, 7, 9, 11, 23, 46),
-                    Contacts = new System.Collections.ObjectModel.ObservableCollection<Contact>
-                    {
-                        new Contact { Id = 8, Name = "周主任", Phone = "13800138008", IsPrimary = true },
-                        new Contact { Id = 9, Name = "吴老师", Phone = "13800138009", IsPrimary = false },
-                        new Contact { Id = 10, Name = "郑校长", Phone = "13800138010", IsPrimary = false }
-                    }
-                }
-            };
+                IndustryTypes.Add(type);
+            }
+
+            // Update provinces
+            var provinces = Customers
+                .Where(c => !string.IsNullOrEmpty(c.Province))
+                .Select(c => c.Province)
+                .Distinct()
+                .OrderBy(p => p)
+                .ToList();
+
+            Provinces.Clear();
+            Provinces.Add("全部");
+            foreach (var province in provinces)
+            {
+                Provinces.Add(province);
+            }
+
+            // Update cities based on selected province
+            UpdateCities();
+
+            // Update contact statuses
+            var statuses = Customers
+                .Where(c => !string.IsNullOrEmpty(c.CustomerStatus))
+                .Select(c => c.CustomerStatus)
+                .Distinct()
+                .OrderBy(s => s)
+                .ToList();
+
+            ContactStatuses.Clear();
+            ContactStatuses.Add("全部");
+            foreach (var status in statuses)
+            {
+                ContactStatuses.Add(status);
+            }
+
+            // Update responsible persons
+            var responsiblePersons = Customers
+                .Where(c => !string.IsNullOrEmpty(c.SalesPersonName))
+                .Select(c => c.SalesPersonName)
+                .Distinct()
+                .OrderBy(p => p)
+                .ToList();
+
+            ResponsiblePersons.Clear();
+            ResponsiblePersons.Add("全部");
+            foreach (var person in responsiblePersons)
+            {
+                ResponsiblePersons.Add(person);
+            }
         }
+
+        private void UpdateCities()
+        {
+            Cities.Clear();
+            Cities.Add("全部");
+
+            if (!string.IsNullOrEmpty(SelectedProvince) && SelectedProvince != "全部")
+            {
+                var cities = Customers
+                    .Where(c => c.Province == SelectedProvince && !string.IsNullOrEmpty(c.City))
+                    .Select(c => c.City)
+                    .Distinct()
+                    .OrderBy(c => c)
+                    .ToList();
+
+                foreach (var city in cities)
+                {
+                    Cities.Add(city);
+                }
+            }
+        }
+
+
 
         private async Task SearchCustomersAsync()
         {
@@ -404,8 +404,9 @@ namespace Sellsys.WpfClient.ViewModels
             {
                 IsLoading = true;
 
-                // Get all customers (using mock data for now)
-                var allCustomers = GetMockCustomers();
+                // Get all customers from API
+                var allCustomers = await _apiService.GetCustomersAsync();
+                if (allCustomers == null) allCustomers = new List<Customer>();
 
                 // Apply filters
                 var filteredCustomers = allCustomers.AsEnumerable();
@@ -639,10 +640,10 @@ namespace Sellsys.WpfClient.ViewModels
 
                 if (result == MessageBoxResult.Yes)
                 {
-                    // TODO: Call API to delete customer when backend is ready
-                    // await _apiService.DeleteCustomerAsync(customer.Id);
+                    // Call API to delete customer
+                    await _apiService.DeleteCustomerAsync(customer.Id);
 
-                    // For now, just remove from the collection
+                    // Remove from the collection
                     Customers.Remove(customer);
 
                     MessageBox.Show($"客户 '{customer.Name}' 已成功删除", "删除成功", MessageBoxButton.OK, MessageBoxImage.Information);

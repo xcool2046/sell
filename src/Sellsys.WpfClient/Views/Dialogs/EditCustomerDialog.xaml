@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="编辑客户"
-        Height="750" Width="750"
-        MinHeight="650" MinWidth="650"
-        MaxHeight="900"
+        Height="650" Width="750"
+        MinHeight="550" MinWidth="650"
+        MaxHeight="800"
         WindowStartupLocation="CenterOwner"
         ResizeMode="CanResize"
         ShowInTaskbar="False">
@@ -36,7 +36,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/> <!-- Title Bar -->
             <RowDefinition Height="*"/>  <!-- Content -->
-            <RowDefinition Height="60"/> <!-- Buttons -->
+            <RowDefinition Height="80" MinHeight="80"/> <!-- Buttons -->
         </Grid.RowDefinitions>
 
         <!-- Title Bar -->
@@ -199,18 +199,31 @@
 
         <!-- Button Area -->
         <Border Grid.Row="2" Background="#F8F9FA" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20,15">
-                <Button Content="取消" 
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20,22,20,22" VerticalAlignment="Center">
+                <Button Content="取消"
                         Command="{Binding CancelCommand}"
                         Style="{StaticResource DeleteButtonStyle}"
                         Width="80"
                         Height="35"
-                        Margin="0,0,10,0"/>
-                <Button Content="保存" 
-                        Command="{Binding SaveCommand}"
-                        Style="{StaticResource PrimaryButtonStyle}"
+                        Margin="0,0,10,0"
+                        VerticalAlignment="Center"/>
+                <Button Command="{Binding SaveCommand}"
                         Width="80"
-                        Height="35"/>
+                        Height="35"
+                        Margin="0"
+                        VerticalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+                            <Setter Property="Content" Value="保存"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                                    <Setter Property="Content" Value="保存中..."/>
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
             </StackPanel>
         </Border>
     </Grid>
