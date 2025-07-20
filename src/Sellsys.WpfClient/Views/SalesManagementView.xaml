@@ -20,7 +20,14 @@
                 CornerRadius="4"
                 Padding="15"
                 Margin="0,0,0,15">
-            <StackPanel Orientation="Horizontal">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- 第一行：搜索条件 -->
+                <WrapPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
                 <!-- 客户单位 (输入框) -->
                 <TextBlock Text="客户单位:" VerticalAlignment="Center" Margin="0,0,5,0"/>
                 <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
@@ -92,7 +99,8 @@
                         Width="60"
                         Height="32"
                         Margin="0"/>
-            </StackPanel>
+                </WrapPanel>
+            </Grid>
         </Border>
 
         <!-- Data Grid -->
@@ -118,13 +126,11 @@
                 <DataGrid x:Name="CustomersDataGrid"
                           ItemsSource="{Binding Customers}"
                           SelectedItem="{Binding SelectedCustomer}"
-                          Style="{StaticResource StandardDataGridStyle}"
-                          ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
-                          RowStyle="{StaticResource DataGridRowStyle}">
+                          Style="{StaticResource ResponsiveBlueHeaderDataGridStyle}">
                     <DataGrid.Columns>
                         <!-- 序号 -->
                         <DataGridTextColumn Header="序号"
-                                            Width="60"
+                                            Width="60" MinWidth="60"
                                             IsReadOnly="True">
                             <DataGridTextColumn.Binding>
                                 <Binding RelativeSource="{RelativeSource AncestorType=DataGridRow}"
@@ -135,23 +141,23 @@
                         <!-- 省份 -->
                         <DataGridTextColumn Header="省份"
                                             Binding="{Binding Province}"
-                                            Width="80"
+                                            Width="*" MinWidth="60"
                                             IsReadOnly="True"/>
 
                         <!-- 城市 -->
                         <DataGridTextColumn Header="城市"
                                             Binding="{Binding City}"
-                                            Width="80"
+                                            Width="*" MinWidth="60"
                                             IsReadOnly="True"/>
 
                         <!-- 客户单位 -->
                         <DataGridTextColumn Header="客户单位"
                                             Binding="{Binding Name}"
-                                            Width="200"
+                                            Width="3*" MinWidth="150"
                                             IsReadOnly="True"/>
 
                         <!-- 联系人（可点击数字） -->
-                        <DataGridTemplateColumn Header="联系人" Width="80">
+                        <DataGridTemplateColumn Header="联系人" Width="60" MinWidth="60">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button Content="{Binding ContactCount}"
@@ -192,17 +198,17 @@
                         <!-- 联系状态 -->
                         <DataGridTextColumn Header="联系状态"
                                             Binding="{Binding Status}"
-                                            Width="100"
+                                            Width="*" MinWidth="80"
                                             IsReadOnly="True"/>
 
                         <!-- 客户意向 -->
                         <DataGridTextColumn Header="客户意向"
                                             Binding="{Binding CustomerIntention}"
-                                            Width="100"
+                                            Width="*" MinWidth="80"
                                             IsReadOnly="True"/>
 
                         <!-- 联系记录 -->
-                        <DataGridTemplateColumn Header="联系记录" Width="80">
+                        <DataGridTemplateColumn Header="联系记录" Width="60" MinWidth="60">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button Content="{Binding ContactRecordCount}"
@@ -241,7 +247,7 @@
                         </DataGridTemplateColumn>
 
                         <!-- 订单 -->
-                        <DataGridTemplateColumn Header="订单" Width="80">
+                        <DataGridTemplateColumn Header="订单" Width="60" MinWidth="60">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button Content="{Binding OrderCount}"
@@ -282,23 +288,23 @@
                         <!-- 下次联系日期 -->
                         <DataGridTextColumn Header="下次联系日期"
                                             Binding="{Binding NextContactDate, StringFormat=yyyy-MM-dd}"
-                                            Width="120"
+                                            Width="120" MinWidth="120"
                                             IsReadOnly="True"/>
 
                         <!-- 销售人 -->
                         <DataGridTextColumn Header="销售人"
                                             Binding="{Binding SalesPersonName}"
-                                            Width="80"
+                                            Width="*" MinWidth="60"
                                             IsReadOnly="True"/>
 
                         <!-- 更新时间 -->
                         <DataGridTextColumn Header="更新时间"
                                             Binding="{Binding UpdatedAt, StringFormat=yyyy-MM-dd HH:mm:ss}"
-                                            Width="140"
+                                            Width="140" MinWidth="140"
                                             IsReadOnly="True"/>
 
                         <!-- 操作 -->
-                        <DataGridTemplateColumn Header="操作" Width="160">
+                        <DataGridTemplateColumn Header="操作" Width="160" MinWidth="160">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">

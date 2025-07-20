@@ -22,7 +22,14 @@
                 CornerRadius="4"
                 Padding="15"
                 Margin="0,0,0,15">
-            <StackPanel Orientation="Horizontal">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- 第一行：搜索条件 -->
+                <WrapPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
                 <!-- 客户名称 (输入框) -->
                 <TextBlock Text="客户名称:" VerticalAlignment="Center" Margin="0,0,5,0"/>
                 <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
@@ -89,27 +96,30 @@
                         Width="60"
                         Height="32"
                         Margin="0,0,15,0"/>
+                </WrapPanel>
 
-                <!-- 操作按钮 -->
-                <Button Content="添加客户"
-                        Command="{Binding AddCustomerCommand}"
-                        Style="{StaticResource PrimaryButtonStyle}"
-                        Width="100"
-                        Height="32"
-                        Margin="0,0,10,0"/>
-                <Button Content="分配给销售"
-                        Command="{Binding AssignSalesCommand}"
-                        Style="{StaticResource EditButtonStyle}"
-                        Width="100"
-                        Height="32"
-                        Margin="0,0,10,0"/>
-                <Button Content="分配给客服"
-                        Command="{Binding AssignSupportCommand}"
-                        Style="{StaticResource SupportButtonStyle}"
-                        Width="100"
-                        Height="32"
-                        Margin="0"/>
-            </StackPanel>
+                <!-- 第二行：操作按钮 -->
+                <WrapPanel Grid.Row="1" Orientation="Horizontal">
+                    <Button Content="添加客户"
+                            Command="{Binding AddCustomerCommand}"
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            Width="100"
+                            Height="32"
+                            Margin="0,0,10,0"/>
+                    <Button Content="分配给销售"
+                            Command="{Binding AssignSalesCommand}"
+                            Style="{StaticResource EditButtonStyle}"
+                            Width="100"
+                            Height="32"
+                            Margin="0,0,10,0"/>
+                    <Button Content="分配给客服"
+                            Command="{Binding AssignSupportCommand}"
+                            Style="{StaticResource SupportButtonStyle}"
+                            Width="100"
+                            Height="32"
+                            Margin="0"/>
+                </WrapPanel>
+            </Grid>
         </Border>
 
         <!-- Data Grid -->
@@ -135,15 +145,13 @@
                 <DataGrid x:Name="CustomersDataGrid"
                           ItemsSource="{Binding Customers}"
                           SelectedItem="{Binding SelectedCustomer}"
-                          Style="{StaticResource StandardDataGridStyle}"
-                          ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
-                          RowStyle="{StaticResource DataGridRowStyle}"
+                          Style="{StaticResource ResponsiveBlueHeaderDataGridStyle}"
                           HorizontalAlignment="Stretch"
                           VerticalAlignment="Stretch"
                           Background="White">
                     <DataGrid.Columns>
                         <!-- 复选框列 -->
-                        <DataGridTemplateColumn Width="40">
+                        <DataGridTemplateColumn Width="40" MinWidth="40">
                             <DataGridTemplateColumn.HeaderTemplate>
                                 <DataTemplate>
                                     <CheckBox IsChecked="{Binding DataContext.IsAllSelected, RelativeSource={RelativeSource AncestorType=UserControl}}"
@@ -164,29 +172,29 @@
                         <!-- 行业类别 -->
                         <DataGridTextColumn Header="行业类别"
                                             Binding="{Binding IndustryType}"
-                                            Width="100"
+                                            Width="*" MinWidth="80"
                                             IsReadOnly="True"/>
 
                         <!-- 省份 -->
                         <DataGridTextColumn Header="省份"
                                             Binding="{Binding Province}"
-                                            Width="80"
+                                            Width="*" MinWidth="60"
                                             IsReadOnly="True"/>
 
                         <!-- 城市 -->
                         <DataGridTextColumn Header="城市"
                                             Binding="{Binding City}"
-                                            Width="80"
+                                            Width="*" MinWidth="60"
                                             IsReadOnly="True"/>
 
                         <!-- 客户单位名称 -->
                         <DataGridTextColumn Header="客户单位名称"
                                             Binding="{Binding Name}"
-                                            Width="200"
+                                            Width="3*" MinWidth="150"
                                             IsReadOnly="True"/>
 
                         <!-- 联系人(蓝色数字) -->
-                        <DataGridTemplateColumn Header="联系人" Width="80">
+                        <DataGridTemplateColumn Header="联系人" Width="60" MinWidth="60">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button Content="{Binding ContactCount}"
@@ -226,35 +234,35 @@
                         <!-- 客户备注 -->
                         <DataGridTextColumn Header="客户备注"
                                             Binding="{Binding CustomerRemarks}"
-                                            Width="100"
+                                            Width="2*" MinWidth="80"
                                             IsReadOnly="True"/>
 
                         <!-- 客户状态 -->
                         <DataGridTextColumn Header="客户状态"
                                             Binding="{Binding CustomerStatus}"
-                                            Width="80"
+                                            Width="*" MinWidth="70"
                                             IsReadOnly="True"/>
 
                         <!-- 销售 -->
                         <DataGridTextColumn Header="销售"
                                             Binding="{Binding SalesPersonDisplay}"
-                                            Width="80"
+                                            Width="*" MinWidth="60"
                                             IsReadOnly="True"/>
 
                         <!-- 客服 -->
                         <DataGridTextColumn Header="客服"
                                             Binding="{Binding SupportPersonDisplay}"
-                                            Width="80"
+                                            Width="*" MinWidth="60"
                                             IsReadOnly="True"/>
 
                         <!-- 创建时间 -->
                         <DataGridTextColumn Header="创建时间"
                                             Binding="{Binding CreatedAt, StringFormat=yyyy-MM-dd HH:mm:ss}"
-                                            Width="140"
+                                            Width="140" MinWidth="140"
                                             IsReadOnly="True"/>
 
                         <!-- 操作列 -->
-                        <DataGridTemplateColumn Header="操作" Width="120">
+                        <DataGridTemplateColumn Header="操作" Width="120" MinWidth="120">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">

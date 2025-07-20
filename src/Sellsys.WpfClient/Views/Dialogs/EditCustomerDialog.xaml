@@ -5,12 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="编辑客户"
-        Height="650" Width="750"
-        MinHeight="550" MinWidth="650"
-        MaxHeight="800"
+        MinHeight="500" MinWidth="600"
+        MaxHeight="800" MaxWidth="1000"
         WindowStartupLocation="CenterOwner"
         ResizeMode="CanResize"
-        ShowInTaskbar="False">
+        ShowInTaskbar="False"
+        SizeToContent="Height">
     
     <Window.Resources>
         <!-- 弹窗样式 -->

@@ -217,6 +217,7 @@
                 <DataGrid x:Name="FinanceOrderDetailsDataGrid"
                           ItemsSource="{Binding FinanceOrderDetails}"
                           SelectedItem="{Binding SelectedOrderDetail}"
+                          Style="{StaticResource ResponsiveBlueHeaderDataGridStyle}"
                           AutoGenerateColumns="False"
                           CanUserAddRows="False"
                           CanUserDeleteRows="False"
@@ -291,7 +292,7 @@
                     <DataGrid.Columns>
                         <!-- 序号 -->
                         <DataGridTextColumn Header="序号"
-                                            Width="60"
+                                            Width="60" MinWidth="60"
                                             IsReadOnly="True">
                             <DataGridTextColumn.Binding>
                                 <Binding RelativeSource="{RelativeSource AncestorType=DataGridRow}"
@@ -308,7 +309,7 @@
                         <!-- 客户单位 -->
                         <DataGridTextColumn Header="客户单位"
                                             Binding="{Binding CustomerName}"
-                                            Width="150"
+                                            Width="3*" MinWidth="120"
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -323,7 +324,7 @@
                         <!-- 产品名称 -->
                         <DataGridTextColumn Header="产品名称"
                                             Binding="{Binding ProductFullName}"
-                                            Width="120"
+                                            Width="2*" MinWidth="100"
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -338,7 +339,7 @@
                         <!-- 型号规格 -->
                         <DataGridTextColumn Header="型号规格"
                                             Binding="{Binding ProductSpecification}"
-                                            Width="100"
+                                            Width="*" MinWidth="80"
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -353,7 +354,7 @@
                         <!-- 产品定价 -->
                         <DataGridTextColumn Header="产品定价"
                                             Binding="{Binding FormattedListPrice}"
-                                            Width="100"
+                                            Width="*" MinWidth="80"
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -366,7 +367,7 @@
                         <!-- 实际单价 -->
                         <DataGridTextColumn Header="实际单价"
                                             Binding="{Binding FormattedUnitPrice}"
-                                            Width="100"
+                                            Width="*" MinWidth="80"
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -379,7 +380,7 @@
                         <!-- 数量 -->
                         <DataGridTextColumn Header="数量"
                                             Binding="{Binding Quantity}"
-                                            Width="80"
+                                            Width="*" MinWidth="60"
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -392,7 +393,7 @@
                         <!-- 单位 -->
                         <DataGridTextColumn Header="单位"
                                             Binding="{Binding ProductUnit}"
-                                            Width="60"
+                                            Width="*" MinWidth="50"
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -405,7 +406,7 @@
                         <!-- 订单金额 -->
                         <DataGridTextColumn Header="订单金额"
                                             Binding="{Binding FormattedTotalAmount}"
-                                            Width="120"
+                                            Width="*" MinWidth="90"
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -419,7 +420,7 @@
                         <!-- 销售提成 -->
                         <DataGridTextColumn Header="销售提成"
                                             Binding="{Binding FormattedSalesCommission}"
-                                            Width="100"
+                                            Width="*" MinWidth="80"
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -432,7 +433,7 @@
                         <!-- 主管提成 -->
                         <DataGridTextColumn Header="主管提成"
                                             Binding="{Binding FormattedSupervisorCommission}"
-                                            Width="100"
+                                            Width="*" MinWidth="80"
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -445,7 +446,7 @@
                         <!-- 经理提成 -->
                         <DataGridTextColumn Header="经理提成"
                                             Binding="{Binding FormattedManagerCommission}"
-                                            Width="100"
+                                            Width="*" MinWidth="80"
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -458,7 +459,7 @@
                         <!-- 签单日期 -->
                         <DataGridTextColumn Header="签单日期"
                                             Binding="{Binding FormattedCreatedDate}"
-                                            Width="120"
+                                            Width="120" MinWidth="120"
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -471,7 +472,7 @@
                         <!-- 销售人 -->
                         <DataGridTextColumn Header="销售人"
                                             Binding="{Binding SalesPersonName}"
-                                            Width="100"
+                                            Width="*" MinWidth="70"
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -484,7 +485,7 @@
                         <!-- 订单状态 -->
                         <DataGridTextColumn Header="订单状态"
                                             Binding="{Binding OrderStatus}"
-                                            Width="100"
+                                            Width="*" MinWidth="80"
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -497,7 +498,7 @@
                         <!-- 到期日期 -->
                         <DataGridTextColumn Header="到期日期"
                                             Binding="{Binding FormattedExpiryDate}"
-                                            Width="120"
+                                            Width="120" MinWidth="120"
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -508,7 +509,7 @@
                         </DataGridTextColumn>
 
                         <!-- 操作 -->
-                        <DataGridTemplateColumn Header="操作" Width="100">
+                        <DataGridTemplateColumn Header="操作" Width="100" MinWidth="100">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">

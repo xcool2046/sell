@@ -8,10 +8,9 @@
         xmlns:viewmodels="clr-namespace:Sellsys.WpfClient.ViewModels"
         mc:Ignorable="d"
         Title="巨炜科技客户管理信息系统"
-        Height="720" Width="1280"
         MinHeight="600" MinWidth="1000"
         WindowStartupLocation="CenterScreen"
-        WindowState="Normal"
+        WindowState="Maximized"
         ShowInTaskbar="True"
         Visibility="Visible"
         Topmost="False">
@@ -32,14 +31,14 @@
         <!-- Main Content Area -->
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"/> <!-- Left Navigation -->
+                <ColumnDefinition Width="Auto" MinWidth="180" MaxWidth="250"/> <!-- Left Navigation -->
                 <ColumnDefinition Width="*"/>   <!-- Main View -->
             </Grid.ColumnDefinitions>
 
             <!-- Left Navigation Panel -->
             <Border Grid.Column="0" Background="{StaticResource LeftMenuBackgroundBrush}">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                    <StackPanel Margin="0,20,0,0">
+                    <StackPanel Margin="10,20,10,20">
                         <!-- Navigation Buttons -->
                         <Button Content="客户管理"
                                 Command="{Binding ShowCustomerManagementViewCommand}"
@@ -75,8 +74,10 @@
             <!-- Content Display -->
             <ContentControl Grid.Column="1"
                             Content="{Binding CurrentView}"
-                            Margin="20"
-                            Background="White"/>
+                            Margin="10,20,20,20"
+                            Background="White"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"/>
         </Grid>
 
         <!-- Dialog Layer -->

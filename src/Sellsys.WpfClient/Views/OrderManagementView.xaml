@@ -19,9 +19,9 @@
                 BorderBrush="{StaticResource BorderBrush}"
                 BorderThickness="1"
                 CornerRadius="4"
-                Padding="15"
-                Margin="0,0,0,15">
-            <StackPanel Orientation="Horizontal">
+                Padding="10"
+                Margin="0,0,0,10">
+            <WrapPanel Orientation="Horizontal">
                 <!-- 输入客户名称 (输入框) -->
                 <TextBlock Text="输入客户名称:" VerticalAlignment="Center" Margin="0,0,5,0"/>
                 <TextBox Text="{Binding SearchCustomerName, UpdateSourceTrigger=PropertyChanged}"
@@ -99,7 +99,7 @@
                         Width="60"
                         Height="32"
                         Margin="0"/>
-            </StackPanel>
+            </WrapPanel>
         </Border>
 
         <!-- Data Grid Section -->
@@ -110,7 +110,7 @@
             <DataGrid x:Name="OrdersDataGrid"
                       ItemsSource="{Binding Orders}"
                       SelectedItem="{Binding SelectedOrder}"
-                      Style="{StaticResource BlueHeaderDataGridStyle}"
+                      Style="{StaticResource ResponsiveBlueHeaderDataGridStyle}"
                       AutoGenerateColumns="False"
                       CanUserAddRows="False"
                       CanUserDeleteRows="False"
@@ -121,7 +121,7 @@
 
                 <DataGrid.Columns>
                     <!-- 序号 -->
-                    <DataGridTextColumn Header="序号" Width="60" IsReadOnly="True">
+                    <DataGridTextColumn Header="序号" Width="60" MinWidth="60" IsReadOnly="True">
                         <DataGridTextColumn.Binding>
                             <Binding RelativeSource="{RelativeSource AncestorType=DataGridRow}"
                                      Converter="{StaticResource RowIndexConverter}"/>
@@ -129,43 +129,43 @@
                     </DataGridTextColumn>
 
                     <!-- 客户单位 -->
-                    <DataGridTextColumn Header="客户单位" Binding="{Binding CustomerName}" Width="200"/>
+                    <DataGridTextColumn Header="客户单位" Binding="{Binding CustomerName}" Width="3*" MinWidth="120"/>
 
                     <!-- 产品名称 -->
-                    <DataGridTextColumn Header="产品名称" Binding="{Binding ProductName}" Width="150"/>
+                    <DataGridTextColumn Header="产品名称" Binding="{Binding ProductName}" Width="2*" MinWidth="100"/>
 
                     <!-- 型号规格 -->
-                    <DataGridTextColumn Header="型号规格" Binding="{Binding ModelSpecification}" Width="120"/>
+                    <DataGridTextColumn Header="型号规格" Binding="{Binding ModelSpecification}" Width="2*" MinWidth="100"/>
 
                     <!-- 产品单价 -->
-                    <DataGridTextColumn Header="产品单价" Binding="{Binding FormattedProductPrice}" Width="100"/>
+                    <DataGridTextColumn Header="产品单价" Binding="{Binding FormattedProductPrice}" Width="*" MinWidth="80"/>
 
                     <!-- 实际单价 -->
-                    <DataGridTextColumn Header="实际单价" Binding="{Binding FormattedActualPrice}" Width="100"/>
+                    <DataGridTextColumn Header="实际单价" Binding="{Binding FormattedActualPrice}" Width="*" MinWidth="80"/>
 
                     <!-- 数量 -->
-                    <DataGridTextColumn Header="数量" Binding="{Binding Quantity}" Width="80"/>
+                    <DataGridTextColumn Header="数量" Binding="{Binding Quantity}" Width="*" MinWidth="60"/>
 
                     <!-- 单位 -->
-                    <DataGridTextColumn Header="单位" Binding="{Binding Unit}" Width="60"/>
+                    <DataGridTextColumn Header="单位" Binding="{Binding Unit}" Width="*" MinWidth="50"/>
 
                     <!-- 订单金额 -->
-                    <DataGridTextColumn Header="订单金额" Binding="{Binding FormattedTotalAmount}" Width="120"/>
+                    <DataGridTextColumn Header="订单金额" Binding="{Binding FormattedTotalAmount}" Width="*" MinWidth="90"/>
 
                     <!-- 生效日期 -->
-                    <DataGridTextColumn Header="生效日期" Binding="{Binding FormattedEffectiveDate}" Width="100"/>
+                    <DataGridTextColumn Header="生效日期" Binding="{Binding FormattedEffectiveDate}" Width="100" MinWidth="100"/>
 
                     <!-- 到期日期 -->
-                    <DataGridTextColumn Header="到期日期" Binding="{Binding FormattedExpiryDate}" Width="100"/>
+                    <DataGridTextColumn Header="到期日期" Binding="{Binding FormattedExpiryDate}" Width="100" MinWidth="100"/>
 
                     <!-- 签单时间 -->
-                    <DataGridTextColumn Header="签单时间" Binding="{Binding FormattedCreatedAt}" Width="140"/>
+                    <DataGridTextColumn Header="签单时间" Binding="{Binding FormattedCreatedAt}" Width="140" MinWidth="140"/>
 
                     <!-- 管理人 -->
-                    <DataGridTextColumn Header="管理人" Binding="{Binding SalesPersonName}" Width="80"/>
+                    <DataGridTextColumn Header="管理人" Binding="{Binding SalesPersonName}" Width="*" MinWidth="60"/>
 
                     <!-- 订单状态 -->
-                    <DataGridTextColumn Header="订单状态" Binding="{Binding Status}" Width="100"/>
+                    <DataGridTextColumn Header="订单状态" Binding="{Binding Status}" Width="*" MinWidth="80"/>
 
 
                 </DataGrid.Columns>
