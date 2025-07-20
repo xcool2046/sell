@@ -17,7 +17,9 @@ namespace Sellsys.WpfClient.Services
         public ApiService()
         {
             _httpClient = new HttpClient();
-            _httpClient.Timeout = TimeSpan.FromSeconds(5); // Set a reasonable timeout
+            _httpClient.Timeout = TimeSpan.FromSeconds(30); // Increase timeout for better reliability
+            _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+            _httpClient.DefaultRequestHeaders.Add("Accept-Charset", "utf-8");
         }
 
         public async Task<bool> IsApiAvailableAsync()
@@ -27,9 +29,48 @@ namespace Sellsys.WpfClient.Services
                 var response = await _httpClient.GetAsync($"{BaseUrl}/health");
                 return response.IsSuccessStatusCode;
             }
-            catch
+            catch (HttpRequestException ex)
             {
+                System.Diagnostics.Debug.WriteLine($"API连接失败 - 网络错误: {ex.Message}");
                 return false;
+            }
+            catch (TaskCanceledException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"API连接失败 - 请求超时: {ex.Message}");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"API连接失败 - 未知错误: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<(bool IsAvailable, string ErrorMessage)> CheckApiConnectionAsync()
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"{BaseUrl}/health");
+                if (response.IsSuccessStatusCode)
+                {
+                    return (true, "连接成功");
+                }
+                else
+                {
+                    return (false, $"服务器返回错误状态码: {response.StatusCode}");
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                return (false, $"网络连接失败: {ex.Message}");
+            }
+            catch (TaskCanceledException ex)
+            {
+                return (false, $"请求超时: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return (false, $"连接失败: {ex.Message}");
             }
         }
 
@@ -135,7 +176,21 @@ namespace Sellsys.WpfClient.Services
         {
             try
             {
-                var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<CustomerDto>>>($"{BaseUrl}/customers");
+                var httpResponse = await _httpClient.GetAsync($"{BaseUrl}/customers");
+                httpResponse.EnsureSuccessStatusCode();
+
+                var content = await httpResponse.Content.ReadAsStringAsync();
+                if (string.IsNullOrWhiteSpace(content))
+                {
+                    throw new Exception("服务器返回空响应");
+                }
+
+                var response = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<List<CustomerDto>>>(content, new System.Text.Json.JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                    Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                });
+
                 if (response != null && response.IsSuccess && response.Data != null)
                 {
                     return response.Data.Select(MapToCustomer).ToList();
@@ -144,11 +199,23 @@ namespace Sellsys.WpfClient.Services
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"网络请求失败: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"获取客户列表 - 网络请求失败: {ex.Message}");
+                throw new Exception($"网络连接失败，请检查服务器是否运行: {ex.Message}");
+            }
+            catch (TaskCanceledException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"获取客户列表 - 请求超时: {ex.Message}");
+                throw new Exception($"请求超时，请稍后重试: {ex.Message}");
             }
             catch (JsonException ex)
             {
-                throw new Exception($"数据解析失败: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"获取客户列表 - 数据解析失败: {ex.Message}");
+                throw new Exception($"服务器返回数据格式错误: {ex.Message}");
+            }
+            catch (Exception ex) when (!(ex.Message.Contains("获取客户列表失败")))
+            {
+                System.Diagnostics.Debug.WriteLine($"获取客户列表 - 未知错误: {ex.Message}");
+                throw new Exception($"获取客户列表时发生未知错误: {ex.Message}");
             }
         }
 
@@ -176,7 +243,18 @@ namespace Sellsys.WpfClient.Services
                 var response = await _httpClient.PostAsJsonAsync($"{BaseUrl}/customers", customerDto);
                 response.EnsureSuccessStatusCode();
 
-                var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<CustomerDto>>();
+                var content = await response.Content.ReadAsStringAsync();
+                if (string.IsNullOrWhiteSpace(content))
+                {
+                    throw new Exception("服务器返回空响应");
+                }
+
+                var apiResponse = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<CustomerDto>>(content, new System.Text.Json.JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                    Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                });
+
                 if (apiResponse != null && apiResponse.IsSuccess && apiResponse.Data != null)
                 {
                     return MapToCustomer(apiResponse.Data);
@@ -185,7 +263,23 @@ namespace Sellsys.WpfClient.Services
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"网络请求失败: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"创建客户 - 网络请求失败: {ex.Message}");
+                throw new Exception($"网络连接失败，无法创建客户，请检查服务器连接: {ex.Message}");
+            }
+            catch (TaskCanceledException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"创建客户 - 请求超时: {ex.Message}");
+                throw new Exception($"创建客户请求超时，请稍后重试: {ex.Message}");
+            }
+            catch (JsonException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"创建客户 - 数据解析失败: {ex.Message}");
+                throw new Exception($"服务器返回数据格式错误: {ex.Message}");
+            }
+            catch (Exception ex) when (!(ex.Message.Contains("创建客户失败")))
+            {
+                System.Diagnostics.Debug.WriteLine($"创建客户 - 未知错误: {ex.Message}");
+                throw new Exception($"创建客户时发生未知错误: {ex.Message}");
             }
         }
 
@@ -196,15 +290,42 @@ namespace Sellsys.WpfClient.Services
                 var response = await _httpClient.PutAsJsonAsync($"{BaseUrl}/customers/{id}", customerDto);
                 response.EnsureSuccessStatusCode();
 
-                var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse>();
-                if (apiResponse?.IsSuccess != true)
+                // PUT requests may return empty content (204 No Content)
+                var content = await response.Content.ReadAsStringAsync();
+                if (!string.IsNullOrWhiteSpace(content))
                 {
-                    throw new Exception(apiResponse?.Message ?? "更新客户失败");
+                    var apiResponse = System.Text.Json.JsonSerializer.Deserialize<ApiResponse>(content, new System.Text.Json.JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true,
+                        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                    });
+
+                    if (apiResponse?.IsSuccess != true)
+                    {
+                        throw new Exception(apiResponse?.Message ?? "更新客户失败");
+                    }
                 }
+                // If content is empty, assume success (HTTP 204)
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"网络请求失败: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"更新客户 - 网络请求失败: {ex.Message}");
+                throw new Exception($"网络连接失败，无法更新客户，请检查服务器连接: {ex.Message}");
+            }
+            catch (TaskCanceledException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"更新客户 - 请求超时: {ex.Message}");
+                throw new Exception($"更新客户请求超时，请稍后重试: {ex.Message}");
+            }
+            catch (JsonException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"更新客户 - 数据解析失败: {ex.Message}");
+                throw new Exception($"服务器返回数据格式错误: {ex.Message}");
+            }
+            catch (Exception ex) when (!(ex.Message.Contains("更新客户失败")))
+            {
+                System.Diagnostics.Debug.WriteLine($"更新客户 - 未知错误: {ex.Message}");
+                throw new Exception($"更新客户时发生未知错误: {ex.Message}");
             }
         }
 
@@ -215,15 +336,42 @@ namespace Sellsys.WpfClient.Services
                 var response = await _httpClient.DeleteAsync($"{BaseUrl}/customers/{id}");
                 response.EnsureSuccessStatusCode();
 
-                var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse>();
-                if (apiResponse?.IsSuccess != true)
+                // DELETE requests may return empty content (204 No Content)
+                var content = await response.Content.ReadAsStringAsync();
+                if (!string.IsNullOrWhiteSpace(content))
                 {
-                    throw new Exception(apiResponse?.Message ?? "删除客户失败");
+                    var apiResponse = System.Text.Json.JsonSerializer.Deserialize<ApiResponse>(content, new System.Text.Json.JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true,
+                        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                    });
+
+                    if (apiResponse?.IsSuccess != true)
+                    {
+                        throw new Exception(apiResponse?.Message ?? "删除客户失败");
+                    }
                 }
+                // If content is empty, assume success (HTTP 204)
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"网络请求失败: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"删除客户 - 网络请求失败: {ex.Message}");
+                throw new Exception($"网络连接失败，无法删除客户，请检查服务器连接: {ex.Message}");
+            }
+            catch (TaskCanceledException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"删除客户 - 请求超时: {ex.Message}");
+                throw new Exception($"删除客户请求超时，请稍后重试: {ex.Message}");
+            }
+            catch (JsonException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"删除客户 - 数据解析失败: {ex.Message}");
+                throw new Exception($"服务器返回数据格式错误: {ex.Message}");
+            }
+            catch (Exception ex) when (!(ex.Message.Contains("删除客户失败")))
+            {
+                System.Diagnostics.Debug.WriteLine($"删除客户 - 未知错误: {ex.Message}");
+                throw new Exception($"删除客户时发生未知错误: {ex.Message}");
             }
         }
 

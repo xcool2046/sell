@@ -283,6 +283,15 @@ namespace Sellsys.WpfClient.ViewModels
             {
                 IsLoading = true;
 
+                // Check API connection first
+                var (isAvailable, errorMessage) = await _apiService.CheckApiConnectionAsync();
+                if (!isAvailable)
+                {
+                    MessageBox.Show($"无法连接到服务器: {errorMessage}\n\n请确保：\n1. 服务器正在运行\n2. 网络连接正常\n3. 防火墙未阻止连接",
+                        "连接错误", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
                 // Use real API call
                 var customers = await _apiService.GetCustomersAsync();
 
@@ -300,7 +309,22 @@ namespace Sellsys.WpfClient.ViewModels
             }
             catch (Exception ex)
             {
-                ErrorHandlingService.HandleApiError(ex, "loading customer data");
+                string errorMessage = "加载客户数据失败";
+
+                if (ex.Message.Contains("网络连接失败"))
+                {
+                    errorMessage = "网络连接失败，请检查服务器是否运行并重试";
+                }
+                else if (ex.Message.Contains("请求超时"))
+                {
+                    errorMessage = "请求超时，请检查网络连接并重试";
+                }
+                else
+                {
+                    errorMessage = $"加载客户数据失败: {ex.Message}";
+                }
+
+                MessageBox.Show(errorMessage, "错误", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally
             {
@@ -640,6 +664,14 @@ namespace Sellsys.WpfClient.ViewModels
 
                 if (result == MessageBoxResult.Yes)
                 {
+                    // Check API connection first
+                    var (isAvailable, errorMessage) = await _apiService.CheckApiConnectionAsync();
+                    if (!isAvailable)
+                    {
+                        MessageBox.Show($"无法连接到服务器: {errorMessage}", "连接错误", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+
                     // Call API to delete customer
                     await _apiService.DeleteCustomerAsync(customer.Id);
 
@@ -651,7 +683,28 @@ namespace Sellsys.WpfClient.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"删除客户失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                string errorMessage = "删除客户失败";
+
+                if (ex.Message.Contains("网络连接失败"))
+                {
+                    errorMessage = "网络连接失败，无法删除客户，请检查服务器连接";
+                }
+                else if (ex.Message.Contains("请求超时"))
+                {
+                    errorMessage = "删除请求超时，请稍后重试";
+                }
+                else if (ex.Message.Contains("Customer not found"))
+                {
+                    errorMessage = "客户不存在，可能已被其他用户删除";
+                    // Remove from local collection if it doesn't exist on server
+                    Customers.Remove(customer);
+                }
+                else
+                {
+                    errorMessage = $"删除客户失败: {ex.Message}";
+                }
+
+                MessageBox.Show(errorMessage, "错误", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

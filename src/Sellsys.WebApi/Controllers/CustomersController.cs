@@ -37,7 +37,7 @@ namespace Sellsys.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ApiResponse<CustomerDto>>> CreateCustomer(CustomerUpsertDto customerDto)
+        public async Task<ActionResult<ApiResponse<CustomerDto>>> CreateCustomer([FromBody] CustomerUpsertDto customerDto)
         {
             var response = await _customerService.CreateCustomerAsync(customerDto);
             if (response.Data == null)
@@ -48,7 +48,7 @@ namespace Sellsys.WebApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCustomer(int id, CustomerUpsertDto customerDto)
+        public async Task<IActionResult> UpdateCustomer(int id, [FromBody] CustomerUpsertDto customerDto)
         {
             var response = await _customerService.UpdateCustomerAsync(id, customerDto);
             if (!response.IsSuccess)
