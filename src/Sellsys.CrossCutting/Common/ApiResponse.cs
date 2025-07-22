@@ -33,5 +33,16 @@ namespace Sellsys.CrossCutting.Common
                 StatusCode = HttpStatusCode.OK
             };
         }
+
+        public static ApiResponse<T> Fail(string message, HttpStatusCode statusCode = HttpStatusCode.InternalServerError)
+        {
+            return new ApiResponse<T>
+            {
+                IsSuccess = false,
+                Data = default(T),
+                Message = message,
+                StatusCode = statusCode
+            };
+        }
     }
 }

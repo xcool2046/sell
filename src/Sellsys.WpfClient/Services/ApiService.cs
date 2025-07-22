@@ -535,6 +535,39 @@ namespace Sellsys.WpfClient.Services
             }
         }
 
+        // Authentication API methods
+        public async Task<LoginResponseDto?> LoginAsync(string username, string password)
+        {
+            try
+            {
+                var loginRequest = new LoginRequestDto
+                {
+                    Username = username,
+                    Password = password
+                };
+
+                var response = await _httpClient.PostAsJsonAsync($"{BaseUrl}/auth/login", loginRequest);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"登录失败: {errorContent}");
+                }
+
+                var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<LoginResponseDto>>();
+                if (apiResponse != null && apiResponse.IsSuccess && apiResponse.Data != null)
+                {
+                    return apiResponse.Data;
+                }
+
+                throw new Exception(apiResponse?.Message ?? "登录失败");
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new Exception($"网络请求失败: {ex.Message}");
+            }
+        }
+
         // Employee API methods
         public async Task<List<Employee>> GetEmployeesAsync()
         {
@@ -1891,6 +1924,25 @@ namespace Sellsys.WpfClient.Services
     public class ApiResponse<T> : ApiResponse
     {
         public T? Data { get; set; }
+    }
+
+    // Authentication DTO classes
+    public class LoginRequestDto
+    {
+        public string Username { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+    }
+
+    public class LoginResponseDto
+    {
+        public int Id { get; set; }
+        public string Username { get; set; } = string.Empty;
+        public string DisplayName { get; set; } = string.Empty;
+        public bool IsAdmin { get; set; }
+        public int? RoleId { get; set; }
+        public string? RoleName { get; set; }
+        public string? DepartmentName { get; set; }
+        public string AccessibleModules { get; set; } = string.Empty;
     }
 
     // DTO classes for API communication

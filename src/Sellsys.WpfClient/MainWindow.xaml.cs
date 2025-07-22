@@ -23,23 +23,10 @@ namespace Sellsys.WpfClient
                 System.Diagnostics.Debug.WriteLine("MainWindow: InitializeComponent completed");
                 File.AppendAllText(logPath, $"{DateTime.Now}: MainWindow: InitializeComponent completed\n");
 
+                System.Diagnostics.Debug.WriteLine("MainWindow: 准备创建MainViewModel...");
                 DataContext = new MainViewModel();
                 System.Diagnostics.Debug.WriteLine("MainWindow: MainViewModel created and set as DataContext");
                 File.AppendAllText(logPath, $"{DateTime.Now}: MainWindow: MainViewModel created and set as DataContext\n");
-
-                // 强制显示窗口
-                this.Show();
-                System.Diagnostics.Debug.WriteLine("MainWindow: Show() called");
-                File.AppendAllText(logPath, $"{DateTime.Now}: MainWindow: Show() called\n");
-
-                this.Activate();
-                System.Diagnostics.Debug.WriteLine("MainWindow: Activate() called");
-
-                this.Focus();
-                System.Diagnostics.Debug.WriteLine("MainWindow: Focus() called");
-
-                this.BringIntoView();
-                System.Diagnostics.Debug.WriteLine("MainWindow: BringIntoView() called");
 
                 // 确保窗口在屏幕中央
                 this.Left = (SystemParameters.PrimaryScreenWidth - this.Width) / 2;

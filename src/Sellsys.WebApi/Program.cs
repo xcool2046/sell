@@ -43,6 +43,7 @@ builder.Services.AddScoped<IFinanceService, FinanceService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<IDepartmentGroupService, DepartmentGroupService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 // Register seed services
 builder.Services.AddScoped<RoleSeedService>();

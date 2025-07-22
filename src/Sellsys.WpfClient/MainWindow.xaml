@@ -22,10 +22,63 @@
 
         <!-- Top Bar -->
         <Grid Grid.Row="0" Background="{StaticResource TopBarBackgroundBrush}">
-            <TextBlock Text="巨炜科技客户管理信息系统"
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 系统标题 -->
+            <TextBlock Grid.Column="0"
+                       Text="巨炜科技客户管理信息系统"
                        Style="{StaticResource TitleTextStyle}"
                        VerticalAlignment="Center"
                        Margin="20,0,0,0"/>
+
+            <!-- 用户信息和登出 -->
+            <StackPanel Grid.Column="1"
+                       Orientation="Horizontal"
+                       VerticalAlignment="Center"
+                       Margin="0,0,20,0">
+
+                <!-- 用户信息 -->
+                <TextBlock Text="{Binding CurrentUserInfo}"
+                          Foreground="White"
+                          FontSize="14"
+                          VerticalAlignment="Center"
+                          Margin="0,0,15,0"/>
+
+                <!-- 登出按钮 -->
+                <Button Content="登出"
+                       Command="{Binding LogoutCommand}"
+                       Background="#FF6C757D"
+                       Foreground="White"
+                       BorderThickness="0"
+                       Padding="15,8"
+                       FontSize="12"
+                       Cursor="Hand">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                               CornerRadius="3"
+                                               Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#FF5A6268"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </StackPanel>
         </Grid>
 
         <!-- Main Content Area -->
@@ -42,31 +95,38 @@
                         <!-- Navigation Buttons -->
                         <Button Content="客户管理"
                                 Command="{Binding ShowCustomerManagementViewCommand}"
-                                Style="{Binding CurrentViewName, Converter={StaticResource NavigationButtonStyleConverter}, ConverterParameter=CustomerManagement}"/>
+                                Style="{Binding CurrentViewName, Converter={StaticResource NavigationButtonStyleConverter}, ConverterParameter=CustomerManagement}"
+                                Visibility="{Binding ., Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=CustomerManagement}"/>
 
                         <Button Content="销售管理"
                                 Command="{Binding ShowSalesManagementViewCommand}"
-                                Style="{Binding CurrentViewName, Converter={StaticResource NavigationButtonStyleConverter}, ConverterParameter=SalesManagement}"/>
+                                Style="{Binding CurrentViewName, Converter={StaticResource NavigationButtonStyleConverter}, ConverterParameter=SalesManagement}"
+                                Visibility="{Binding ., Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=SalesFollowUp}"/>
 
                         <Button Content="订单管理"
                                 Command="{Binding ShowOrderManagementViewCommand}"
-                                Style="{Binding CurrentViewName, Converter={StaticResource NavigationButtonStyleConverter}, ConverterParameter=OrderManagement}"/>
+                                Style="{Binding CurrentViewName, Converter={StaticResource NavigationButtonStyleConverter}, ConverterParameter=OrderManagement}"
+                                Visibility="{Binding ., Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=OrderManagement}"/>
 
                         <Button Content="售后服务"
                                 Command="{Binding ShowAfterSalesViewCommand}"
-                                Style="{Binding CurrentViewName, Converter={StaticResource NavigationButtonStyleConverter}, ConverterParameter=AfterSales}"/>
+                                Style="{Binding CurrentViewName, Converter={StaticResource NavigationButtonStyleConverter}, ConverterParameter=AfterSales}"
+                                Visibility="{Binding ., Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=AfterSalesService}"/>
 
                         <Button Content="产品管理"
                                 Command="{Binding ShowProductManagementViewCommand}"
-                                Style="{Binding CurrentViewName, Converter={StaticResource NavigationButtonStyleConverter}, ConverterParameter=ProductManagement}"/>
+                                Style="{Binding CurrentViewName, Converter={StaticResource NavigationButtonStyleConverter}, ConverterParameter=ProductManagement}"
+                                Visibility="{Binding ., Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=ProductManagement}"/>
 
                         <Button Content="财务管理"
                                 Command="{Binding ShowFinanceManagementViewCommand}"
-                                Style="{Binding CurrentViewName, Converter={StaticResource NavigationButtonStyleConverter}, ConverterParameter=FinanceManagement}"/>
+                                Style="{Binding CurrentViewName, Converter={StaticResource NavigationButtonStyleConverter}, ConverterParameter=FinanceManagement}"
+                                Visibility="{Binding ., Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=FinanceManagement}"/>
 
                         <Button Content="系统设置"
                                 Command="{Binding ShowSystemSettingsViewCommand}"
-                                Style="{Binding CurrentViewName, Converter={StaticResource NavigationButtonStyleConverter}, ConverterParameter=SystemSettings}"/>
+                                Style="{Binding CurrentViewName, Converter={StaticResource NavigationButtonStyleConverter}, ConverterParameter=SystemSettings}"
+                                Visibility="{Binding ., Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=SystemSettings}"/>
                     </StackPanel>
                 </ScrollViewer>
             </Border>

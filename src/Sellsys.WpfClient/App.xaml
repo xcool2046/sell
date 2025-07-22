@@ -5,7 +5,7 @@
              xmlns:views="clr-namespace:Sellsys.WpfClient.Views"
              xmlns:viewmodels="clr-namespace:Sellsys.WpfClient.ViewModels"
              xmlns:converters="clr-namespace:Sellsys.WpfClient.Converters"
-             StartupUri="MainWindow.xaml">
+             Startup="Application_Startup">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -26,6 +26,9 @@
             <converters:StringToBooleanConverter x:Key="StringToBooleanConverter"/>
             <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
             <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+            <converters:PermissionToVisibilityConverter x:Key="PermissionToVisibilityConverter"/>
+            <converters:PermissionToBooleanConverter x:Key="PermissionToBooleanConverter"/>
+            <converters:AdminPermissionToVisibilityConverter x:Key="AdminPermissionToVisibilityConverter"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
             <!-- ViewModel to View mappings -->

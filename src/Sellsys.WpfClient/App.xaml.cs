@@ -2,6 +2,7 @@
 using System.Data;
 using System.Windows;
 using Sellsys.WpfClient.Services;
+using Sellsys.WpfClient.Views;
 
 namespace Sellsys.WpfClient;
 
@@ -33,6 +34,26 @@ public partial class App : Application
             System.Diagnostics.Debug.WriteLine($"App.OnStartup: Stack trace: {ex.StackTrace}");
             MessageBox.Show($"应用程序启动失败: {ex.Message}\n\n{ex.StackTrace}", "启动错误", MessageBoxButton.OK, MessageBoxImage.Error);
             throw;
+        }
+    }
+
+    private void Application_Startup(object sender, StartupEventArgs e)
+    {
+        try
+        {
+            System.Diagnostics.Debug.WriteLine("Application_Startup: Creating login window...");
+
+            // 创建并显示登录窗口
+            var loginWindow = new LoginWindow();
+            loginWindow.Show();
+
+            System.Diagnostics.Debug.WriteLine("Application_Startup: Login window created and shown");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Application_Startup: Exception: {ex.Message}");
+            MessageBox.Show($"启动登录窗口失败: {ex.Message}", "启动错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            Shutdown();
         }
     }
 

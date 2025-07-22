@@ -1,5 +1,7 @@
 using Sellsys.WpfClient.Commands;
 using Sellsys.WpfClient.Services;
+using Sellsys.WpfClient.Views;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Sellsys.WpfClient.ViewModels
@@ -9,6 +11,7 @@ namespace Sellsys.WpfClient.ViewModels
         private ViewModelBase? _currentView;
         private ViewModelBase? _dialogViewModel;
         private string _currentViewName = "CustomerManagement";
+        private string _currentUserInfo = string.Empty;
 
         public ViewModelBase? CurrentView
         {
@@ -28,6 +31,12 @@ namespace Sellsys.WpfClient.ViewModels
             set => SetProperty(ref _currentViewName, value);
         }
 
+        public string CurrentUserInfo
+        {
+            get => _currentUserInfo;
+            set => SetProperty(ref _currentUserInfo, value);
+        }
+
         // ViewModels for each module
         public ProductManagementViewModel ProductManagementVM { get; set; }
         public CustomerManagementViewModel CustomerManagementVM { get; set; }
@@ -45,6 +54,7 @@ namespace Sellsys.WpfClient.ViewModels
         public ICommand ShowProductManagementViewCommand { get; }
         public ICommand ShowFinanceManagementViewCommand { get; }
         public ICommand ShowSystemSettingsViewCommand { get; }
+        public ICommand LogoutCommand { get; }
 
         public MainViewModel()
         {
@@ -85,13 +95,19 @@ namespace Sellsys.WpfClient.ViewModels
                 ShowProductManagementViewCommand = new RelayCommand(p => SwitchView("ProductManagement", ProductManagementVM));
                 ShowFinanceManagementViewCommand = new RelayCommand(p => SwitchView("FinanceManagement", FinanceManagementVM));
                 ShowSystemSettingsViewCommand = new RelayCommand(p => SwitchView("SystemSettings", SystemSettingsVM));
+                LogoutCommand = new RelayCommand(p => Logout());
 
                 System.Diagnostics.Debug.WriteLine("MainViewModel: Commands created successfully");
 
-                // Set the initial view to Customer Management
-                System.Diagnostics.Debug.WriteLine("MainViewModel: Setting initial view...");
-                CurrentView = CustomerManagementVM;
-                CurrentViewName = "CustomerManagement";
+                // 订阅用户变更事件
+                CurrentUser.UserChanged += OnUserChanged;
+
+                // 初始化用户信息
+                UpdateCurrentUserInfo();
+
+                // Set the initial view based on user permissions
+                System.Diagnostics.Debug.WriteLine("MainViewModel: Setting initial view based on permissions...");
+                SetInitialViewBasedOnPermissions();
 
                 System.Diagnostics.Debug.WriteLine("MainViewModel: Initialization completed successfully");
             }
@@ -107,6 +123,14 @@ namespace Sellsys.WpfClient.ViewModels
         {
             try
             {
+                // 检查权限（除了基于权限的初始设置）
+                string modulePermission = GetModulePermissionName(viewName);
+                if (!string.IsNullOrEmpty(modulePermission) && !HasPermission(modulePermission))
+                {
+                    MessageBox.Show("您没有权限访问此模块", "权限不足", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
                 System.Diagnostics.Debug.WriteLine($"Switching to view: {viewName}");
                 CurrentViewName = viewName;
                 CurrentView = viewModel;
@@ -131,6 +155,26 @@ namespace Sellsys.WpfClient.ViewModels
             }
         }
 
+        /// <summary>
+        /// 获取视图对应的权限模块名称
+        /// </summary>
+        /// <param name="viewName">视图名称</param>
+        /// <returns>权限模块名称</returns>
+        private string GetModulePermissionName(string viewName)
+        {
+            return viewName switch
+            {
+                "CustomerManagement" => "CustomerManagement",
+                "SalesManagement" => "SalesFollowUp",
+                "OrderManagement" => "OrderManagement",
+                "AfterSales" => "AfterSalesService",
+                "ProductManagement" => "ProductManagement",
+                "FinanceManagement" => "FinanceManagement",
+                "SystemSettings" => "SystemSettings",
+                _ => string.Empty
+            };
+        }
+
         private void SwitchView(ViewModelBase viewModel)
         {
             CurrentView = viewModel;
@@ -145,6 +189,113 @@ namespace Sellsys.WpfClient.ViewModels
         public void CloseDialog()
         {
             DialogViewModel = null;
+        }
+
+        /// <summary>
+        /// 用户信息变更事件处理
+        /// </summary>
+        /// <param name="userInfo">用户信息</param>
+        private void OnUserChanged(Models.UserInfo? userInfo)
+        {
+            UpdateCurrentUserInfo();
+        }
+
+        /// <summary>
+        /// 更新当前用户信息显示
+        /// </summary>
+        private void UpdateCurrentUserInfo()
+        {
+            CurrentUserInfo = CurrentUser.GetUserDisplayInfo();
+        }
+
+        /// <summary>
+        /// 登出
+        /// </summary>
+        private void Logout()
+        {
+            try
+            {
+                var result = MessageBox.Show("确定要退出登录吗？", "确认", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                {
+                    // 清除当前用户
+                    CurrentUser.ClearUser();
+
+                    // 关闭主窗口
+                    var mainWindow = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
+                    mainWindow?.Close();
+
+                    // 显示登录窗口
+                    var loginWindow = new LoginWindow();
+                    loginWindow.Show();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"登出过程中发生错误：{ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        /// <summary>
+        /// 检查用户是否有权限访问指定模块
+        /// </summary>
+        /// <param name="module">模块名称</param>
+        /// <returns>是否有权限</returns>
+        public bool HasPermission(string module)
+        {
+            return CurrentUser.HasPermission(module);
+        }
+
+        /// <summary>
+        /// 根据权限设置初始视图
+        /// </summary>
+        private void SetInitialViewBasedOnPermissions()
+        {
+            // 按优先级顺序检查权限并设置初始视图（同步版本，不加载数据）
+            if (HasPermission("CustomerManagement"))
+            {
+                SwitchViewSync("CustomerManagement", CustomerManagementVM);
+            }
+            else if (HasPermission("SalesFollowUp"))
+            {
+                SwitchViewSync("SalesManagement", SalesManagementVM);
+            }
+            else if (HasPermission("OrderManagement"))
+            {
+                SwitchViewSync("OrderManagement", OrderManagementVM);
+            }
+            else if (HasPermission("ProductManagement"))
+            {
+                SwitchViewSync("ProductManagement", ProductManagementVM);
+            }
+            else if (HasPermission("AfterSalesService"))
+            {
+                SwitchViewSync("AfterSales", AfterSalesVM);
+            }
+            else if (HasPermission("FinanceManagement"))
+            {
+                SwitchViewSync("FinanceManagement", FinanceManagementVM);
+            }
+            else if (HasPermission("SystemSettings"))
+            {
+                SwitchViewSync("SystemSettings", SystemSettingsVM);
+            }
+            else
+            {
+                // 如果没有任何权限，显示一个空白页面或错误信息
+                CurrentView = null;
+                CurrentViewName = "NoPermission";
+            }
+        }
+
+        /// <summary>
+        /// 同步切换视图（不加载数据）
+        /// </summary>
+        private void SwitchViewSync(string viewName, ViewModelBase viewModel)
+        {
+            System.Diagnostics.Debug.WriteLine($"Switching to view (sync): {viewName}");
+            CurrentViewName = viewName;
+            CurrentView = viewModel;
         }
     }
 }
