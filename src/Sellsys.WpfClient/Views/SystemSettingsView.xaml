@@ -15,8 +15,8 @@
         </Grid.RowDefinitions>
 
         <!-- Top Navigation Bar -->
-        <Border Grid.Row="0" Background="{StaticResource TopBarBackgroundBrush}" Height="50">
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0">
+        <Border Grid.Row="0" Background="#F8F9FA" Height="50">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="0,7,20,0">
                 <Button Content="部门管理"
                         Command="{Binding ShowDepartmentManagementCommand}"
                         Style="{StaticResource NavigationButtonStyle}"

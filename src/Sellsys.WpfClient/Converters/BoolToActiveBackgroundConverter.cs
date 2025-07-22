@@ -12,13 +12,13 @@ namespace Sellsys.WpfClient.Converters
         {
             if (value is bool isActive && isActive)
             {
-                // Active state - darker blue background
-                return new SolidColorBrush(Color.FromRgb(0x1E, 0x4A, 0x7E));
+                // Active state - same as finance management order list color
+                return new SolidColorBrush(Color.FromRgb(0x00, 0x7A, 0xCC));
             }
             else
             {
-                // Inactive state - same deep blue background
-                return new SolidColorBrush(Color.FromRgb(0x2A, 0x60, 0x9E));
+                // Inactive state - same as finance management order list color
+                return new SolidColorBrush(Color.FromRgb(0x00, 0x7A, 0xCC));
             }
         }
 

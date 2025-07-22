@@ -14,8 +14,8 @@
         </Grid.RowDefinitions>
 
         <!-- Action Button Section -->
-        <Border Grid.Row="0" Style="{StaticResource SearchAreaBorderStyle}">
-            <StackPanel Orientation="Horizontal">
+        <Border Grid.Row="0" Style="{StaticResource SearchAreaBorderStyle}" Padding="0,7,15,15">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
                 <Button Content="添加产品"
                         Command="{Binding AddProductCommand}"
                         Style="{StaticResource ActionButtonStyle}"/>
