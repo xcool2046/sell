@@ -44,6 +44,9 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<IDepartmentGroupService, DepartmentGroupService>();
 
+// Register seed services
+builder.Services.AddScoped<RoleSeedService>();
+
 
 var app = builder.Build();
 
@@ -52,6 +55,10 @@ using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<SellsysDbContext>();
     context.Database.EnsureCreated();
+
+    // Initialize seed data
+    var roleSeedService = scope.ServiceProvider.GetRequiredService<RoleSeedService>();
+    await roleSeedService.SeedRolesAsync();
 }
 
 // 3. Configure the HTTP request pipeline.
