@@ -10,6 +10,7 @@ namespace Sellsys.WpfClient.ViewModels
     public class SystemSettingsViewModel : ViewModelBase
     {
         private readonly ApiService _apiService;
+        private readonly EventBus _eventBus;
         private ObservableCollection<Department> _departments;
         private ObservableCollection<DepartmentGroup> _departmentGroups;
         private ObservableCollection<Role> _roles;
@@ -134,10 +135,16 @@ namespace Sellsys.WpfClient.ViewModels
         public SystemSettingsViewModel()
         {
             _apiService = new ApiService();
+            _eventBus = EventBus.Instance;
             _departments = new ObservableCollection<Department>();
             _departmentGroups = new ObservableCollection<DepartmentGroup>();
             _roles = new ObservableCollection<Role>();
             _employees = new ObservableCollection<Employee>();
+
+            // 订阅事件
+            _eventBus.Subscribe<DepartmentDeletedEvent>(OnDepartmentDeleted);
+            _eventBus.Subscribe<DepartmentUpdatedEvent>(OnDepartmentUpdated);
+            _eventBus.Subscribe<DepartmentGroupUpdatedEvent>(OnDepartmentGroupUpdated);
 
             // Initialize navigation commands
             ShowDepartmentManagementCommand = new RelayCommand(p => ShowDepartmentManagement());
@@ -376,28 +383,70 @@ namespace Sellsys.WpfClient.ViewModels
         {
             if (department == null) return;
 
-            var result = MessageBox.Show(
-                $"确定要删除部门 '{department.Name}' 吗？此操作不可撤销。",
-                "确认删除",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Warning);
-
-            if (result == MessageBoxResult.Yes)
+            try
             {
-                try
+                // 先获取部门的分组和员工信息，用于确认对话框
+                var groups = await _apiService.GetDepartmentGroupsByDepartmentIdAsync(department.Id);
+                var employees = await _apiService.GetEmployeesAsync();
+                var departmentEmployees = employees.Where(e => groups.Any(g => g.Id == e.GroupId)).ToList();
+
+                var groupCount = groups.Count;
+                var employeeCount = departmentEmployees.Count;
+
+                var confirmMessage = $"确定要删除部门 '{department.Name}' 吗？\n\n此操作将同时删除：";
+                if (groupCount > 0)
                 {
-                    IsLoading = true;
-                    await _apiService.DeleteDepartmentAsync(department.Id);
-                    await LoadDepartmentsAsync();
+                    confirmMessage += $"\n• {groupCount} 个分组：{string.Join(", ", groups.Select(g => g.Name))}";
                 }
-                catch (Exception ex)
+                if (employeeCount > 0)
                 {
-                    MessageBox.Show($"删除部门失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                    confirmMessage += $"\n• {employeeCount} 名员工：{string.Join(", ", departmentEmployees.Select(e => e.Name))}";
                 }
-                finally
+                confirmMessage += "\n\n此操作不可撤销。";
+
+                var result = MessageBox.Show(
+                    confirmMessage,
+                    "确认删除",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+
+                if (result == MessageBoxResult.Yes)
                 {
-                    IsLoading = false;
+                    try
+                    {
+                        IsLoading = true;
+                        var deleteResult = await _apiService.DeleteDepartmentAsync(department.Id);
+
+                        // 刷新部门列表
+                        await LoadDepartmentsAsync();
+
+                        // 发布部门删除事件
+                        if (deleteResult != null)
+                        {
+                            _eventBus.Publish(new DepartmentDeletedEvent
+                            {
+                                DepartmentId = deleteResult.DepartmentId,
+                                DepartmentName = deleteResult.DepartmentName,
+                                DeletedGroupCount = deleteResult.DeletedGroupCount,
+                                DeletedGroupNames = deleteResult.DeletedGroupNames
+                            });
+
+                            // 删除成功，不显示额外提示，直接完成操作
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"删除部门失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    finally
+                    {
+                        IsLoading = false;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"获取部门信息失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -683,6 +732,62 @@ namespace Sellsys.WpfClient.ViewModels
                 {
                     IsLoading = false;
                 }
+            }
+        }
+
+        #endregion
+
+        #region Event Handlers
+
+        /// <summary>
+        /// 处理部门删除事件
+        /// </summary>
+        private async void OnDepartmentDeleted(DepartmentDeletedEvent eventData)
+        {
+            try
+            {
+                // 刷新部门分组列表，因为相关分组已被删除
+                await LoadDepartmentGroupsAsync();
+
+                // 刷新员工列表，因为相关员工已被删除
+                await LoadEmployeesAsync();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"处理部门删除事件失败: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 处理部门更新事件
+        /// </summary>
+        private async void OnDepartmentUpdated(DepartmentUpdatedEvent eventData)
+        {
+            try
+            {
+                if (eventData.UpdateType == "Created" || eventData.UpdateType == "Updated")
+                {
+                    await LoadDepartmentsAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"处理部门更新事件失败: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 处理部门分组更新事件
+        /// </summary>
+        private async void OnDepartmentGroupUpdated(DepartmentGroupUpdatedEvent eventData)
+        {
+            try
+            {
+                await LoadDepartmentGroupsAsync();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"处理部门分组更新事件失败: {ex.Message}");
             }
         }
 

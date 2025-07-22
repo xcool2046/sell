@@ -13,6 +13,7 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
     public class AddDepartmentGroupDialogViewModel : ViewModelBase
     {
         private readonly ApiService _apiService;
+        private readonly EventBus _eventBus;
         private ObservableCollection<Department> _departments;
         private Department? _selectedDepartment;
         private string _groupName = string.Empty;
@@ -60,10 +61,15 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
         public AddDepartmentGroupDialogViewModel(ApiService apiService)
         {
             _apiService = apiService;
+            _eventBus = EventBus.Instance;
             _departments = new ObservableCollection<Department>();
 
             SaveCommand = new AsyncRelayCommand(async p => await SaveDepartmentGroupAsync(), p => CanSave());
             CancelCommand = new RelayCommand(p => Cancel());
+
+            // 订阅部门更新事件
+            _eventBus.Subscribe<DepartmentUpdatedEvent>(OnDepartmentUpdated);
+            _eventBus.Subscribe<DepartmentDeletedEvent>(OnDepartmentDeleted);
 
             // Load departments when dialog opens
             _ = LoadDepartmentsAsync();
@@ -152,6 +158,36 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
         {
             Cancelled?.Invoke(this, EventArgs.Empty);
             RequestClose?.Invoke(this, EventArgs.Empty);
+        }
+
+        private async void OnDepartmentUpdated(DepartmentUpdatedEvent eventData)
+        {
+            try
+            {
+                await LoadDepartmentsAsync();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"处理部门更新事件失败: {ex.Message}");
+            }
+        }
+
+        private async void OnDepartmentDeleted(DepartmentDeletedEvent eventData)
+        {
+            try
+            {
+                await LoadDepartmentsAsync();
+
+                // 如果当前选择的部门被删除了，清除选择
+                if (SelectedDepartment?.Id == eventData.DepartmentId)
+                {
+                    SelectedDepartment = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"处理部门删除事件失败: {ex.Message}");
+            }
         }
     }
 }

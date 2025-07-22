@@ -100,4 +100,39 @@ namespace Sellsys.WpfClient.Services
         public string ModuleName { get; set; } = string.Empty;
         public Dictionary<string, object>? Parameters { get; set; }
     }
+
+    /// <summary>
+    /// 部门删除事件
+    /// </summary>
+    public class DepartmentDeletedEvent
+    {
+        public int DepartmentId { get; set; }
+        public string DepartmentName { get; set; } = string.Empty;
+        public int DeletedGroupCount { get; set; }
+        public List<string> DeletedGroupNames { get; set; } = new List<string>();
+        public DateTime DeletedAt { get; set; } = DateTime.Now;
+    }
+
+    /// <summary>
+    /// 部门更新事件
+    /// </summary>
+    public class DepartmentUpdatedEvent
+    {
+        public int DepartmentId { get; set; }
+        public string DepartmentName { get; set; } = string.Empty;
+        public string UpdateType { get; set; } = string.Empty; // "Created", "Updated", "Deleted"
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+    }
+
+    /// <summary>
+    /// 部门分组更新事件
+    /// </summary>
+    public class DepartmentGroupUpdatedEvent
+    {
+        public int GroupId { get; set; }
+        public string GroupName { get; set; } = string.Empty;
+        public int DepartmentId { get; set; }
+        public string UpdateType { get; set; } = string.Empty; // "Created", "Updated", "Deleted"
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+    }
 }

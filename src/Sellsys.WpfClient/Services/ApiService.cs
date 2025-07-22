@@ -1312,22 +1312,56 @@ namespace Sellsys.WpfClient.Services
             }
         }
 
-        public async Task DeleteDepartmentAsync(int id)
+        public async Task<DepartmentDeleteResult?> DeleteDepartmentAsync(int id)
         {
             try
             {
                 var response = await _httpClient.DeleteAsync($"{BaseUrl}/departments/{id}");
-                response.EnsureSuccessStatusCode();
 
-                var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse>();
-                if (apiResponse?.IsSuccess != true)
+                // 读取响应内容，无论状态码如何
+                var content = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
                 {
+                    // 成功响应
+                    var apiResponse = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<DepartmentDeleteResult>>(content, new System.Text.Json.JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+
+                    if (apiResponse?.IsSuccess == true)
+                    {
+                        return apiResponse.Data;
+                    }
                     throw new Exception(apiResponse?.Message ?? "删除部门失败");
+                }
+                else
+                {
+                    // 错误响应，尝试解析错误信息
+                    try
+                    {
+                        var errorResponse = System.Text.Json.JsonSerializer.Deserialize<ApiResponse<DepartmentDeleteResult>>(content, new System.Text.Json.JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        });
+
+                        // 抛出包含后端错误信息的异常
+                        throw new Exception(errorResponse?.Message ?? $"删除部门失败 (状态码: {response.StatusCode})");
+                    }
+                    catch (System.Text.Json.JsonException)
+                    {
+                        // 如果无法解析JSON，使用默认错误信息
+                        throw new Exception($"删除部门失败 (状态码: {response.StatusCode}): {content}");
+                    }
                 }
             }
             catch (HttpRequestException ex)
             {
                 throw new Exception($"网络请求失败: {ex.Message}");
+            }
+            catch (TaskCanceledException ex)
+            {
+                throw new Exception($"请求超时: {ex.Message}");
             }
         }
 

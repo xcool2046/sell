@@ -1,5 +1,6 @@
 using Sellsys.CrossCutting.Common;
 using Sellsys.Domain.Entities;
+using Sellsys.Application.DTOs.Departments;
 
 namespace Sellsys.Application.Interfaces
 {
@@ -9,6 +10,6 @@ namespace Sellsys.Application.Interfaces
         Task<ApiResponse<Department>> GetDepartmentByIdAsync(int id);
         Task<ApiResponse<Department>> CreateDepartmentAsync(string name);
         Task<ApiResponse> UpdateDepartmentAsync(int id, string name);
-        Task<ApiResponse> DeleteDepartmentAsync(int id);
+        Task<ApiResponse<DepartmentDeleteResultDto>> DeleteDepartmentAsync(int id);
     }
 }
