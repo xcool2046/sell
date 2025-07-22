@@ -96,37 +96,37 @@
                         <Button Content="客户管理"
                                 Command="{Binding ShowCustomerManagementViewCommand}"
                                 Style="{Binding CurrentViewName, Converter={StaticResource NavigationButtonStyleConverter}, ConverterParameter=CustomerManagement}"
-                                Visibility="{Binding ., Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=CustomerManagement}"/>
+                                Visibility="{Binding ., Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=客户管理}"/>
 
                         <Button Content="销售管理"
                                 Command="{Binding ShowSalesManagementViewCommand}"
                                 Style="{Binding CurrentViewName, Converter={StaticResource NavigationButtonStyleConverter}, ConverterParameter=SalesManagement}"
-                                Visibility="{Binding ., Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=SalesFollowUp}"/>
+                                Visibility="{Binding ., Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=销售跟进}"/>
 
                         <Button Content="订单管理"
                                 Command="{Binding ShowOrderManagementViewCommand}"
                                 Style="{Binding CurrentViewName, Converter={StaticResource NavigationButtonStyleConverter}, ConverterParameter=OrderManagement}"
-                                Visibility="{Binding ., Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=OrderManagement}"/>
+                                Visibility="{Binding ., Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=订单管理}"/>
 
                         <Button Content="售后服务"
                                 Command="{Binding ShowAfterSalesViewCommand}"
                                 Style="{Binding CurrentViewName, Converter={StaticResource NavigationButtonStyleConverter}, ConverterParameter=AfterSales}"
-                                Visibility="{Binding ., Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=AfterSalesService}"/>
+                                Visibility="{Binding ., Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=售后服务}"/>
 
                         <Button Content="产品管理"
                                 Command="{Binding ShowProductManagementViewCommand}"
                                 Style="{Binding CurrentViewName, Converter={StaticResource NavigationButtonStyleConverter}, ConverterParameter=ProductManagement}"
-                                Visibility="{Binding ., Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=ProductManagement}"/>
+                                Visibility="{Binding ., Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=产品管理}"/>
 
                         <Button Content="财务管理"
                                 Command="{Binding ShowFinanceManagementViewCommand}"
                                 Style="{Binding CurrentViewName, Converter={StaticResource NavigationButtonStyleConverter}, ConverterParameter=FinanceManagement}"
-                                Visibility="{Binding ., Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=FinanceManagement}"/>
+                                Visibility="{Binding ., Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=财务管理}"/>
 
                         <Button Content="系统设置"
                                 Command="{Binding ShowSystemSettingsViewCommand}"
                                 Style="{Binding CurrentViewName, Converter={StaticResource NavigationButtonStyleConverter}, ConverterParameter=SystemSettings}"
-                                Visibility="{Binding ., Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=SystemSettings}"/>
+                                Visibility="{Binding ., Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=系统设置}"/>
                     </StackPanel>
                 </ScrollViewer>
             </Border>

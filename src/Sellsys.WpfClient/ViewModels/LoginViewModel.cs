@@ -19,6 +19,8 @@ namespace Sellsys.WpfClient.ViewModels
         private bool _rememberUsername = false;
         private bool _isLoading = false;
 
+        public event Action? LoginSuccessful;
+
         public LoginViewModel()
         {
             var apiService = new ApiService();
@@ -109,6 +111,9 @@ namespace Sellsys.WpfClient.ViewModels
 
                     // 保存设置
                     SaveSettings();
+
+                    // 触发登录成功事件
+                    LoginSuccessful?.Invoke();
 
                     // 登录成功，关闭登录窗口并打开主窗口
                     Application.Current.Dispatcher.Invoke(() =>

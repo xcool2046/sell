@@ -14,13 +14,13 @@ namespace Sellsys.Application.Services
         // 系统模块常量
         private static class SystemModules
         {
-            public const string CustomerManagement = "CustomerManagement";
-            public const string ProductManagement = "ProductManagement";
-            public const string OrderManagement = "OrderManagement";
-            public const string SalesFollowUp = "SalesFollowUp";
-            public const string AfterSalesService = "AfterSalesService";
-            public const string FinanceManagement = "FinanceManagement";
-            public const string SystemSettings = "SystemSettings";
+            public const string CustomerManagement = "客户管理";
+            public const string ProductManagement = "产品管理";
+            public const string OrderManagement = "订单管理";
+            public const string SalesFollowUp = "销售跟进";
+            public const string AfterSalesService = "售后服务";
+            public const string FinanceManagement = "财务管理";
+            public const string SystemSettings = "系统设置";
         }
 
         public AuthService(SellsysDbContext context)

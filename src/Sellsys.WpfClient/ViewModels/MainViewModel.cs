@@ -164,13 +164,13 @@ namespace Sellsys.WpfClient.ViewModels
         {
             return viewName switch
             {
-                "CustomerManagement" => "CustomerManagement",
-                "SalesManagement" => "SalesFollowUp",
-                "OrderManagement" => "OrderManagement",
-                "AfterSales" => "AfterSalesService",
-                "ProductManagement" => "ProductManagement",
-                "FinanceManagement" => "FinanceManagement",
-                "SystemSettings" => "SystemSettings",
+                "CustomerManagement" => Constants.SystemModules.CustomerManagement,
+                "SalesManagement" => Constants.SystemModules.SalesFollowUp,
+                "OrderManagement" => Constants.SystemModules.OrderManagement,
+                "AfterSales" => Constants.SystemModules.AfterSalesService,
+                "ProductManagement" => Constants.SystemModules.ProductManagement,
+                "FinanceManagement" => Constants.SystemModules.FinanceManagement,
+                "SystemSettings" => Constants.SystemModules.SystemSettings,
                 _ => string.Empty
             };
         }
@@ -221,13 +221,23 @@ namespace Sellsys.WpfClient.ViewModels
                     // 清除当前用户
                     CurrentUser.ClearUser();
 
-                    // 关闭主窗口
-                    var mainWindow = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
-                    mainWindow?.Close();
+                    // 先创建并显示登录窗口
+                    var loginWindow = new Views.LoginWindow();
 
-                    // 显示登录窗口
-                    var loginWindow = new LoginWindow();
+                    // 设置登录窗口为应用程序主窗口
+                    Application.Current.MainWindow = loginWindow;
                     loginWindow.Show();
+
+                    // 激活登录窗口
+                    loginWindow.Activate();
+                    loginWindow.Focus();
+
+                    // 然后关闭主窗口
+                    var mainWindow = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
+                    if (mainWindow != null)
+                    {
+                        mainWindow.Close();
+                    }
                 }
             }
             catch (Exception ex)
@@ -252,31 +262,31 @@ namespace Sellsys.WpfClient.ViewModels
         private void SetInitialViewBasedOnPermissions()
         {
             // 按优先级顺序检查权限并设置初始视图（同步版本，不加载数据）
-            if (HasPermission("CustomerManagement"))
+            if (HasPermission(Constants.SystemModules.CustomerManagement))
             {
                 SwitchViewSync("CustomerManagement", CustomerManagementVM);
             }
-            else if (HasPermission("SalesFollowUp"))
+            else if (HasPermission(Constants.SystemModules.SalesFollowUp))
             {
                 SwitchViewSync("SalesManagement", SalesManagementVM);
             }
-            else if (HasPermission("OrderManagement"))
+            else if (HasPermission(Constants.SystemModules.OrderManagement))
             {
                 SwitchViewSync("OrderManagement", OrderManagementVM);
             }
-            else if (HasPermission("ProductManagement"))
+            else if (HasPermission(Constants.SystemModules.ProductManagement))
             {
                 SwitchViewSync("ProductManagement", ProductManagementVM);
             }
-            else if (HasPermission("AfterSalesService"))
+            else if (HasPermission(Constants.SystemModules.AfterSalesService))
             {
                 SwitchViewSync("AfterSales", AfterSalesVM);
             }
-            else if (HasPermission("FinanceManagement"))
+            else if (HasPermission(Constants.SystemModules.FinanceManagement))
             {
                 SwitchViewSync("FinanceManagement", FinanceManagementVM);
             }
-            else if (HasPermission("SystemSettings"))
+            else if (HasPermission(Constants.SystemModules.SystemSettings))
             {
                 SwitchViewSync("SystemSettings", SystemSettingsVM);
             }
