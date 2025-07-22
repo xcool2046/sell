@@ -74,7 +74,7 @@
             <!-- Content Display -->
             <ContentControl Grid.Column="1"
                             Content="{Binding CurrentView}"
-                            Margin="10,20,20,20"
+                            Margin="0"
                             Background="White"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"/>

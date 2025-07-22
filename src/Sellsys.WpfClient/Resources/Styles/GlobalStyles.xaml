@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!-- 全局颜色定义 -->
-    <SolidColorBrush x:Key="TopBarBackgroundBrush" Color="#2A609E"/>
+    <SolidColorBrush x:Key="TopBarBackgroundBrush" Color="#F8F9FA"/>
     <SolidColorBrush x:Key="LeftMenuBackgroundBrush" Color="#C5D9EF"/>
     <SolidColorBrush x:Key="PrimaryButtonBrush" Color="#409EFF"/>
     <SolidColorBrush x:Key="EditButtonBrush" Color="#E6A23C"/>
@@ -36,23 +36,48 @@
         <Setter Property="FontSize" Value="14"/>
     </Style>
 
+    <!-- 统一的搜索区域样式 -->
+    <Style x:Key="SearchAreaBorderStyle" TargetType="Border">
+        <Setter Property="Background" Value="#F8F9FA"/>
+        <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        <Setter Property="CornerRadius" Value="0"/>
+        <Setter Property="Padding" Value="15"/>
+        <Setter Property="Margin" Value="0,0,0,0"/>
+    </Style>
+
+    <!-- 统一的搜索条件标签样式 -->
+    <Style x:Key="SearchLabelStyle" TargetType="TextBlock" BasedOn="{StaticResource GlobalTextStyle}">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,5,0"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <!-- 统一的搜索控件样式 -->
+    <Style x:Key="SearchControlStyle" TargetType="FrameworkElement">
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="Margin" Value="0,0,15,0"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
     <!-- 按钮样式 -->
     <Style x:Key="PrimaryButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="{StaticResource PrimaryButtonBrush}"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="FontFamily" Value="Microsoft YaHei UI"/>
         <Setter Property="FontSize" Value="14"/>
-        <Setter Property="Height" Value="40"/>
-        <Setter Property="Margin" Value="10"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="Width" Value="60"/>
+        <Setter Property="Margin" Value="0,0,10,0"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border Background="{TemplateBinding Background}" 
-                            CornerRadius="4" 
-                            BorderBrush="{StaticResource BorderBrush}" 
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="4"
+                            BorderBrush="{StaticResource BorderBrush}"
                             BorderThickness="1">
-                        <ContentPresenter HorizontalAlignment="Center" 
+                        <ContentPresenter HorizontalAlignment="Center"
                                         VerticalAlignment="Center"/>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -68,18 +93,52 @@
         </Setter>
     </Style>
 
-    <Style x:Key="EditButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
-        <Setter Property="Background" Value="{StaticResource EditButtonBrush}"/>
+    <!-- 灰色按钮样式 (重置按钮) -->
+    <Style x:Key="GrayButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+        <Setter Property="Background" Value="#909399"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Width" Value="60"/>
         <Setter Property="Height" Value="32"/>
-        <Setter Property="Margin" Value="5"/>
+        <Setter Property="Margin" Value="0"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border Background="{TemplateBinding Background}" 
-                            CornerRadius="4" 
-                            BorderBrush="{StaticResource BorderBrush}" 
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="4"
+                            BorderBrush="{StaticResource BorderBrush}"
                             BorderThickness="1">
-                        <ContentPresenter HorizontalAlignment="Center" 
+                        <ContentPresenter HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#808389"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- 操作按钮样式 (添加客户等) -->
+    <Style x:Key="ActionButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+        <Setter Property="Width" Value="100"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="Margin" Value="0,0,10,0"/>
+    </Style>
+
+    <Style x:Key="EditButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+        <Setter Property="Background" Value="{StaticResource EditButtonBrush}"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="Margin" Value="0,0,10,0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="4"
+                            BorderBrush="{StaticResource BorderBrush}"
+                            BorderThickness="1">
+                        <ContentPresenter HorizontalAlignment="Center"
                                         VerticalAlignment="Center"/>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -117,11 +176,9 @@
     </Style>
 
     <!-- 绿色按钮样式 (客服相关) -->
-    <Style x:Key="SupportButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+    <Style x:Key="SupportButtonStyle" TargetType="Button" BasedOn="{StaticResource ActionButtonStyle}">
         <Setter Property="Background" Value="#27AE60"/>
         <Setter Property="Foreground" Value="White"/>
-        <Setter Property="Height" Value="32"/>
-        <Setter Property="Margin" Value="5"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -145,34 +202,7 @@
         </Setter>
     </Style>
 
-    <!-- 灰色按钮样式 (重置等) -->
-    <Style x:Key="GrayButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
-        <Setter Property="Background" Value="#95A5A6"/>
-        <Setter Property="Foreground" Value="White"/>
-        <Setter Property="Height" Value="32"/>
-        <Setter Property="Margin" Value="5"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Border Background="{TemplateBinding Background}"
-                            CornerRadius="4"
-                            BorderBrush="#7F8C8D"
-                            BorderThickness="1">
-                        <ContentPresenter HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"/>
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="#7F8C8D"/>
-                        </Trigger>
-                        <Trigger Property="IsPressed" Value="True">
-                            <Setter Property="Background" Value="#6C7B7D"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+
 
     <!-- 蓝色按钮样式 (编辑等) -->
     <Style x:Key="BlueButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">

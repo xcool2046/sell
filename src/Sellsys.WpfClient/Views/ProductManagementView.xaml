@@ -14,18 +14,18 @@
         </Grid.RowDefinitions>
 
         <!-- Action Button Section -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,15">
-            <Button Content="添加产品"
-                    Command="{Binding AddProductCommand}"
-                    Style="{StaticResource BlueButtonStyle}"
-                    Width="100"
-                    Height="35"/>
-        </StackPanel>
+        <Border Grid.Row="0" Style="{StaticResource SearchAreaBorderStyle}">
+            <StackPanel Orientation="Horizontal">
+                <Button Content="添加产品"
+                        Command="{Binding AddProductCommand}"
+                        Style="{StaticResource ActionButtonStyle}"/>
+            </StackPanel>
+        </Border>
 
         <!-- Data Grid -->
         <Border Grid.Row="1"
                 BorderBrush="{StaticResource BorderBrush}"
-                BorderThickness="1"
+                BorderThickness="0,0,0,1"
                 Background="White">
             <Grid>
                 <!-- Loading Indicator -->

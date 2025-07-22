@@ -5,125 +5,87 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Sellsys.WpfClient.Views"
              mc:Ignorable="d"
-             d:DesignHeight="600" d:DesignWidth="1000">
+             d:DesignHeight="600" d:DesignWidth="1000"
+             Margin="0"
+             Padding="0">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/> <!-- Search Filters -->
             <RowDefinition Height="*"/>    <!-- Data Grid -->
         </Grid.RowDefinitions>
 
-
-
         <!-- Search and Filter Section -->
-        <Border Grid.Row="0"
-                Background="#F8F9FA"
-                BorderBrush="{StaticResource BorderBrush}"
-                BorderThickness="1"
-                CornerRadius="4"
-                Padding="15"
-                Margin="0,0,0,15">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-
-                <!-- 搜索条件和操作按钮 - 合并为一行 -->
-                <WrapPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,0">
+        <Border Grid.Row="0" Style="{StaticResource SearchAreaBorderStyle}">
+            <WrapPanel Orientation="Horizontal">
                 <!-- 客户名称 (输入框) -->
-                <TextBlock Text="客户名称:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBlock Text="客户名称:" Style="{StaticResource SearchLabelStyle}"/>
                 <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
                          Style="{StaticResource StandardTextBoxStyle}"
-                         Width="120"
-                         Height="32"
-                         Margin="0,0,15,0"/>
+                         Width="120" Height="32" Margin="0,0,15,0"/>
 
                 <!-- 行业类别 (下拉框) -->
-                <TextBlock Text="行业类别:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBlock Text="行业类别:" Style="{StaticResource SearchLabelStyle}"/>
                 <ComboBox SelectedItem="{Binding SelectedIndustryType}"
                           ItemsSource="{Binding IndustryTypes}"
                           Style="{StaticResource StandardComboBoxStyle}"
-                          Width="100"
-                          Height="32"
-                          Margin="0,0,15,0"/>
+                          Width="100" Height="32" Margin="0,0,15,0"/>
 
                 <!-- 省份 (下拉框) -->
-                <TextBlock Text="省份:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBlock Text="省份:" Style="{StaticResource SearchLabelStyle}"/>
                 <ComboBox SelectedItem="{Binding SelectedProvince}"
                           ItemsSource="{Binding Provinces}"
                           Style="{StaticResource StandardComboBoxStyle}"
-                          Width="80"
-                          Height="32"
-                          Margin="0,0,15,0"/>
+                          Width="80" Height="32" Margin="0,0,15,0"/>
 
                 <!-- 城市 (下拉框) -->
-                <TextBlock Text="城市:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBlock Text="城市:" Style="{StaticResource SearchLabelStyle}"/>
                 <ComboBox SelectedItem="{Binding SelectedCity}"
                           ItemsSource="{Binding Cities}"
                           Style="{StaticResource StandardComboBoxStyle}"
-                          Width="80"
-                          Height="32"
-                          Margin="0,0,15,0"/>
+                          Width="80" Height="32" Margin="0,0,15,0"/>
 
                 <!-- 联系状态 (下拉框) -->
-                <TextBlock Text="联系状态:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBlock Text="联系状态:" Style="{StaticResource SearchLabelStyle}"/>
                 <ComboBox SelectedItem="{Binding SelectedContactStatus}"
                           ItemsSource="{Binding ContactStatuses}"
                           Style="{StaticResource StandardComboBoxStyle}"
-                          Width="100"
-                          Height="32"
-                          Margin="0,0,15,0"/>
+                          Width="100" Height="32" Margin="0,0,15,0"/>
 
                 <!-- 销售人员 (下拉框) -->
-                <TextBlock Text="销售人员:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBlock Text="销售人员:" Style="{StaticResource SearchLabelStyle}"/>
                 <ComboBox SelectedItem="{Binding SelectedResponsiblePerson}"
                           ItemsSource="{Binding ResponsiblePersons}"
                           Style="{StaticResource StandardComboBoxStyle}"
-                          Width="100"
-                          Height="32"
-                          Margin="0,0,15,0"/>
+                          Width="100" Height="32" Margin="0,0,15,0"/>
 
                 <!-- 查询和重置按钮 -->
                 <Button Content="查询"
                         Command="{Binding SearchCommand}"
-                        Style="{StaticResource PrimaryButtonStyle}"
-                        Width="60"
-                        Height="32"
-                        Margin="0,0,10,0"/>
+                        Style="{StaticResource PrimaryButtonStyle}"/>
                 <Button Content="重置"
                         Command="{Binding ResetFiltersCommand}"
                         Style="{StaticResource GrayButtonStyle}"
-                        Width="60"
-                        Height="32"
                         Margin="0,0,15,0"/>
 
-                <!-- 操作按钮 - 移动到同一行 -->
+                <!-- 操作按钮 -->
                 <Button Content="添加客户"
                         Command="{Binding AddCustomerCommand}"
-                        Style="{StaticResource PrimaryButtonStyle}"
-                        Width="100"
-                        Height="32"
-                        Margin="0,0,10,0"/>
+                        Style="{StaticResource ActionButtonStyle}"/>
                 <Button Content="分配给销售"
                         Command="{Binding AssignSalesCommand}"
-                        Style="{StaticResource EditButtonStyle}"
-                        Width="100"
-                        Height="32"
-                        Margin="0,0,10,0"/>
+                        Style="{StaticResource ActionButtonStyle}"/>
                 <Button Content="分配给客服"
                         Command="{Binding AssignSupportCommand}"
-                        Style="{StaticResource SupportButtonStyle}"
-                        Width="100"
-                        Height="32"
+                        Style="{StaticResource ActionButtonStyle}"
                         Margin="0"/>
-                </WrapPanel>
-            </Grid>
+            </WrapPanel>
         </Border>
 
         <!-- Data Grid -->
         <Border Grid.Row="1"
                 BorderBrush="{StaticResource BorderBrush}"
-                BorderThickness="1"
-                Background="White">
+                BorderThickness="0,0,0,1"
+                CornerRadius="0">
             <Grid>
                 <!-- Loading Indicator -->
                 <Grid Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">

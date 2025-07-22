@@ -5,7 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Sellsys.WpfClient.Views"
              mc:Ignorable="d"
-             d:DesignHeight="600" d:DesignWidth="1000">
+             d:DesignHeight="600" d:DesignWidth="1000"
+             Margin="0"
+             Padding="0">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/> <!-- Top Navigation -->
@@ -43,7 +45,7 @@
         </Border>
 
         <!-- Content Area -->
-        <Grid Grid.Row="1" Margin="20">
+        <Grid Grid.Row="1" Margin="0">
             <!-- Department Management Tab -->
             <Grid Visibility="{Binding IsDepartmentTabActive, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <Grid.RowDefinitions>
@@ -60,7 +62,7 @@
                 </StackPanel>
 
                 <!-- Departments Data Grid -->
-                <Border Grid.Row="1" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Background="White">
+                <Border Grid.Row="1" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" CornerRadius="0">
                     <DataGrid ItemsSource="{Binding Departments}"
                               SelectedItem="{Binding SelectedDepartment}"
                               Style="{StaticResource StandardDataGridStyle}"
@@ -136,7 +138,7 @@
                 </StackPanel>
 
                 <!-- Department Groups Data Grid -->
-                <Border Grid.Row="1" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Background="White">
+                <Border Grid.Row="1" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" CornerRadius="0">
                     <DataGrid ItemsSource="{Binding DepartmentGroups}"
                               SelectedItem="{Binding SelectedDepartmentGroup}"
                               Style="{StaticResource StandardDataGridStyle}"
@@ -222,7 +224,7 @@
                 </StackPanel>
 
                 <!-- Employees Data Grid -->
-                <Border Grid.Row="1" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Background="White">
+                <Border Grid.Row="1" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" CornerRadius="0">
                     <DataGrid ItemsSource="{Binding Employees}"
                               SelectedItem="{Binding SelectedEmployee}"
                               Style="{StaticResource StandardDataGridStyle}"
@@ -338,7 +340,7 @@
                 </StackPanel>
 
                 <!-- Permissions Data Grid -->
-                <Border Grid.Row="1" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Background="White">
+                <Border Grid.Row="1" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" CornerRadius="0">
                     <DataGrid ItemsSource="{Binding Roles}"
                               SelectedItem="{Binding SelectedRole}"
                               Style="{StaticResource StandardDataGridStyle}"

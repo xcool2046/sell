@@ -5,7 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Sellsys.WpfClient.Views"
              mc:Ignorable="d"
-             d:DesignHeight="600" d:DesignWidth="1200">
+             d:DesignHeight="600" d:DesignWidth="1200"
+             Margin="0"
+             Padding="0">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/> <!-- Search Filters -->
@@ -13,61 +15,43 @@
         </Grid.RowDefinitions>
 
         <!-- Search and Filter Section -->
-        <Border Grid.Row="0"
-                Background="#F8F9FA"
-                BorderBrush="{StaticResource BorderBrush}"
-                BorderThickness="1"
-                CornerRadius="4"
-                Padding="15"
-                Margin="0,0,0,15">
-            <StackPanel Orientation="Horizontal">
+        <Border Grid.Row="0" Style="{StaticResource SearchAreaBorderStyle}">
+            <WrapPanel Orientation="Horizontal">
                 <!-- 客户单位名称 (输入框) -->
-                <TextBlock Text="客户单位名称:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBlock Text="客户单位名称:" Style="{StaticResource SearchLabelStyle}"/>
                 <TextBox Text="{Binding SelectedCustomerName, UpdateSourceTrigger=PropertyChanged}"
                          Style="{StaticResource StandardTextBoxStyle}"
-                         Width="120"
-                         Height="32"
-                         Margin="0,0,15,0"/>
+                         Width="120" Height="32" Margin="0,0,15,0"/>
 
                 <!-- 客服 (下拉框) -->
-                <TextBlock Text="客服:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBlock Text="客服:" Style="{StaticResource SearchLabelStyle}"/>
                 <ComboBox ItemsSource="{Binding CustomerServiceOptions}"
                           SelectedValue="{Binding SelectedCustomerService}"
                           Style="{StaticResource StandardComboBoxStyle}"
-                          Width="100"
-                          Height="32"
-                          Margin="0,0,15,0"/>
+                          Width="100" Height="32" Margin="0,0,15,0"/>
 
                 <!-- 处理状态 (下拉框) -->
-                <TextBlock Text="处理状态:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBlock Text="处理状态:" Style="{StaticResource SearchLabelStyle}"/>
                 <ComboBox ItemsSource="{Binding StatusOptions}"
                           SelectedValue="{Binding SelectedStatus}"
                           Style="{StaticResource StandardComboBoxStyle}"
-                          Width="100"
-                          Height="32"
-                          Margin="0,0,15,0"/>
+                          Width="100" Height="32" Margin="0,0,15,0"/>
 
                 <!-- 查询和重置按钮 -->
                 <Button Content="查询"
                         Command="{Binding SearchCommand}"
-                        Style="{StaticResource PrimaryButtonStyle}"
-                        Width="60"
-                        Height="32"
-                        Margin="0,0,10,0"/>
+                        Style="{StaticResource PrimaryButtonStyle}"/>
                 <Button Content="重置"
                         Command="{Binding ResetFiltersCommand}"
-                        Style="{StaticResource GrayButtonStyle}"
-                        Width="60"
-                        Height="32"
-                        Margin="0"/>
-            </StackPanel>
+                        Style="{StaticResource GrayButtonStyle}"/>
+            </WrapPanel>
         </Border>
 
         <!-- Data Grid -->
         <Border Grid.Row="1"
                 BorderBrush="{StaticResource BorderBrush}"
-                BorderThickness="1"
-                Background="White">
+                BorderThickness="0,0,0,1"
+                CornerRadius="0">
             <Grid>
                 <!-- Loading Indicator -->
                 <Grid Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">

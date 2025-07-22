@@ -106,13 +106,7 @@
         </Border>
 
         <!-- 筛选区域 -->
-        <Border Grid.Row="1"
-                Background="#F8F9FA"
-                BorderBrush="{StaticResource BorderBrush}"
-                BorderThickness="1"
-                CornerRadius="4"
-                Padding="15"
-                Margin="0,0,0,15">
+        <Border Grid.Row="1" Style="{StaticResource SearchAreaBorderStyle}">
             <StackPanel Orientation="Horizontal">
                 <!-- 输入客户名称 (输入框) -->
                 <TextBlock Text="输入客户名称:" VerticalAlignment="Center" Margin="0,0,5,0"/>
@@ -198,7 +192,7 @@
         <!-- 数据表格区域 -->
         <Border Grid.Row="2"
                 BorderBrush="{StaticResource BorderBrush}"
-                BorderThickness="1"
+                BorderThickness="0,0,0,1"
                 Background="White">
             <Grid>
                 <!-- 加载指示器 -->

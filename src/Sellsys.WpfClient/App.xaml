@@ -22,6 +22,7 @@
             <converters:OrderItemsToActualPricesConverter x:Key="OrderItemsToActualPricesConverter"/>
             <converters:OrderItemsToUnitsConverter x:Key="OrderItemsToUnitsConverter"/>
             <converters:BoolToActiveBackgroundConverter x:Key="BoolToActiveBackgroundConverter"/>
+            <converters:BoolToActiveForegroundConverter x:Key="BoolToActiveForegroundConverter"/>
             <converters:StringToBooleanConverter x:Key="StringToBooleanConverter"/>
             <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
             <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>

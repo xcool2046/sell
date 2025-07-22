@@ -6,19 +6,19 @@ using System.Windows.Media;
 
 namespace Sellsys.WpfClient.Converters
 {
-    public class BoolToActiveBackgroundConverter : IValueConverter
+    public class BoolToActiveForegroundConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is bool isActive && isActive)
             {
-                // Active state - darker blue background
-                return new SolidColorBrush(Color.FromRgb(0x1E, 0x4A, 0x7E));
+                // Active state - white text on dark blue background
+                return Brushes.White;
             }
             else
             {
-                // Inactive state - same deep blue background
-                return new SolidColorBrush(Color.FromRgb(0x2A, 0x60, 0x9E));
+                // Inactive state - white text on dark gray background
+                return Brushes.White;
             }
         }
 
