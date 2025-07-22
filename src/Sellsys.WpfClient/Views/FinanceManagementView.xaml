@@ -313,7 +313,7 @@
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
-                                    <Setter Property="HorizontalAlignment" Value="Left"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
                                     <Setter Property="VerticalAlignment" Value="Center"/>
                                     <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
                                     <Setter Property="ToolTip" Value="{Binding CustomerName}"/>
@@ -328,7 +328,7 @@
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
-                                    <Setter Property="HorizontalAlignment" Value="Left"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
                                     <Setter Property="VerticalAlignment" Value="Center"/>
                                     <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
                                     <Setter Property="ToolTip" Value="{Binding ProductFullName}"/>
@@ -343,7 +343,7 @@
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
-                                    <Setter Property="HorizontalAlignment" Value="Left"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
                                     <Setter Property="VerticalAlignment" Value="Center"/>
                                     <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
                                     <Setter Property="ToolTip" Value="{Binding ProductSpecification}"/>
@@ -358,7 +358,7 @@
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
-                                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
                                     <Setter Property="VerticalAlignment" Value="Center"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
@@ -371,7 +371,7 @@
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
-                                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
                                     <Setter Property="VerticalAlignment" Value="Center"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
@@ -384,7 +384,7 @@
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
-                                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
                                     <Setter Property="VerticalAlignment" Value="Center"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
@@ -410,7 +410,7 @@
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
-                                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
                                     <Setter Property="VerticalAlignment" Value="Center"/>
                                     <Setter Property="FontWeight" Value="Bold"/>
                                 </Style>
@@ -424,7 +424,7 @@
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
-                                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
                                     <Setter Property="VerticalAlignment" Value="Center"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
@@ -437,7 +437,7 @@
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
-                                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
                                     <Setter Property="VerticalAlignment" Value="Center"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
@@ -450,7 +450,7 @@
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
-                                    <Setter Property="HorizontalAlignment" Value="Right"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
                                     <Setter Property="VerticalAlignment" Value="Center"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>

@@ -356,12 +356,9 @@ namespace Sellsys.WpfClient.ViewModels
             ContactStatuses.Add("已成交");
             ContactStatuses.Add("已流失");
 
-            // Initialize responsible persons
+            // Initialize responsible persons - will be loaded from API
             ResponsiblePersons.Clear();
             ResponsiblePersons.Add("全部");
-            ResponsiblePersons.Add("张飞");
-            ResponsiblePersons.Add("李逵");
-            ResponsiblePersons.Add("陈小二");
 
             // Set default selections
             SelectedIndustryType = "全部";

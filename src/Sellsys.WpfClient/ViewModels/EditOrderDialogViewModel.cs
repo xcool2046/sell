@@ -178,8 +178,7 @@ namespace Sellsys.WpfClient.ViewModels
                 };
 
                 await _apiService.UpdateOrderAsync(_originalOrder.Id, orderDto);
-                MessageBox.Show("订单更新成功", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
-                
+
                 SaveCompleted?.Invoke(this, EventArgs.Empty);
                 Cancel();
             }

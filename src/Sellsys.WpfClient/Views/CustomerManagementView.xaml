@@ -25,11 +25,10 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!-- 第一行：搜索条件 -->
-                <WrapPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+                <!-- 搜索条件和操作按钮 - 合并为一行 -->
+                <WrapPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,0">
                 <!-- 客户名称 (输入框) -->
                 <TextBlock Text="客户名称:" VerticalAlignment="Center" Margin="0,0,5,0"/>
                 <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
@@ -96,28 +95,26 @@
                         Width="60"
                         Height="32"
                         Margin="0,0,15,0"/>
-                </WrapPanel>
 
-                <!-- 第二行：操作按钮 -->
-                <WrapPanel Grid.Row="1" Orientation="Horizontal">
-                    <Button Content="添加客户"
-                            Command="{Binding AddCustomerCommand}"
-                            Style="{StaticResource PrimaryButtonStyle}"
-                            Width="100"
-                            Height="32"
-                            Margin="0,0,10,0"/>
-                    <Button Content="分配给销售"
-                            Command="{Binding AssignSalesCommand}"
-                            Style="{StaticResource EditButtonStyle}"
-                            Width="100"
-                            Height="32"
-                            Margin="0,0,10,0"/>
-                    <Button Content="分配给客服"
-                            Command="{Binding AssignSupportCommand}"
-                            Style="{StaticResource SupportButtonStyle}"
-                            Width="100"
-                            Height="32"
-                            Margin="0"/>
+                <!-- 操作按钮 - 移动到同一行 -->
+                <Button Content="添加客户"
+                        Command="{Binding AddCustomerCommand}"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Width="100"
+                        Height="32"
+                        Margin="0,0,10,0"/>
+                <Button Content="分配给销售"
+                        Command="{Binding AssignSalesCommand}"
+                        Style="{StaticResource EditButtonStyle}"
+                        Width="100"
+                        Height="32"
+                        Margin="0,0,10,0"/>
+                <Button Content="分配给客服"
+                        Command="{Binding AssignSupportCommand}"
+                        Style="{StaticResource SupportButtonStyle}"
+                        Width="100"
+                        Height="32"
+                        Margin="0"/>
                 </WrapPanel>
             </Grid>
         </Border>
@@ -173,25 +170,53 @@
                         <DataGridTextColumn Header="行业类别"
                                             Binding="{Binding IndustryType}"
                                             Width="*" MinWidth="80"
-                                            IsReadOnly="True"/>
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
 
                         <!-- 省份 -->
                         <DataGridTextColumn Header="省份"
                                             Binding="{Binding Province}"
                                             Width="*" MinWidth="60"
-                                            IsReadOnly="True"/>
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
 
                         <!-- 城市 -->
                         <DataGridTextColumn Header="城市"
                                             Binding="{Binding City}"
                                             Width="*" MinWidth="60"
-                                            IsReadOnly="True"/>
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
 
                         <!-- 客户单位名称 -->
                         <DataGridTextColumn Header="客户单位名称"
                                             Binding="{Binding Name}"
                                             Width="3*" MinWidth="150"
-                                            IsReadOnly="True"/>
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
 
                         <!-- 联系人(蓝色数字) -->
                         <DataGridTemplateColumn Header="联系人" Width="60" MinWidth="60">
@@ -235,31 +260,66 @@
                         <DataGridTextColumn Header="客户备注"
                                             Binding="{Binding CustomerRemarks}"
                                             Width="2*" MinWidth="80"
-                                            IsReadOnly="True"/>
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
 
                         <!-- 客户状态 -->
                         <DataGridTextColumn Header="客户状态"
                                             Binding="{Binding CustomerStatus}"
                                             Width="*" MinWidth="70"
-                                            IsReadOnly="True"/>
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
 
                         <!-- 销售 -->
                         <DataGridTextColumn Header="销售"
                                             Binding="{Binding SalesPersonDisplay}"
                                             Width="*" MinWidth="60"
-                                            IsReadOnly="True"/>
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
 
                         <!-- 客服 -->
                         <DataGridTextColumn Header="客服"
                                             Binding="{Binding SupportPersonDisplay}"
                                             Width="*" MinWidth="60"
-                                            IsReadOnly="True"/>
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
 
                         <!-- 创建时间 -->
                         <DataGridTextColumn Header="创建时间"
                                             Binding="{Binding CreatedAt, StringFormat=yyyy-MM-dd HH:mm:ss}"
                                             Width="140" MinWidth="140"
-                                            IsReadOnly="True"/>
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
 
                         <!-- 操作列 -->
                         <DataGridTemplateColumn Header="操作" Width="120" MinWidth="120">

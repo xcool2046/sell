@@ -155,9 +155,10 @@
                 <TextBlock Grid.Row="2" Grid.Column="0" 
                            Text="岗位职务:" 
                            Style="{StaticResource DialogLabelStyle}"/>
-                <ComboBox Grid.Row="2" Grid.Column="1" 
-                          ItemsSource="{Binding JobPositions}"
-                          SelectedItem="{Binding SelectedJobPosition}"
+                <ComboBox Grid.Row="2" Grid.Column="1"
+                          ItemsSource="{Binding Roles}"
+                          SelectedItem="{Binding SelectedRole}"
+                          DisplayMemberPath="Name"
                           Style="{StaticResource DialogComboBoxStyle}"/>
 
                 <!-- 操作权限 -->

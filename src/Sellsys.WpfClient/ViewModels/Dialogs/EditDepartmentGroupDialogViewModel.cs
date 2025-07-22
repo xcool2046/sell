@@ -154,8 +154,6 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
                 // Notify success
                 GroupSaved?.Invoke(this, EventArgs.Empty);
                 RequestClose?.Invoke(this, EventArgs.Empty);
-
-                MessageBox.Show("部门分组信息更新成功", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {

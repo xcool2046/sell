@@ -189,8 +189,6 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
                 // Notify success
                 PermissionSaved?.Invoke(this, EventArgs.Empty);
                 RequestClose?.Invoke(this, EventArgs.Empty);
-
-                MessageBox.Show("角色权限更新成功", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {

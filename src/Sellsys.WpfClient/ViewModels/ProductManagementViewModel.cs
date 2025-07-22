@@ -289,7 +289,6 @@ namespace Sellsys.WpfClient.ViewModels
                     IsLoading = true;
                     await _apiService.DeleteProductAsync(product.Id);
                     Products.Remove(product);
-                    MessageBox.Show("产品删除成功", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
                 {
@@ -319,7 +318,6 @@ namespace Sellsys.WpfClient.ViewModels
                     IsLoading = true;
                     await _apiService.DeleteProductAsync(SelectedProduct.Id);
                     Products.Remove(SelectedProduct);
-                    MessageBox.Show("产品删除成功", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
                 {

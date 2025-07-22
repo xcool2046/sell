@@ -167,7 +167,6 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
                     await _apiService.DeleteAfterSalesRecordAsync(record.Id);
                     await LoadRecordsAsync();
                     RecordChanged?.Invoke(this, EventArgs.Empty);
-                    MessageBox.Show("售后记录删除成功", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
                 {

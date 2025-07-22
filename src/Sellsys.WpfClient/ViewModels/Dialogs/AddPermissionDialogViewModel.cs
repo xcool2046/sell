@@ -16,9 +16,9 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
     {
         private readonly ApiService _apiService;
         private ObservableCollection<Department> _departments;
-        private ObservableCollection<string> _jobPositions;
+        private ObservableCollection<Role> _roles;
         private Department? _selectedDepartment;
-        private string? _selectedJobPosition;
+        private Role? _selectedRole;
         private bool _customerManagementPermission = false;
         private bool _productManagementPermission = false;
         private bool _orderManagementPermission = false;
@@ -35,10 +35,10 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
             set => SetProperty(ref _departments, value);
         }
 
-        public ObservableCollection<string> JobPositions
+        public ObservableCollection<Role> Roles
         {
-            get => _jobPositions;
-            set => SetProperty(ref _jobPositions, value);
+            get => _roles;
+            set => SetProperty(ref _roles, value);
         }
 
         public Department? SelectedDepartment
@@ -47,14 +47,14 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
             set => SetProperty(ref _selectedDepartment, value);
         }
 
-        public string? SelectedJobPosition
+        public Role? SelectedRole
         {
-            get => _selectedJobPosition;
+            get => _selectedRole;
             set
             {
-                if (SetProperty(ref _selectedJobPosition, value))
+                if (SetProperty(ref _selectedRole, value))
                 {
-                    SetDefaultPermissionsForPosition();
+                    SetDefaultPermissionsForRole();
                 }
             }
         }
@@ -125,37 +125,50 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
         {
             _apiService = apiService;
             _departments = new ObservableCollection<Department>();
-            _jobPositions = new ObservableCollection<string> { "销售", "产品", "客服", "财务" };
+            _roles = new ObservableCollection<Role>();
 
             SaveCommand = new AsyncRelayCommand(async p => await SavePermissionAsync(), p => CanSave());
             CancelCommand = new RelayCommand(p => Cancel());
 
-            // Load departments when dialog opens
-            _ = LoadDepartmentsAsync();
+            // Load departments and roles when dialog opens
+            _ = LoadInitialDataAsync();
         }
 
         private bool CanSave()
         {
             return SelectedDepartment != null &&
-                   !string.IsNullOrWhiteSpace(SelectedJobPosition) &&
+                   SelectedRole != null &&
                    !IsSaving &&
                    !IsLoading;
         }
 
-        private async Task LoadDepartmentsAsync()
+        private async Task LoadInitialDataAsync()
         {
             try
             {
                 IsLoading = true;
-                var departments = await _apiService.GetDepartmentsAsync();
-                
+
+                // Load departments and roles in parallel
+                var departmentsTask = _apiService.GetDepartmentsAsync();
+                var rolesTask = _apiService.GetRolesAsync();
+
+                await Task.WhenAll(departmentsTask, rolesTask);
+
+                // Update departments
                 Departments.Clear();
-                foreach (var department in departments)
+                foreach (var department in await departmentsTask)
                 {
                     Departments.Add(department);
                 }
 
-                // 如果只有一个部门，自动选择
+                // Update roles
+                Roles.Clear();
+                foreach (var role in await rolesTask)
+                {
+                    Roles.Add(role);
+                }
+
+                // Auto-select first department if only one exists
                 if (Departments.Count == 1)
                 {
                     SelectedDepartment = Departments.First();
@@ -163,7 +176,7 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"加载部门数据失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"加载数据失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally
             {
@@ -171,61 +184,33 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
             }
         }
 
-        private void SetDefaultPermissionsForPosition()
+        private void SetDefaultPermissionsForRole()
         {
-            if (string.IsNullOrWhiteSpace(SelectedJobPosition))
-                return;
-
-            // 根据岗位设置默认权限
-            switch (SelectedJobPosition)
+            if (SelectedRole == null)
             {
-                case "销售":
-                    CustomerManagementPermission = true;
-                    ProductManagementPermission = false;
-                    OrderManagementPermission = true;
-                    SalesFollowUpPermission = true;
-                    AfterSalesServicePermission = false;
-                    FinanceManagementPermission = false;
-                    SystemSettingsPermission = false;
-                    break;
-                case "产品":
-                    CustomerManagementPermission = false;
-                    ProductManagementPermission = true;
-                    OrderManagementPermission = true;
-                    SalesFollowUpPermission = false;
-                    AfterSalesServicePermission = false;
-                    FinanceManagementPermission = false;
-                    SystemSettingsPermission = false;
-                    break;
-                case "客服":
-                    CustomerManagementPermission = true;
-                    ProductManagementPermission = false;
-                    OrderManagementPermission = false;
-                    SalesFollowUpPermission = false;
-                    AfterSalesServicePermission = true;
-                    FinanceManagementPermission = false;
-                    SystemSettingsPermission = false;
-                    break;
-                case "财务":
-                    CustomerManagementPermission = false;
-                    ProductManagementPermission = false;
-                    OrderManagementPermission = true;
-                    SalesFollowUpPermission = false;
-                    AfterSalesServicePermission = false;
-                    FinanceManagementPermission = true;
-                    SystemSettingsPermission = false;
-                    break;
-                default:
-                    // 清除所有权限
-                    CustomerManagementPermission = false;
-                    ProductManagementPermission = false;
-                    OrderManagementPermission = false;
-                    SalesFollowUpPermission = false;
-                    AfterSalesServicePermission = false;
-                    FinanceManagementPermission = false;
-                    SystemSettingsPermission = false;
-                    break;
+                // 清除所有权限
+                CustomerManagementPermission = false;
+                ProductManagementPermission = false;
+                OrderManagementPermission = false;
+                SalesFollowUpPermission = false;
+                AfterSalesServicePermission = false;
+                FinanceManagementPermission = false;
+                SystemSettingsPermission = false;
+                return;
             }
+
+            // 根据角色的权限配置设置复选框
+            var modules = string.IsNullOrEmpty(SelectedRole.AccessibleModules)
+                ? new List<string>()
+                : SelectedRole.AccessibleModules.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            CustomerManagementPermission = modules.Contains(SystemModules.CustomerManagement);
+            ProductManagementPermission = modules.Contains(SystemModules.ProductManagement);
+            OrderManagementPermission = modules.Contains(SystemModules.OrderManagement);
+            SalesFollowUpPermission = modules.Contains(SystemModules.SalesFollowUp);
+            AfterSalesServicePermission = modules.Contains(SystemModules.AfterSalesService);
+            FinanceManagementPermission = modules.Contains(SystemModules.FinanceManagement);
+            SystemSettingsPermission = modules.Contains(SystemModules.SystemSettings);
         }
 
         private async Task SavePermissionAsync()
@@ -241,7 +226,7 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(SelectedJobPosition))
+                if (SelectedRole == null)
                 {
                     MessageBox.Show("请选择岗位职务", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
@@ -260,7 +245,7 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
                 // 创建角色DTO
                 var roleDto = new RoleUpsertDto
                 {
-                    Name = SelectedJobPosition,
+                    Name = SelectedRole.Name,
                     AccessibleModules = selectedModules
                 };
 
@@ -270,8 +255,6 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
                 // 通知保存成功
                 PermissionSaved?.Invoke(this, EventArgs.Empty);
                 RequestClose?.Invoke(this, EventArgs.Empty);
-
-                MessageBox.Show("权限设置保存成功", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {

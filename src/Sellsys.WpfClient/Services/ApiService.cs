@@ -592,7 +592,12 @@ namespace Sellsys.WpfClient.Services
             try
             {
                 var response = await _httpClient.PostAsJsonAsync($"{BaseUrl}/employees", employeeDto);
-                response.EnsureSuccessStatusCode();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"创建员工失败 (状态码: {response.StatusCode}): {errorContent}");
+                }
 
                 var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<EmployeeDto>>();
                 if (apiResponse != null && apiResponse.IsSuccess && apiResponse.Data != null)

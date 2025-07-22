@@ -164,7 +164,6 @@ namespace Sellsys.WpfClient.ViewModels
                 {
                     // TODO: Call API to delete the order
                     OrderRecords.Remove(order);
-                    MessageBox.Show("订单已删除", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
             catch (Exception ex)

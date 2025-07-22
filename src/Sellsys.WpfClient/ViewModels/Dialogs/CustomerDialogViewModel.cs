@@ -144,10 +144,9 @@ namespace Sellsys.WpfClient.ViewModels
         private void InitializeData()
         {
             // Initialize industry types
-            IndustryTypes.Add("制造业");
-            IndustryTypes.Add("服务业");
-            IndustryTypes.Add("科技");
-            IndustryTypes.Add("金融");
+            IndustryTypes.Add("应急");
+            IndustryTypes.Add("人社");
+            IndustryTypes.Add("其它");
 
             // Initialize provinces
             Provinces.Add("四川");
@@ -323,8 +322,6 @@ namespace Sellsys.WpfClient.ViewModels
                     await _apiService.CreateCustomerAsync(customerDto);
                 }
 
-                string action = _isEditMode ? "更新" : "添加";
-                MessageBox.Show($"客户 '{CustomerName}' {action}成功！", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
                 CustomerSaved?.Invoke(this, EventArgs.Empty);
             }
             catch (Exception ex)

@@ -24,6 +24,7 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
         private string _employeeName = string.Empty;
         private string _phoneNumber = string.Empty;
         private string _loginAccount = string.Empty;
+        private string _password = string.Empty;
         private bool _isSaving = false;
         private bool _isLoading = false;
 
@@ -93,6 +94,12 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
             set => SetProperty(ref _loginAccount, value);
         }
 
+        public string Password
+        {
+            get => _password;
+            set => SetProperty(ref _password, value);
+        }
+
         public bool IsSaving
         {
             get => _isSaving;
@@ -119,7 +126,7 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
             _originalEmployee = employee;
             _departments = new ObservableCollection<Department>();
             _departmentGroups = new ObservableCollection<DepartmentGroup>();
-            _jobPositions = new ObservableCollection<string> { "销售", "产品", "客服", "财务" };
+            _jobPositions = new ObservableCollection<string>();
             _roles = new ObservableCollection<Role>();
 
             // Initialize with current values
@@ -175,9 +182,11 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
 
                 // Load roles
                 Roles.Clear();
+                JobPositions.Clear();
                 foreach (var role in rolesTask.Result)
                 {
                     Roles.Add(role);
+                    JobPositions.Add(role.Name);
                 }
 
                 // Find and set the current department based on employee's group
@@ -283,7 +292,7 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
                     BranchAccount = string.Empty, // Keep existing or empty
                     GroupId = SelectedDepartmentGroup.Id,
                     RoleId = selectedRole.Id,
-                    Password = "abc12345" // Keep default password for updates
+                    Password = string.IsNullOrWhiteSpace(Password) ? null : Password.Trim()
                 };
 
                 // Call API to update employee
@@ -292,8 +301,6 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
                 // Notify success
                 EmployeeSaved?.Invoke(this, EventArgs.Empty);
                 RequestClose?.Invoke(this, EventArgs.Empty);
-
-                MessageBox.Show("员工信息更新成功", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {

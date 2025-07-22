@@ -69,13 +69,34 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="序号"
                                                 Binding="{Binding Id}"
-                                                Width="80" IsReadOnly="True"/>
+                                                Width="80" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
                             <DataGridTextColumn Header="部门名称"
                                                 Binding="{Binding Name}"
-                                                Width="300" IsReadOnly="True"/>
+                                                Width="300" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
                             <DataGridTextColumn Header="创建时间"
                                                 Binding="{Binding CreatedAt, StringFormat=yyyy-MM-dd HH:mm:ss}"
-                                                Width="200" IsReadOnly="True"/>
+                                                Width="200" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
                             <DataGridTemplateColumn Header="操作" Width="150">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -124,16 +145,44 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="序号"
                                                 Binding="{Binding Id}"
-                                                Width="80" IsReadOnly="True"/>
+                                                Width="80" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
                             <DataGridTextColumn Header="部门名称"
                                                 Binding="{Binding Department.Name}"
-                                                Width="200" IsReadOnly="True"/>
+                                                Width="200" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
                             <DataGridTextColumn Header="部门分组"
                                                 Binding="{Binding Name}"
-                                                Width="200" IsReadOnly="True"/>
+                                                Width="200" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
                             <DataGridTextColumn Header="创建时间"
                                                 Binding="{Binding CreatedAt, StringFormat=yyyy-MM-dd HH:mm:ss}"
-                                                Width="200" IsReadOnly="True"/>
+                                                Width="200" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
                             <DataGridTemplateColumn Header="操作" Width="150">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -182,25 +231,74 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="序号"
                                                 Binding="{Binding Id}"
-                                                Width="60" IsReadOnly="True"/>
+                                                Width="60" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
                             <DataGridTextColumn Header="部门名称"
                                                 Binding="{Binding DepartmentName}"
-                                                Width="100" IsReadOnly="True"/>
+                                                Width="100" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
                             <DataGridTextColumn Header="部门分组"
                                                 Binding="{Binding GroupName}"
-                                                Width="100" IsReadOnly="True"/>
+                                                Width="100" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
                             <DataGridTextColumn Header="员工姓名"
                                                 Binding="{Binding Name}"
-                                                Width="100" IsReadOnly="True"/>
+                                                Width="100" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
                             <DataGridTextColumn Header="岗位职务"
                                                 Binding="{Binding RoleName}"
-                                                Width="100" IsReadOnly="True"/>
+                                                Width="100" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
                             <DataGridTextColumn Header="登录账号"
                                                 Binding="{Binding LoginUsername}"
-                                                Width="100" IsReadOnly="True"/>
+                                                Width="100" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
                             <DataGridTextColumn Header="创建时间"
                                                 Binding="{Binding CreatedAt, StringFormat=yyyy-MM-dd HH:mm:ss}"
-                                                Width="150" IsReadOnly="True"/>
+                                                Width="150" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
                             <DataGridTemplateColumn Header="操作" Width="150">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -249,16 +347,44 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="序号"
                                                 Binding="{Binding Id}"
-                                                Width="80" IsReadOnly="True"/>
+                                                Width="80" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
                             <DataGridTextColumn Header="部门名称"
                                                 Binding="{Binding DepartmentName}"
-                                                Width="200" IsReadOnly="True"/>
+                                                Width="200" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
                             <DataGridTextColumn Header="岗位职务"
                                                 Binding="{Binding Name}"
-                                                Width="200" IsReadOnly="True"/>
+                                                Width="200" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
                             <DataGridTextColumn Header="创建时间"
                                                 Binding="{Binding CreatedAt, StringFormat=yyyy-MM-dd HH:mm:ss}"
-                                                Width="200" IsReadOnly="True"/>
+                                                Width="200" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
                             <DataGridTemplateColumn Header="操作" Width="150">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>

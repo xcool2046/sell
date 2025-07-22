@@ -201,8 +201,7 @@ namespace Sellsys.WpfClient.ViewModels
                 };
 
                 // TODO: Call API to save the contact record
-                MessageBox.Show("联系记录保存成功", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
-                
+
                 SaveCompleted?.Invoke(this, EventArgs.Empty);
                 Close();
             }

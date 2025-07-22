@@ -389,7 +389,6 @@ namespace Sellsys.WpfClient.ViewModels
                     IsLoading = true;
                     await _apiService.DeleteDepartmentAsync(department.Id);
                     await LoadDepartmentsAsync();
-                    MessageBox.Show("部门删除成功", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
                 {
@@ -485,7 +484,6 @@ namespace Sellsys.WpfClient.ViewModels
                     IsLoading = true;
                     await _apiService.DeleteDepartmentGroupAsync(group.Id);
                     await LoadDepartmentGroupsAsync();
-                    MessageBox.Show("分组删除成功", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
                 {
@@ -581,7 +579,6 @@ namespace Sellsys.WpfClient.ViewModels
                     IsLoading = true;
                     await _apiService.DeleteEmployeeAsync(employee.Id);
                     await LoadEmployeesAsync();
-                    MessageBox.Show("员工删除成功", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
                 {
@@ -677,7 +674,6 @@ namespace Sellsys.WpfClient.ViewModels
                     IsLoading = true;
                     await _apiService.DeleteRoleAsync(role.Id);
                     await LoadRolesAsync();
-                    MessageBox.Show("权限删除成功", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
                 {

@@ -188,7 +188,6 @@ namespace Sellsys.WpfClient.ViewModels
                 {
                     // TODO: Call API to delete the record
                     ContactRecords.Remove(record);
-                    MessageBox.Show("联系记录已删除", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
             catch (Exception ex)

@@ -250,8 +250,7 @@ namespace Sellsys.WpfClient.ViewModels
                 _originalRecord.NextFollowUpDate = NextFollowUpDate;
 
                 // TODO: Call API to update the contact record
-                MessageBox.Show("联系记录更新成功", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
-                
+
                 SaveCompleted?.Invoke(this, EventArgs.Empty);
                 Cancel();
             }

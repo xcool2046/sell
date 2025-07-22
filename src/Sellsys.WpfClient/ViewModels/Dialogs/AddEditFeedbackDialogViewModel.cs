@@ -182,12 +182,10 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
                 if (IsEditMode && _originalRecord != null)
                 {
                     await _apiService.UpdateAfterSalesRecordAsync(_originalRecord.Id, recordDto);
-                    MessageBox.Show("售后记录更新成功", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 else
                 {
                     await _apiService.CreateAfterSalesRecordAsync(recordDto);
-                    MessageBox.Show("售后记录添加成功", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
 
                 RecordSaved?.Invoke(this, EventArgs.Empty);

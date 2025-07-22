@@ -126,46 +126,143 @@
                             <Binding RelativeSource="{RelativeSource AncestorType=DataGridRow}"
                                      Converter="{StaticResource RowIndexConverter}"/>
                         </DataGridTextColumn.Binding>
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
                     <!-- 客户单位 -->
-                    <DataGridTextColumn Header="客户单位" Binding="{Binding CustomerName}" Width="3*" MinWidth="120"/>
+                    <DataGridTextColumn Header="客户单位" Binding="{Binding CustomerName}" Width="3*" MinWidth="120">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
 
                     <!-- 产品名称 -->
-                    <DataGridTextColumn Header="产品名称" Binding="{Binding ProductName}" Width="2*" MinWidth="100"/>
+                    <DataGridTextColumn Header="产品名称" Binding="{Binding ProductName}" Width="2*" MinWidth="100">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
 
                     <!-- 型号规格 -->
-                    <DataGridTextColumn Header="型号规格" Binding="{Binding ModelSpecification}" Width="2*" MinWidth="100"/>
+                    <DataGridTextColumn Header="型号规格" Binding="{Binding ModelSpecification}" Width="2*" MinWidth="100">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
 
                     <!-- 产品单价 -->
-                    <DataGridTextColumn Header="产品单价" Binding="{Binding FormattedProductPrice}" Width="*" MinWidth="80"/>
+                    <DataGridTextColumn Header="产品单价" Binding="{Binding FormattedProductPrice}" Width="*" MinWidth="80">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
 
                     <!-- 实际单价 -->
-                    <DataGridTextColumn Header="实际单价" Binding="{Binding FormattedActualPrice}" Width="*" MinWidth="80"/>
+                    <DataGridTextColumn Header="实际单价" Binding="{Binding FormattedActualPrice}" Width="*" MinWidth="80">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
 
                     <!-- 数量 -->
-                    <DataGridTextColumn Header="数量" Binding="{Binding Quantity}" Width="*" MinWidth="60"/>
+                    <DataGridTextColumn Header="数量" Binding="{Binding Quantity}" Width="*" MinWidth="60">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
 
                     <!-- 单位 -->
-                    <DataGridTextColumn Header="单位" Binding="{Binding Unit}" Width="*" MinWidth="50"/>
+                    <DataGridTextColumn Header="单位" Binding="{Binding Unit}" Width="*" MinWidth="50">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
 
                     <!-- 订单金额 -->
-                    <DataGridTextColumn Header="订单金额" Binding="{Binding FormattedTotalAmount}" Width="*" MinWidth="90"/>
+                    <DataGridTextColumn Header="订单金额" Binding="{Binding FormattedTotalAmount}" Width="*" MinWidth="90">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
 
                     <!-- 生效日期 -->
-                    <DataGridTextColumn Header="生效日期" Binding="{Binding FormattedEffectiveDate}" Width="100" MinWidth="100"/>
+                    <DataGridTextColumn Header="生效日期" Binding="{Binding FormattedEffectiveDate}" Width="100" MinWidth="100">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
 
                     <!-- 到期日期 -->
-                    <DataGridTextColumn Header="到期日期" Binding="{Binding FormattedExpiryDate}" Width="100" MinWidth="100"/>
+                    <DataGridTextColumn Header="到期日期" Binding="{Binding FormattedExpiryDate}" Width="100" MinWidth="100">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
 
                     <!-- 签单时间 -->
-                    <DataGridTextColumn Header="签单时间" Binding="{Binding FormattedCreatedAt}" Width="140" MinWidth="140"/>
+                    <DataGridTextColumn Header="签单时间" Binding="{Binding FormattedCreatedAt}" Width="140" MinWidth="140">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
 
                     <!-- 管理人 -->
-                    <DataGridTextColumn Header="管理人" Binding="{Binding SalesPersonName}" Width="*" MinWidth="60"/>
+                    <DataGridTextColumn Header="管理人" Binding="{Binding SalesPersonName}" Width="*" MinWidth="60">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
 
                     <!-- 订单状态 -->
-                    <DataGridTextColumn Header="订单状态" Binding="{Binding Status}" Width="*" MinWidth="80"/>
+                    <DataGridTextColumn Header="订单状态" Binding="{Binding Status}" Width="*" MinWidth="80">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
 
 
                 </DataGrid.Columns>

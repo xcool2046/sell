@@ -80,11 +80,8 @@ namespace Sellsys.WpfClient.ViewModels
         // 下拉框选项
         public ObservableCollection<string> CustomerNameOptions { get; } = new ObservableCollection<string>();
 
-        // 客服选项
-        public List<string> CustomerServiceOptions { get; } = new List<string>
-        {
-            "全部", "客服A", "客服B", "客服C"
-        };
+        // 客服选项 - will be loaded from API
+        public ObservableCollection<string> CustomerServiceOptions { get; } = new ObservableCollection<string> { "全部" };
 
         // 状态选项
         public List<string> StatusOptions { get; } = new List<string>
@@ -129,6 +126,7 @@ namespace Sellsys.WpfClient.ViewModels
         {
             if (IsDataLoaded) return; // Avoid loading data multiple times
             await LoadAfterSalesDataAsync();
+            await LoadEmployeesForFilterAsync();
             IsDataLoaded = true;
         }
 
@@ -264,6 +262,37 @@ namespace Sellsys.WpfClient.ViewModels
             ViewRecordsRow(customerAfterSales);
         }
 
+        private async Task LoadEmployeesForFilterAsync()
+        {
+            try
+            {
+                var employees = await _apiService.GetEmployeesAsync();
+
+                // Clear existing customer service options except "全部"
+                CustomerServiceOptions.Clear();
+                CustomerServiceOptions.Add("全部");
+
+                // Add employees to customer service filter (filter for customer service roles if needed)
+                foreach (var employee in employees.Where(e => e.RoleName?.Contains("客服") == true || e.RoleName?.Contains("服务") == true))
+                {
+                    CustomerServiceOptions.Add(employee.Name);
+                }
+
+                // If no customer service employees found, add all employees
+                if (CustomerServiceOptions.Count == 1)
+                {
+                    foreach (var employee in employees)
+                    {
+                        CustomerServiceOptions.Add(employee.Name);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error but don't fail the whole operation
+                System.Diagnostics.Debug.WriteLine($"Error loading employees for filter: {ex.Message}");
+            }
+        }
 
     }
 }

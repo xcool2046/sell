@@ -31,6 +31,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -108,20 +109,34 @@
                           Margin="0,0,0,15"/>
 
                 <!-- Login Account -->
-                <TextBlock Grid.Row="5" Grid.Column="0" Text="登录账号:" 
-                           VerticalAlignment="Center" 
-                           Margin="0,0,10,15" 
+                <TextBlock Grid.Row="5" Grid.Column="0" Text="登录账号:"
+                           VerticalAlignment="Center"
+                           Margin="0,0,10,15"
                            FontWeight="Medium"/>
-                <TextBox Grid.Row="5" Grid.Column="1" 
+                <TextBox Grid.Row="5" Grid.Column="1"
                          Text="{Binding LoginAccount, UpdateSourceTrigger=PropertyChanged}"
-                         Height="30" 
+                         Height="30"
                          Padding="8,5"
                          BorderBrush="#CCCCCC"
                          BorderThickness="1"
                          Margin="0,0,0,15"/>
 
+                <!-- Password -->
+                <TextBlock Grid.Row="6" Grid.Column="0" Text="密码:"
+                           VerticalAlignment="Center"
+                           Margin="0,0,10,15"
+                           FontWeight="Medium"/>
+                <TextBox Grid.Row="6" Grid.Column="1"
+                         Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"
+                         Height="30"
+                         Padding="8,5"
+                         BorderBrush="#CCCCCC"
+                         BorderThickness="1"
+                         Margin="0,0,0,15"
+                         ToolTip="留空则不修改密码，输入新密码则更新"/>
+
                 <!-- Loading Indicator -->
-                <StackPanel Grid.Row="6" Grid.ColumnSpan="2" 
+                <StackPanel Grid.Row="7" Grid.ColumnSpan="2"
                             Orientation="Horizontal" 
                             Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
                             Margin="0,10,0,0">

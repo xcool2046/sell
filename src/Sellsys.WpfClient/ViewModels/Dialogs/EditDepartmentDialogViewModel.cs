@@ -86,8 +86,6 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
                 // Notify success
                 DepartmentSaved?.Invoke(this, EventArgs.Empty);
                 RequestClose?.Invoke(this, EventArgs.Empty);
-
-                MessageBox.Show("部门信息更新成功", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {

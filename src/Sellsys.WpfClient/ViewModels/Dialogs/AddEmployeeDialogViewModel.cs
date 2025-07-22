@@ -237,6 +237,34 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
                     return;
                 }
 
+                if (string.IsNullOrWhiteSpace(InitialPassword))
+                {
+                    MessageBox.Show("请输入初始密码", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                if (InitialPassword.Length < 6)
+                {
+                    MessageBox.Show("密码长度至少6位", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // 检查用户名是否已存在
+                try
+                {
+                    var existingEmployees = await _apiService.GetEmployeesAsync();
+                    if (existingEmployees.Any(e => e.LoginUsername.Equals(LoginUsername.Trim(), StringComparison.OrdinalIgnoreCase)))
+                    {
+                        MessageBox.Show($"登录账号 '{LoginUsername.Trim()}' 已存在，请使用其他账号", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"检查用户名失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
                 // 创建员工DTO
                 var employeeDto = new EmployeeUpsertDto
                 {
@@ -245,7 +273,7 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
                     Phone = string.IsNullOrWhiteSpace(PhoneNumber) ? null : PhoneNumber.Trim(),
                     GroupId = SelectedDepartmentGroup?.Id,
                     RoleId = SelectedRole.Id,
-                    Password = InitialPassword
+                    Password = InitialPassword.Trim()
                 };
 
                 // 调用API创建员工
@@ -254,8 +282,6 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
                 // 通知保存成功
                 EmployeeSaved?.Invoke(this, EventArgs.Empty);
                 RequestClose?.Invoke(this, EventArgs.Empty);
-
-                MessageBox.Show("员工添加成功", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {

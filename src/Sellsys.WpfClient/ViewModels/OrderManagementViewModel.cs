@@ -421,7 +421,6 @@ namespace Sellsys.WpfClient.ViewModels
                     IsLoading = true;
                     await _apiService.DeleteOrderAsync(order.Id);
                     await LoadOrdersAsync();
-                    MessageBox.Show("订单删除成功", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
             catch (Exception ex)

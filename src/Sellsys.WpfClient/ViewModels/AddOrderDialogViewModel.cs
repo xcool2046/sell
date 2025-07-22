@@ -285,7 +285,6 @@ namespace Sellsys.WpfClient.ViewModels
 
                 // Call API to save the order
                 await _apiService.CreateOrderAsync(orderDto);
-                MessageBox.Show("订单保存成功", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 SaveCompleted?.Invoke(this, EventArgs.Empty);
                 Cancel();

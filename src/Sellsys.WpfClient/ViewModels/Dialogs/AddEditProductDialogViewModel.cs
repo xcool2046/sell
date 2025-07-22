@@ -170,12 +170,10 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
                 if (_isEditMode && _existingProduct != null)
                 {
                     await _apiService.UpdateProductAsync(_existingProduct.Id, productDto);
-                    MessageBox.Show("产品更新成功", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 else
                 {
                     await _apiService.CreateProductAsync(productDto);
-                    MessageBox.Show("产品创建成功", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
 
                 ProductSaved?.Invoke(this, EventArgs.Empty);

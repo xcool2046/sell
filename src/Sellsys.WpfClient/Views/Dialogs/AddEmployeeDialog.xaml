@@ -207,9 +207,8 @@
                 <TextBlock Grid.Row="12" Grid.Column="0" 
                            Text="初始密码:" 
                            Style="{StaticResource DialogLabelStyle}"/>
-                <TextBox Grid.Row="12" Grid.Column="1" 
-                         Text="{Binding InitialPassword}"
-                         IsReadOnly="True"
+                <TextBox Grid.Row="12" Grid.Column="1"
+                         Text="{Binding InitialPassword, UpdateSourceTrigger=PropertyChanged}"
                          Style="{StaticResource DialogTextBoxStyle}"
                          Background="#F5F7FA"/>
             </Grid>

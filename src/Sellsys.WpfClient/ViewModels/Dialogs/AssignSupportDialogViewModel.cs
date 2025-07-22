@@ -180,9 +180,6 @@ namespace Sellsys.WpfClient.ViewModels
                     AssignmentType = "Support"
                 });
 
-                MessageBox.Show($"已成功将客户 '{_customer.Name}' 分配给客服 '{SelectedSupportPerson.Name}'",
-                    "分配成功", MessageBoxButton.OK, MessageBoxImage.Information);
-
                 AssignmentCompleted?.Invoke(this, EventArgs.Empty);
             }
             catch (Exception ex)

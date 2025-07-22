@@ -137,8 +137,6 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
                 // 通知保存成功
                 DepartmentGroupSaved?.Invoke(this, EventArgs.Empty);
                 RequestClose?.Invoke(this, EventArgs.Empty);
-
-                MessageBox.Show("部门分组添加成功", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {

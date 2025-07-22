@@ -208,6 +208,7 @@ namespace Sellsys.WpfClient.ViewModels
         {
             if (IsDataLoaded) return; // Avoid loading data multiple times
             await LoadCustomersAsync();
+            await LoadEmployeesForFilterAsync();
             IsDataLoaded = true;
         }
 
@@ -216,12 +217,9 @@ namespace Sellsys.WpfClient.ViewModels
             // Initialize industry types
             IndustryTypes.Clear();
             IndustryTypes.Add("全部");
-            IndustryTypes.Add("教育");
-            IndustryTypes.Add("医疗");
-            IndustryTypes.Add("制造业");
-            IndustryTypes.Add("服务业");
-            IndustryTypes.Add("科技");
-            IndustryTypes.Add("金融");
+            IndustryTypes.Add("应急");
+            IndustryTypes.Add("人社");
+            IndustryTypes.Add("其它");
 
             // Initialize provinces
             Provinces.Clear();
@@ -252,12 +250,9 @@ namespace Sellsys.WpfClient.ViewModels
             ContactStatuses.Add("已成交");
             ContactStatuses.Add("已流失");
 
-            // Initialize responsible persons
+            // Initialize responsible persons - will be loaded from API
             ResponsiblePersons.Clear();
             ResponsiblePersons.Add("全部");
-            ResponsiblePersons.Add("张飞");
-            ResponsiblePersons.Add("李逵");
-            ResponsiblePersons.Add("陈小二");
 
             // Set default selections
             SelectedIndustryType = "全部";
@@ -265,6 +260,29 @@ namespace Sellsys.WpfClient.ViewModels
             SelectedCity = "全部";
             SelectedContactStatus = "全部";
             SelectedResponsiblePerson = "全部";
+        }
+
+        private async Task LoadEmployeesForFilterAsync()
+        {
+            try
+            {
+                var employees = await _apiService.GetEmployeesAsync();
+
+                // Clear existing responsible persons except "全部"
+                ResponsiblePersons.Clear();
+                ResponsiblePersons.Add("全部");
+
+                // Add employees to responsible persons filter
+                foreach (var employee in employees)
+                {
+                    ResponsiblePersons.Add(employee.Name);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error but don't fail the whole operation
+                System.Diagnostics.Debug.WriteLine($"Error loading employees for filter: {ex.Message}");
+            }
         }
 
         private void ResetFilters()
@@ -334,21 +352,12 @@ namespace Sellsys.WpfClient.ViewModels
 
         private void UpdateFilterOptions()
         {
-            // Update industry types
-            var industryTypes = Customers
-                .Where(c => !string.IsNullOrEmpty(c.IndustryTypes))
-                .SelectMany(c => c.IndustryTypes.Split(',', StringSplitOptions.RemoveEmptyEntries))
-                .Select(t => t.Trim())
-                .Distinct()
-                .OrderBy(t => t)
-                .ToList();
-
+            // Update industry types - keep fixed options
             IndustryTypes.Clear();
             IndustryTypes.Add("全部");
-            foreach (var type in industryTypes)
-            {
-                IndustryTypes.Add(type);
-            }
+            IndustryTypes.Add("应急");
+            IndustryTypes.Add("人社");
+            IndustryTypes.Add("其它");
 
             // Update provinces
             var provinces = Customers
@@ -677,8 +686,6 @@ namespace Sellsys.WpfClient.ViewModels
 
                     // Remove from the collection
                     Customers.Remove(customer);
-
-                    MessageBox.Show($"客户 '{customer.Name}' 已成功删除", "删除成功", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
             catch (Exception ex)
@@ -754,7 +761,6 @@ namespace Sellsys.WpfClient.ViewModels
                     IsLoading = true;
                     await _apiService.DeleteCustomerAsync(SelectedCustomer.Id);
                     await LoadCustomersAsync();
-                    MessageBox.Show("客户删除成功", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
                 {
