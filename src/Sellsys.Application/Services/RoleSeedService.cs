@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Sellsys.Domain.Entities;
+using Sellsys.Domain.Common;
 using Sellsys.Infrastructure.Data;
 
 namespace Sellsys.Application.Services
@@ -40,7 +41,7 @@ namespace Sellsys.Application.Services
                         {
                             Name = roleConfig.Name,
                             AccessibleModules = string.Join(",", roleConfig.AccessibleModules),
-                            CreatedAt = DateTime.UtcNow
+                            CreatedAt = TimeHelper.GetBeijingTime()
                         };
 
                         _context.Roles.Add(newRole);

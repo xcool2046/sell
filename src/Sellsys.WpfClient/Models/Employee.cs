@@ -19,5 +19,6 @@ namespace Sellsys.WpfClient.Models
         public string GroupInfo => !string.IsNullOrEmpty(GroupName) ? GroupName : "未分组";
         public string RoleInfo => !string.IsNullOrEmpty(RoleName) ? RoleName : "无角色";
         public string DepartmentInfo => !string.IsNullOrEmpty(DepartmentName) ? DepartmentName : "未分配部门";
+        public string FormattedCreatedAt => CreatedAt.ToString("yyyy-MM-dd HH:mm");
     }
 }

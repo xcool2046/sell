@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Sellsys.Domain.Common;
 
 namespace Sellsys.Domain.Entities
 {
@@ -39,7 +40,7 @@ namespace Sellsys.Domain.Entities
         public int? SupportPersonId { get; set; }
         public Employee? SupportPerson { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = TimeHelper.GetBeijingTime();
 
         // Navigation properties
         public ICollection<Contact> Contacts { get; set; } = new List<Contact>();

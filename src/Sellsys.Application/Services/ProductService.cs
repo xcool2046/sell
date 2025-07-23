@@ -3,6 +3,7 @@ using Sellsys.Application.DTOs.Products;
 using Sellsys.Application.Interfaces;
 using Sellsys.CrossCutting.Common;
 using Sellsys.Domain.Entities;
+using Sellsys.Domain.Common;
 using Sellsys.Infrastructure.Data;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +32,9 @@ namespace Sellsys.Application.Services
                 MinPrice = productDto.MinPrice,
                 SalesCommission = productDto.SalesCommission,
                 SupervisorCommission = productDto.SupervisorCommission,
-                ManagerCommission = productDto.ManagerCommission
+                ManagerCommission = productDto.ManagerCommission,
+                CreatedAt = TimeHelper.GetBeijingTime(),
+                UpdatedAt = TimeHelper.GetBeijingTime()
             };
 
             _context.Products.Add(product);
@@ -141,7 +144,7 @@ namespace Sellsys.Application.Services
             product.SalesCommission = productDto.SalesCommission;
             product.SupervisorCommission = productDto.SupervisorCommission;
             product.ManagerCommission = productDto.ManagerCommission;
-            product.UpdatedAt = DateTime.UtcNow;
+            product.UpdatedAt = TimeHelper.GetBeijingTime();
 
             _context.Products.Update(product);
             await _context.SaveChangesAsync();

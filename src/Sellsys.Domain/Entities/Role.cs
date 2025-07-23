@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Sellsys.Domain.Common;
 
 namespace Sellsys.Domain.Entities
 {
@@ -18,7 +19,7 @@ namespace Sellsys.Domain.Entities
         /// </summary>
         public string? AccessibleModules { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = TimeHelper.GetBeijingTime();
 
         // Navigation properties
         public ICollection<Employee> Employees { get; set; } = new List<Employee>();

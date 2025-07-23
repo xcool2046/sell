@@ -3,6 +3,7 @@ using Sellsys.Application.DTOs.Finance;
 using Sellsys.CrossCutting.Common;
 using Sellsys.Application.Interfaces;
 using Sellsys.Infrastructure.Data;
+using Sellsys.Domain.Common;
 using System.Net;
 
 namespace Sellsys.Application.Services
@@ -283,7 +284,7 @@ namespace Sellsys.Application.Services
                 // 注意：这里需要根据实际业务逻辑来处理收款记录
                 // 可能需要创建收款记录表来记录多次收款
                 order.PaymentReceivedDate = updateDto.PaymentReceivedDate;
-                order.UpdatedAt = DateTime.UtcNow;
+                order.UpdatedAt = TimeHelper.GetBeijingTime();
 
                 // 根据收款金额更新订单状态
                 var totalAmount = order.TotalAmount;

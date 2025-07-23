@@ -20,7 +20,7 @@ namespace Sellsys.Domain.Entities
         public int DepartmentId { get; set; }
         public Department Department { get; set; } = null!;
         
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
         
         // Navigation properties
         public ICollection<Employee> Employees { get; set; } = new List<Employee>();

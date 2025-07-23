@@ -250,10 +250,9 @@ namespace Sellsys.WpfClient.ViewModels
         {
             try
             {
-                // Get latest follow-up log for this customer to get next contact date
-                var followUpLogs = await _apiService.GetSalesFollowUpLogsAsync();
+                // Get latest follow-up log for this customer to get next contact date and customer intention
+                var followUpLogs = await _apiService.GetSalesFollowUpLogsByCustomerIdAsync(customer.Id);
                 var latestLog = followUpLogs
-                    .Where(log => log.CustomerId == customer.Id)
                     .OrderByDescending(log => log.CreatedAt)
                     .FirstOrDefault();
 
@@ -262,11 +261,18 @@ namespace Sellsys.WpfClient.ViewModels
                     customer.NextContactDate = latestLog.NextFollowUpDate;
                     customer.CustomerIntention = latestLog.CustomerIntention ?? "待分配";
                 }
+                else
+                {
+                    // 如果没有跟进记录，设置默认值
+                    customer.CustomerIntention = "待分配";
+                }
             }
             catch (Exception ex)
             {
                 // Log error but don't fail the whole operation
                 System.Diagnostics.Debug.WriteLine($"Error enriching customer {customer.Id}: {ex.Message}");
+                // 设置默认值以防出错
+                customer.CustomerIntention = "待分配";
             }
         }
 

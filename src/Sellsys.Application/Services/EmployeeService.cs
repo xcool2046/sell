@@ -4,6 +4,7 @@ using Sellsys.Application.DTOs.Employees;
 using Sellsys.Application.Interfaces;
 using Sellsys.CrossCutting.Common;
 using Sellsys.Domain.Entities;
+using Sellsys.Domain.Common;
 using Sellsys.Infrastructure.Data;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,7 +43,8 @@ namespace Sellsys.Application.Services
                 BranchAccount = employeeDto.BranchAccount,
                 GroupId = employeeDto.GroupId,
                 RoleId = employeeDto.RoleId,
-                HashedPassword = BCrypt.Net.BCrypt.HashPassword(employeeDto.Password)
+                HashedPassword = BCrypt.Net.BCrypt.HashPassword(employeeDto.Password),
+                CreatedAt = TimeHelper.GetBeijingTime()
             };
 
             _context.Employees.Add(employee);

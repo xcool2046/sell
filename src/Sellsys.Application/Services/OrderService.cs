@@ -3,6 +3,7 @@ using Sellsys.Application.DTOs.Orders;
 using Sellsys.Application.Interfaces;
 using Sellsys.CrossCutting.Common;
 using Sellsys.Domain.Entities;
+using Sellsys.Domain.Common;
 using Sellsys.Infrastructure.Data;
 using System.Net;
 
@@ -47,7 +48,9 @@ namespace Sellsys.Application.Services
                 PaymentReceivedDate = orderDto.PaymentReceivedDate,
                 SalesCommissionAmount = orderDto.SalesCommissionAmount,
                 SupervisorCommissionAmount = orderDto.SupervisorCommissionAmount,
-                ManagerCommissionAmount = orderDto.ManagerCommissionAmount
+                ManagerCommissionAmount = orderDto.ManagerCommissionAmount,
+                CreatedAt = TimeHelper.GetBeijingTime(),
+                UpdatedAt = TimeHelper.GetBeijingTime()
             };
 
             // 添加订单项

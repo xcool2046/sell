@@ -3,6 +3,7 @@ using Sellsys.Application.DTOs.Customers;
 using Sellsys.Application.Interfaces;
 using Sellsys.CrossCutting.Common;
 using Sellsys.Domain.Entities;
+using Sellsys.Domain.Common;
 using Sellsys.Infrastructure.Data;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +38,8 @@ namespace Sellsys.Application.Services
                 Remarks = customerDto.Remarks,
                 IndustryTypes = customerDto.IndustryTypes,
                 SalesPersonId = customerDto.SalesPersonId,
-                SupportPersonId = customerDto.SupportPersonId
+                SupportPersonId = customerDto.SupportPersonId,
+                CreatedAt = TimeHelper.GetBeijingTime()
             };
 
             // 添加联系人

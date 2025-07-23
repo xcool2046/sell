@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Sellsys.Domain.Common;
 
 namespace Sellsys.Domain.Entities
 {
@@ -19,7 +20,7 @@ namespace Sellsys.Domain.Entities
         
         public bool IsPrimary { get; set; } = false;
         
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = TimeHelper.GetBeijingTime();
         
         // Navigation properties
         public ICollection<SalesFollowUpLog> SalesFollowUpLogs { get; set; } = new List<SalesFollowUpLog>();

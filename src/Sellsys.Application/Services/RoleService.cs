@@ -2,6 +2,7 @@ using Sellsys.Application.DTOs.Roles;
 using Sellsys.Application.Interfaces;
 using Sellsys.CrossCutting.Common;
 using Sellsys.Domain.Entities;
+using Sellsys.Domain.Common;
 using Sellsys.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -25,7 +26,8 @@ namespace Sellsys.Application.Services
             var role = new Sellsys.Domain.Entities.Role
             {
                 Name = roleDto.Name,
-                AccessibleModules = string.Join(",", roleDto.AccessibleModules)
+                AccessibleModules = string.Join(",", roleDto.AccessibleModules),
+                CreatedAt = TimeHelper.GetBeijingTime()
             };
 
             _context.Roles.Add(role);

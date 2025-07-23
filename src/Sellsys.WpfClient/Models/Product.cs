@@ -25,5 +25,7 @@ namespace Sellsys.WpfClient.Models
         public string FormattedManagerCommission => ManagerCommission?.ToString("C") ?? "-";
         public string UnitDisplay => !string.IsNullOrEmpty(Unit) ? Unit : "-";
         public string SpecificationDisplay => !string.IsNullOrEmpty(Specification) ? Specification : "-";
+        public string FormattedCreatedAt => CreatedAt.ToString("yyyy-MM-dd HH:mm");
+        public string FormattedUpdatedAt => UpdatedAt.ToString("yyyy-MM-dd HH:mm");
     }
 }

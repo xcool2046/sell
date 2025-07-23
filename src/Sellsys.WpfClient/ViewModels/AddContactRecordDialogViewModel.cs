@@ -23,17 +23,18 @@ namespace Sellsys.WpfClient.ViewModels
         private bool _isCompleted;
         
         // Customer Intention
-        private bool _isIntentionUnknown = true;
-        private bool _isIntentionHigh;
+        private bool _isIntentionHigh = true; // 默认选择"高"
         private bool _isIntentionMedium;
         private bool _isIntentionLow;
-        private bool _isIntentionNone;
 
         public AddContactRecordDialogViewModel(Customer customer)
         {
             _customer = customer ?? throw new ArgumentNullException(nameof(customer));
             _apiService = new ApiService();
             _contacts = new ObservableCollection<Contact>();
+
+            // Initialize default values
+            _nextFollowUpDate = DateTime.Today.AddDays(1); // 默认设置为明天
 
             // Initialize commands
             CancelAppointmentCommand = new RelayCommand(p => CancelAppointment());
@@ -45,6 +46,12 @@ namespace Sellsys.WpfClient.ViewModels
         }
 
         public string CustomerName => _customer.Name;
+
+        // 显示当前时间
+        public string CurrentDateTime => DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+
+        // 销售人员名称
+        public string SalesPersonName => _customer.SalesPersonName ?? "未分配";
 
         public ObservableCollection<Contact> Contacts
         {
@@ -102,12 +109,6 @@ namespace Sellsys.WpfClient.ViewModels
         }
 
         // Customer Intention Properties
-        public bool IsIntentionUnknown
-        {
-            get => _isIntentionUnknown;
-            set => SetProperty(ref _isIntentionUnknown, value);
-        }
-
         public bool IsIntentionHigh
         {
             get => _isIntentionHigh;
@@ -124,12 +125,6 @@ namespace Sellsys.WpfClient.ViewModels
         {
             get => _isIntentionLow;
             set => SetProperty(ref _isIntentionLow, value);
-        }
-
-        public bool IsIntentionNone
-        {
-            get => _isIntentionNone;
-            set => SetProperty(ref _isIntentionNone, value);
         }
 
         // Commands
@@ -222,8 +217,7 @@ namespace Sellsys.WpfClient.ViewModels
             if (IsIntentionHigh) return "高";
             if (IsIntentionMedium) return "中";
             if (IsIntentionLow) return "低";
-            if (IsIntentionNone) return "无";
-            return "未知";
+            return "高"; // 默认返回"高"
         }
 
         private void Close()

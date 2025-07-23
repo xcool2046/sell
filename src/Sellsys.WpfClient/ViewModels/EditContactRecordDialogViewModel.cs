@@ -24,11 +24,9 @@ namespace Sellsys.WpfClient.ViewModels
         private bool _isCompleted;
         
         // Customer Intention
-        private bool _isIntentionUnknown;
-        private bool _isIntentionHigh;
+        private bool _isIntentionHigh = true; // 默认选择"高"
         private bool _isIntentionMedium;
         private bool _isIntentionLow;
-        private bool _isIntentionNone;
 
         public EditContactRecordDialogViewModel(Customer customer, SalesFollowUpLog record)
         {
@@ -48,6 +46,12 @@ namespace Sellsys.WpfClient.ViewModels
         }
 
         public string CustomerName => _customer.Name;
+
+        // 显示联系时间
+        public string ContactDateTime => _originalRecord.CreatedAt.ToString("yyyy-MM-dd HH:mm");
+
+        // 销售人员名称
+        public string SalesPersonName => _originalRecord.SalesPersonName ?? "未分配";
 
         public ObservableCollection<Contact> Contacts
         {
@@ -105,12 +109,6 @@ namespace Sellsys.WpfClient.ViewModels
         }
 
         // Customer Intention Properties
-        public bool IsIntentionUnknown
-        {
-            get => _isIntentionUnknown;
-            set => SetProperty(ref _isIntentionUnknown, value);
-        }
-
         public bool IsIntentionHigh
         {
             get => _isIntentionHigh;
@@ -127,12 +125,6 @@ namespace Sellsys.WpfClient.ViewModels
         {
             get => _isIntentionLow;
             set => SetProperty(ref _isIntentionLow, value);
-        }
-
-        public bool IsIntentionNone
-        {
-            get => _isIntentionNone;
-            set => SetProperty(ref _isIntentionNone, value);
         }
 
         // Commands
@@ -175,7 +167,7 @@ namespace Sellsys.WpfClient.ViewModels
                 }
 
                 // Set customer intention
-                SetCustomerIntention(_originalRecord.CustomerIntention ?? "未知");
+                SetCustomerIntention(_originalRecord.CustomerIntention ?? "高");
 
                 // Set customer status (default to "跟进中" for existing records)
                 IsFollowingUp = true;
@@ -189,11 +181,9 @@ namespace Sellsys.WpfClient.ViewModels
         private void SetCustomerIntention(string intention)
         {
             // Reset all intention flags
-            IsIntentionUnknown = false;
             IsIntentionHigh = false;
             IsIntentionMedium = false;
             IsIntentionLow = false;
-            IsIntentionNone = false;
 
             // Set the appropriate flag
             switch (intention)
@@ -207,11 +197,8 @@ namespace Sellsys.WpfClient.ViewModels
                 case "低":
                     IsIntentionLow = true;
                     break;
-                case "无":
-                    IsIntentionNone = true;
-                    break;
                 default:
-                    IsIntentionUnknown = true;
+                    IsIntentionHigh = true; // 默认选择"高"
                     break;
             }
         }
@@ -284,8 +271,7 @@ namespace Sellsys.WpfClient.ViewModels
             if (IsIntentionHigh) return "高";
             if (IsIntentionMedium) return "中";
             if (IsIntentionLow) return "低";
-            if (IsIntentionNone) return "无";
-            return "未知";
+            return "高"; // 默认返回"高"
         }
 
         private void Cancel()

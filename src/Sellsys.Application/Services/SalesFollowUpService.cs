@@ -335,6 +335,7 @@ namespace Sellsys.Application.Services
                 CustomerName = log.Customer?.Name ?? string.Empty,
                 ContactId = log.ContactId,
                 ContactName = log.Contact?.Name,
+                ContactPhone = log.Contact?.Phone,
                 Summary = log.Summary,
                 CustomerIntention = log.CustomerIntention,
                 NextFollowUpDate = log.NextFollowUpDate,

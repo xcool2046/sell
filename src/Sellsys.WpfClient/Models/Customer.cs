@@ -87,6 +87,9 @@ namespace Sellsys.WpfClient.Models
             }
         }
 
+        // 时间格式化属性
+        public string FormattedCreatedAt => CreatedAt.ToString("yyyy-MM-dd HH:mm");
+
         public event PropertyChangedEventHandler? PropertyChanged;
     }
 }

@@ -3,6 +3,7 @@ using Sellsys.Application.DTOs.AfterSales;
 using Sellsys.Application.Interfaces;
 using Sellsys.CrossCutting.Common;
 using Sellsys.Domain.Entities;
+using Sellsys.Domain.Common;
 using Sellsys.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
@@ -236,8 +237,8 @@ namespace Sellsys.Application.Services
                 Status = recordDto.Status,
                 ProcessedDate = recordDto.ProcessedDate,
                 SupportPersonId = recordDto.SupportPersonId,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
+                CreatedAt = TimeHelper.GetBeijingTime(),
+                UpdatedAt = TimeHelper.GetBeijingTime()
             };
 
             _context.AfterSalesRecords.Add(record);
@@ -457,7 +458,7 @@ namespace Sellsys.Application.Services
             record.Status = recordDto.Status;
             record.ProcessedDate = recordDto.ProcessedDate;
             record.SupportPersonId = recordDto.SupportPersonId;
-            record.UpdatedAt = DateTime.UtcNow;
+            record.UpdatedAt = TimeHelper.GetBeijingTime();
 
             await _context.SaveChangesAsync();
 
