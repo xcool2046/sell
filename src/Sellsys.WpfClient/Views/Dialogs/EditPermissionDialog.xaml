@@ -1,0 +1,111 @@
+<Window x:Class="Sellsys.WpfClient.Views.Dialogs.EditPermissionDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="编辑权限" Height="450" Width="500"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="#F5F5F5">
+    
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title -->
+        <TextBlock Grid.Row="0" Text="编辑角色权限" 
+                   FontSize="16" FontWeight="Bold" 
+                   Foreground="#333333" 
+                   Margin="0,0,0,20"/>
+
+        <!-- Form Content -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Role Name -->
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="角色名称:" 
+                           VerticalAlignment="Center" 
+                           Margin="0,0,10,20" 
+                           FontWeight="Medium"/>
+                <TextBox Grid.Row="0" Grid.Column="1" 
+                         Text="{Binding RoleName, UpdateSourceTrigger=PropertyChanged}"
+                         Height="30" 
+                         Padding="8,5"
+                         BorderBrush="#CCCCCC"
+                         BorderThickness="1"
+                         Margin="0,0,0,20"/>
+
+                <!-- Permissions Section -->
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="权限模块:" 
+                           VerticalAlignment="Top" 
+                           Margin="0,0,10,20" 
+                           FontWeight="Medium"/>
+                <StackPanel Grid.Row="1" Grid.Column="1" Margin="0,0,0,20">
+                    <CheckBox Content="客户管理" 
+                              IsChecked="{Binding CustomerManagementPermission}"
+                              Margin="0,0,0,10"
+                              FontSize="14"/>
+                    <CheckBox Content="产品管理" 
+                              IsChecked="{Binding ProductManagementPermission}"
+                              Margin="0,0,0,10"
+                              FontSize="14"/>
+                    <CheckBox Content="订单管理" 
+                              IsChecked="{Binding OrderManagementPermission}"
+                              Margin="0,0,0,10"
+                              FontSize="14"/>
+                    <CheckBox Content="销售跟进" 
+                              IsChecked="{Binding SalesFollowUpPermission}"
+                              Margin="0,0,0,10"
+                              FontSize="14"/>
+                    <CheckBox Content="售后服务" 
+                              IsChecked="{Binding AfterSalesServicePermission}"
+                              Margin="0,0,0,10"
+                              FontSize="14"/>
+                    <CheckBox Content="财务管理" 
+                              IsChecked="{Binding FinanceManagementPermission}"
+                              Margin="0,0,0,10"
+                              FontSize="14"/>
+                    <CheckBox Content="系统设置" 
+                              IsChecked="{Binding SystemSettingsPermission}"
+                              Margin="0,0,0,10"
+                              FontSize="14"/>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" 
+                    HorizontalAlignment="Right" 
+                    Margin="0,20,0,0">
+            <Button Content="保存" 
+                    Command="{Binding SaveCommand}"
+                    Style="{StaticResource PrimaryButtonStyle}"
+                    Width="80" Height="35" 
+                    Margin="0,0,10,0"/>
+            <Button Content="取消" 
+                    Command="{Binding CancelCommand}"
+                    Style="{StaticResource SecondaryButtonStyle}"
+                    Width="80" Height="35"/>
+        </StackPanel>
+
+        <!-- Saving Overlay -->
+        <Border Grid.RowSpan="3" 
+                Background="#80000000" 
+                Visibility="{Binding IsSaving, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar IsIndeterminate="True" Width="100" Height="4" Margin="0,0,0,10"/>
+                <TextBlock Text="正在保存..." Foreground="White" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

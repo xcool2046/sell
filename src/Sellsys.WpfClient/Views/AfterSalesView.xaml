@@ -1,0 +1,246 @@
+<UserControl x:Class="Sellsys.WpfClient.Views.AfterSalesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Sellsys.WpfClient.Views"
+             mc:Ignorable="d"
+             d:DesignHeight="600" d:DesignWidth="1200"
+             Margin="0"
+             Padding="0">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/> <!-- Search Filters -->
+            <RowDefinition Height="*"/>    <!-- Data Grid -->
+        </Grid.RowDefinitions>
+
+        <!-- Search and Filter Section -->
+        <Border Grid.Row="0" Style="{StaticResource SearchAreaBorderStyle}">
+            <WrapPanel Orientation="Horizontal">
+                <!-- 客户单位名称 (输入框) -->
+                <TextBlock Text="客户单位名称:" Style="{StaticResource SearchLabelStyle}"/>
+                <TextBox Text="{Binding SelectedCustomerName, UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource StandardTextBoxStyle}"
+                         Width="120" Height="32" Margin="0,0,15,0"/>
+
+                <!-- 客服 (下拉框) -->
+                <TextBlock Text="客服:" Style="{StaticResource SearchLabelStyle}"/>
+                <ComboBox ItemsSource="{Binding CustomerServiceOptions}"
+                          SelectedValue="{Binding SelectedCustomerService}"
+                          Style="{StaticResource StandardComboBoxStyle}"
+                          Width="100" Height="32" Margin="0,0,15,0"/>
+
+                <!-- 处理状态 (下拉框) -->
+                <TextBlock Text="处理状态:" Style="{StaticResource SearchLabelStyle}"/>
+                <ComboBox ItemsSource="{Binding StatusOptions}"
+                          SelectedValue="{Binding SelectedStatus}"
+                          Style="{StaticResource StandardComboBoxStyle}"
+                          Width="100" Height="32" Margin="0,0,15,0"/>
+
+                <!-- 查询和重置按钮 -->
+                <Button Content="查询"
+                        Command="{Binding SearchCommand}"
+                        Style="{StaticResource PrimaryButtonStyle}"/>
+                <Button Content="重置"
+                        Command="{Binding ResetFiltersCommand}"
+                        Style="{StaticResource GrayButtonStyle}"/>
+            </WrapPanel>
+        </Border>
+
+        <!-- Data Grid -->
+        <Border Grid.Row="1"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="0,0,0,1"
+                CornerRadius="0">
+            <Grid>
+                <!-- Loading Indicator -->
+                <Grid Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Grid.Background>
+                        <SolidColorBrush Color="White" Opacity="0.7"/>
+                    </Grid.Background>
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <ProgressBar IsIndeterminate="True" Width="200" Height="20" Margin="0,0,0,10"/>
+                        <TextBlock Text="正在加载..."
+                                   Style="{StaticResource GlobalTextStyle}"
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Customer After Sales Data Grid -->
+                <DataGrid x:Name="CustomerAfterSalesDataGrid"
+                          ItemsSource="{Binding CustomerAfterSales}"
+                          SelectedItem="{Binding SelectedCustomer}"
+                          Style="{StaticResource BlueHeaderDataGridStyle}"
+                          AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <!-- 序号 -->
+                        <DataGridTextColumn Header="序号"
+                                            Width="60"
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.Binding>
+                                <Binding RelativeSource="{RelativeSource AncestorType=DataGridRow}"
+                                         Converter="{StaticResource RowIndexConverter}"/>
+                            </DataGridTextColumn.Binding>
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- 省份 -->
+                        <DataGridTextColumn Header="省份"
+                                            Binding="{Binding Province}"
+                                            Width="80"
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- 城市 -->
+                        <DataGridTextColumn Header="城市"
+                                            Binding="{Binding City}"
+                                            Width="80"
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- 客户单位名称 -->
+                        <DataGridTextColumn Header="客户单位名称"
+                                            Binding="{Binding CustomerName}"
+                                            Width="200"
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- 联系人 -->
+                        <DataGridTemplateColumn Header="联系人" Width="100">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0} ({1}人)">
+                                                <Binding Path="ContactName" TargetNullValue="主联系人"/>
+                                                <Binding Path="ContactCount"/>
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!-- 销售 -->
+                        <DataGridTextColumn Header="销售"
+                                            Binding="{Binding SalesPersonDisplay}"
+                                            Width="80"
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- 客服 -->
+                        <DataGridTextColumn Header="客服"
+                                            Binding="{Binding SupportPersonDisplay}"
+                                            Width="80"
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- 客服记录 -->
+                        <DataGridTemplateColumn Header="客服记录" Width="80">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="{Binding ServiceRecordCount}"
+                                            Command="{Binding DataContext.ViewRecordsRowCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                            CommandParameter="{Binding}"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Foreground="#409EFF"
+                                            FontWeight="Bold"
+                                            Cursor="Hand"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center">
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <TextBlock Text="{TemplateBinding Content}"
+                                                                       Foreground="{TemplateBinding Foreground}"
+                                                                       FontWeight="{TemplateBinding FontWeight}"
+                                                                       HorizontalAlignment="Center"
+                                                                       VerticalAlignment="Center"/>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter Property="TextBlock.TextDecorations" Value="Underline"/>
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!-- 更新时间 -->
+                        <DataGridTextColumn Header="更新时间"
+                                            Binding="{Binding UpdatedAt, StringFormat=yyyy-MM-dd HH:mm:ss}"
+                                            Width="140"
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- 操作 -->
+                        <DataGridTemplateColumn Header="操作" Width="100" IsReadOnly="True"
+                                                Visibility="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=售后服务}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="查看记录"
+                                            Command="{Binding DataContext.ViewRecordsRowCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                            CommandParameter="{Binding}"
+                                            Style="{StaticResource BlueButtonStyle}"
+                                            Width="80"
+                                            Height="25"
+                                            FontSize="12"
+                                            Visibility="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=售后服务}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
