@@ -30,6 +30,13 @@ namespace Sellsys.WebApi.Controllers
             return new ObjectResult(response) { StatusCode = (int)response.StatusCode };
         }
 
+        [HttpGet("by-group/{groupId}")]
+        public async Task<IActionResult> GetEmployeesByGroup(int groupId)
+        {
+            var response = await _employeeService.GetEmployeesByGroupIdAsync(groupId);
+            return new ObjectResult(response) { StatusCode = (int)response.StatusCode };
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEmployee(int id)
         {

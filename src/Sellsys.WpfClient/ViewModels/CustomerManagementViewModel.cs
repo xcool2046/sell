@@ -2,9 +2,11 @@ using Sellsys.WpfClient.Commands;
 using Sellsys.WpfClient.Models;
 using Sellsys.WpfClient.Services;
 using Sellsys.WpfClient.Views.Dialogs;
+using Sellsys.WpfClient.ViewModels.Dialogs;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows;
+using System.Linq;
 
 namespace Sellsys.WpfClient.ViewModels
 {
@@ -110,6 +112,24 @@ namespace Sellsys.WpfClient.ViewModels
             {
                 if (SetProperty(ref _selectedProvince, value))
                 {
+                    // Update cities when province changes
+                    UpdateCities();
+                    // Reset selected city if it's not valid for the new province
+                    if (!string.IsNullOrEmpty(SelectedCity) && SelectedCity != "全部" &&
+                        !string.IsNullOrEmpty(value) && value != "全部")
+                    {
+                        var cities = Customers
+                            .Where(c => c.Province == value && !string.IsNullOrEmpty(c.City))
+                            .Select(c => c.City)
+                            .Distinct()
+                            .ToList();
+
+                        if (!cities.Contains(SelectedCity))
+                        {
+                            SelectedCity = "全部";
+                        }
+                    }
+
                     _ = SearchCustomersAsync(); // Auto-search when filter changes
                 }
             }
@@ -188,8 +208,8 @@ namespace Sellsys.WpfClient.ViewModels
             EditCustomerCommand = new RelayCommand(p => EditCustomer(), p => SelectedCustomer != null);
             DeleteCustomerCommand = new AsyncRelayCommand(async p => await DeleteCustomerAsync(), p => SelectedCustomer != null);
             RefreshCommand = new AsyncRelayCommand(async p => await LoadCustomersAsync());
-            AssignSalesCommand = new RelayCommand(p => AssignSales(), p => SelectedCustomer != null);
-            AssignSupportCommand = new RelayCommand(p => AssignSupport(), p => SelectedCustomer != null);
+            AssignSalesCommand = new RelayCommand(p => AssignSales(), p => HasSelectedCustomers());
+            AssignSupportCommand = new RelayCommand(p => AssignSupport(), p => HasSelectedCustomers());
             ViewContactsCommand = new RelayCommand(p => ViewContacts(p as Customer));
             SelectAllCommand = new RelayCommand(p => ToggleSelectAll());
 
@@ -224,26 +244,13 @@ namespace Sellsys.WpfClient.ViewModels
             IndustryTypes.Add("人社");
             IndustryTypes.Add("其它");
 
-            // Initialize provinces
+            // Initialize provinces - will be updated with actual data later
             Provinces.Clear();
             Provinces.Add("全部");
-            Provinces.Add("四川");
-            Provinces.Add("广东");
-            Provinces.Add("北京");
-            Provinces.Add("上海");
-            Provinces.Add("江苏");
-            Provinces.Add("浙江");
 
-            // Initialize cities
+            // Initialize cities - will be updated with actual data later
             Cities.Clear();
             Cities.Add("全部");
-            Cities.Add("成都");
-            Cities.Add("广州");
-            Cities.Add("深圳");
-            Cities.Add("北京");
-            Cities.Add("上海");
-            Cities.Add("南京");
-            Cities.Add("杭州");
 
             // Initialize contact statuses
             ContactStatuses.Clear();
@@ -395,17 +402,26 @@ namespace Sellsys.WpfClient.ViewModels
                 ContactStatuses.Add(status);
             }
 
-            // Update responsible persons
-            var responsiblePersons = Customers
+            // Update responsible persons (include both sales and support persons)
+            var salesPersons = Customers
                 .Where(c => !string.IsNullOrEmpty(c.SalesPersonName))
-                .Select(c => c.SalesPersonName)
+                .Select(c => c.SalesPersonName!)
+                .ToList();
+
+            var supportPersons = Customers
+                .Where(c => !string.IsNullOrEmpty(c.SupportPersonName))
+                .Select(c => c.SupportPersonName!)
+                .ToList();
+
+            var allResponsiblePersons = salesPersons
+                .Concat(supportPersons)
                 .Distinct()
                 .OrderBy(p => p)
                 .ToList();
 
             ResponsiblePersons.Clear();
             ResponsiblePersons.Add("全部");
-            foreach (var person in responsiblePersons)
+            foreach (var person in allResponsiblePersons)
             {
                 ResponsiblePersons.Add(person);
             }
@@ -541,29 +557,57 @@ namespace Sellsys.WpfClient.ViewModels
 
         private void AssignSales()
         {
-            if (SelectedCustomer == null) return;
+            var selectedCustomers = GetSelectedCustomers();
+            if (!selectedCustomers.Any()) return;
 
             try
             {
-                var dialog = new AssignSalesDialog();
-                var viewModel = new AssignSalesDialogViewModel(_apiService, SelectedCustomer);
-                dialog.DataContext = viewModel;
-
-                // Set owner to main window for proper positioning
-                dialog.Owner = Application.Current.MainWindow;
-
-                viewModel.AssignmentCompleted += async (sender, args) =>
+                if (selectedCustomers.Count == 1)
                 {
-                    dialog.DialogResult = true;
-                    await LoadCustomersAsync();
-                };
+                    // Single customer assignment - use original dialog
+                    var dialog = new AssignSalesDialog();
+                    var viewModel = new AssignSalesDialogViewModel(_apiService, selectedCustomers.First());
+                    dialog.DataContext = viewModel;
 
-                viewModel.Cancelled += (sender, args) =>
+                    // Set owner to main window for proper positioning
+                    dialog.Owner = Application.Current.MainWindow;
+
+                    viewModel.AssignmentCompleted += async (sender, args) =>
+                    {
+                        dialog.DialogResult = true;
+                        await LoadCustomersAsync();
+                    };
+
+                    viewModel.Cancelled += (sender, args) =>
+                    {
+                        dialog.DialogResult = false;
+                    };
+
+                    dialog.ShowDialog();
+                }
+                else
                 {
-                    dialog.DialogResult = false;
-                };
+                    // Batch assignment - use new batch dialog
+                    var dialog = new BatchAssignSalesDialog();
+                    var viewModel = new BatchAssignSalesDialogViewModel(_apiService, selectedCustomers);
+                    dialog.DataContext = viewModel;
 
-                dialog.ShowDialog();
+                    // Set owner to main window for proper positioning
+                    dialog.Owner = Application.Current.MainWindow;
+
+                    viewModel.AssignmentCompleted += async (sender, args) =>
+                    {
+                        dialog.DialogResult = true;
+                        await LoadCustomersAsync();
+                    };
+
+                    viewModel.Cancelled += (sender, args) =>
+                    {
+                        dialog.DialogResult = false;
+                    };
+
+                    dialog.ShowDialog();
+                }
             }
             catch (Exception ex)
             {
@@ -573,29 +617,57 @@ namespace Sellsys.WpfClient.ViewModels
 
         private void AssignSupport()
         {
-            if (SelectedCustomer == null) return;
+            var selectedCustomers = GetSelectedCustomers();
+            if (!selectedCustomers.Any()) return;
 
             try
             {
-                var dialog = new AssignSupportDialog();
-                var viewModel = new AssignSupportDialogViewModel(_apiService, SelectedCustomer);
-                dialog.DataContext = viewModel;
-
-                // Set owner to main window for proper positioning
-                dialog.Owner = Application.Current.MainWindow;
-
-                viewModel.AssignmentCompleted += async (sender, args) =>
+                if (selectedCustomers.Count == 1)
                 {
-                    dialog.DialogResult = true;
-                    await LoadCustomersAsync();
-                };
+                    // Single customer assignment - use original dialog
+                    var dialog = new AssignSupportDialog();
+                    var viewModel = new AssignSupportDialogViewModel(_apiService, selectedCustomers.First());
+                    dialog.DataContext = viewModel;
 
-                viewModel.Cancelled += (sender, args) =>
+                    // Set owner to main window for proper positioning
+                    dialog.Owner = Application.Current.MainWindow;
+
+                    viewModel.AssignmentCompleted += async (sender, args) =>
+                    {
+                        dialog.DialogResult = true;
+                        await LoadCustomersAsync();
+                    };
+
+                    viewModel.Cancelled += (sender, args) =>
+                    {
+                        dialog.DialogResult = false;
+                    };
+
+                    dialog.ShowDialog();
+                }
+                else
                 {
-                    dialog.DialogResult = false;
-                };
+                    // Batch assignment - use new batch dialog
+                    var dialog = new BatchAssignSupportDialog();
+                    var viewModel = new BatchAssignSupportDialogViewModel(_apiService, selectedCustomers);
+                    dialog.DataContext = viewModel;
 
-                dialog.ShowDialog();
+                    // Set owner to main window for proper positioning
+                    dialog.Owner = Application.Current.MainWindow;
+
+                    viewModel.AssignmentCompleted += async (sender, args) =>
+                    {
+                        dialog.DialogResult = true;
+                        await LoadCustomersAsync();
+                    };
+
+                    viewModel.Cancelled += (sender, args) =>
+                    {
+                        dialog.DialogResult = false;
+                    };
+
+                    dialog.ShowDialog();
+                }
             }
             catch (Exception ex)
             {
@@ -788,6 +860,24 @@ namespace Sellsys.WpfClient.ViewModels
             {
                 customer.IsSelected = IsAllSelected;
             }
+        }
+
+        private bool HasSelectedCustomers()
+        {
+            return Customers.Any(c => c.IsSelected) || SelectedCustomer != null;
+        }
+
+        private List<Customer> GetSelectedCustomers()
+        {
+            var selectedCustomers = Customers.Where(c => c.IsSelected).ToList();
+
+            // If no customers are selected via checkbox but there's a selected customer, use that
+            if (!selectedCustomers.Any() && SelectedCustomer != null)
+            {
+                selectedCustomers.Add(SelectedCustomer);
+            }
+
+            return selectedCustomers;
         }
 
         /// <summary>

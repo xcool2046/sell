@@ -44,7 +44,19 @@ namespace Sellsys.WpfClient.ViewModels
         public string SelectedProvince
         {
             get => _selectedProvince;
-            set => SetProperty(ref _selectedProvince, value);
+            set
+            {
+                if (SetProperty(ref _selectedProvince, value))
+                {
+                    // Update cities when province changes
+                    UpdateCitiesForProvince(value);
+                    // Clear selected city if it's not valid for the new province
+                    if (!string.IsNullOrEmpty(SelectedCity) && !RegionDataService.IsCityInProvince(SelectedCity, value))
+                    {
+                        SelectedCity = string.Empty;
+                    }
+                }
+            }
         }
 
         public string SelectedCity
@@ -148,22 +160,30 @@ namespace Sellsys.WpfClient.ViewModels
             IndustryTypes.Add("人社");
             IndustryTypes.Add("其它");
 
-            // Initialize provinces
-            Provinces.Add("四川");
-            Provinces.Add("广东");
-            Provinces.Add("北京");
-            Provinces.Add("上海");
-            Provinces.Add("江苏");
-            Provinces.Add("浙江");
+            // Initialize provinces using RegionDataService
+            Provinces.Clear();
+            var provinces = RegionDataService.GetProvinces();
+            foreach (var province in provinces)
+            {
+                Provinces.Add(province);
+            }
 
-            // Initialize cities
-            Cities.Add("成都");
-            Cities.Add("广州");
-            Cities.Add("深圳");
-            Cities.Add("北京");
-            Cities.Add("上海");
-            Cities.Add("南京");
-            Cities.Add("杭州");
+            // Initialize cities (empty initially, will be populated when province is selected)
+            Cities.Clear();
+        }
+
+        private void UpdateCitiesForProvince(string province)
+        {
+            Cities.Clear();
+
+            if (!string.IsNullOrEmpty(province))
+            {
+                var cities = RegionDataService.GetCitiesByProvince(province);
+                foreach (var city in cities)
+                {
+                    Cities.Add(city);
+                }
+            }
         }
 
         private void LoadCustomerData()
@@ -173,8 +193,12 @@ namespace Sellsys.WpfClient.ViewModels
             // Load customer data into form
             CustomerName = _originalCustomer.Name;
             SelectedIndustryType = _originalCustomer.IndustryTypes ?? string.Empty;
+
+            // Load province first, which will trigger city update
             SelectedProvince = _originalCustomer.Province ?? string.Empty;
+            // Then load city after cities are populated
             SelectedCity = _originalCustomer.City ?? string.Empty;
+
             DetailedAddress = _originalCustomer.Address ?? string.Empty;
             CustomerRemarks = _originalCustomer.Remarks ?? string.Empty;
 

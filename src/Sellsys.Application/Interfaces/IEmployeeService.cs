@@ -9,6 +9,7 @@ namespace Sellsys.Application.Interfaces
     {
         Task<ApiResponse<List<EmployeeDto>>> GetAllEmployeesAsync();
         Task<ApiResponse<List<EmployeeDto>>> GetEmployeesByDepartmentNameAsync(string departmentName);
+        Task<ApiResponse<List<EmployeeDto>>> GetEmployeesByGroupIdAsync(int groupId);
         Task<ApiResponse<EmployeeDto>> GetEmployeeByIdAsync(int id);
         Task<ApiResponse<EmployeeDto>> CreateEmployeeAsync(EmployeeUpsertDto employeeDto);
         Task<ApiResponse> UpdateEmployeeAsync(int id, EmployeeUpsertDto employeeDto);
