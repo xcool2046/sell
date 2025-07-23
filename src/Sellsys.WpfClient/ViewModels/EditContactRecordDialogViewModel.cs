@@ -221,7 +221,7 @@ namespace Sellsys.WpfClient.ViewModels
             NextFollowUpDate = null;
         }
 
-        private void Save()
+        private async void Save()
         {
             try
             {
@@ -242,14 +242,25 @@ namespace Sellsys.WpfClient.ViewModels
                 string customerStatus = GetSelectedCustomerStatus();
                 string customerIntention = GetSelectedCustomerIntention();
 
-                // Update the original record
+                // Create update DTO
+                var updateDto = new SalesFollowUpLogUpsertDto
+                {
+                    CustomerId = _customer.Id,
+                    ContactId = SelectedContact.Id,
+                    Summary = ContactSummary,
+                    CustomerIntention = customerIntention,
+                    NextFollowUpDate = NextFollowUpDate
+                };
+
+                // Call API to update the contact record
+                await _apiService.UpdateSalesFollowUpLogAsync(_originalRecord.Id, updateDto);
+
+                // Update the original record for UI consistency
                 _originalRecord.ContactId = SelectedContact.Id;
                 _originalRecord.ContactName = SelectedContact.Name;
                 _originalRecord.Summary = ContactSummary;
                 _originalRecord.CustomerIntention = customerIntention;
                 _originalRecord.NextFollowUpDate = NextFollowUpDate;
-
-                // TODO: Call API to update the contact record
 
                 SaveCompleted?.Invoke(this, EventArgs.Empty);
                 Cancel();

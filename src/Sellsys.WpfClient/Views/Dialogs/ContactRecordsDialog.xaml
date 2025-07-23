@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="联系记录"
-        Height="600"
-        Width="1000"
+        Height="700"
+        Width="1200"
         WindowStartupLocation="CenterOwner"
         ResizeMode="CanResize">
     <Grid>
@@ -79,49 +79,99 @@
                                 <Binding RelativeSource="{RelativeSource AncestorType=DataGridRow}"
                                          Converter="{StaticResource RowIndexConverter}"/>
                             </DataGridTextColumn.Binding>
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
                         <!-- 联系人 -->
-                        <DataGridTextColumn Header="联系人" 
-                                            Binding="{Binding ContactName}" 
-                                            Width="100" 
-                                            IsReadOnly="True"/>
+                        <DataGridTextColumn Header="联系人"
+                                            Binding="{Binding ContactName}"
+                                            Width="100"
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
 
                         <!-- 联系电话 -->
-                        <DataGridTextColumn Header="联系电话" 
-                                            Binding="{Binding ContactPhone}" 
-                                            Width="120" 
-                                            IsReadOnly="True"/>
+                        <DataGridTextColumn Header="联系电话"
+                                            Binding="{Binding ContactPhone}"
+                                            Width="120"
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
 
                         <!-- 联系记录 -->
-                        <DataGridTextColumn Header="联系记录" 
-                                            Binding="{Binding Summary}" 
-                                            Width="200" 
-                                            IsReadOnly="True"/>
+                        <DataGridTextColumn Header="联系记录"
+                                            Binding="{Binding Summary}"
+                                            Width="400"
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="TextWrapping" Value="Wrap"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
 
                         <!-- 客户意向 -->
-                        <DataGridTextColumn Header="客户意向" 
-                                            Binding="{Binding CustomerIntention}" 
-                                            Width="80" 
-                                            IsReadOnly="True"/>
+                        <DataGridTextColumn Header="客户意向"
+                                            Binding="{Binding CustomerIntention}"
+                                            Width="80"
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
 
                         <!-- 联系时间 -->
-                        <DataGridTextColumn Header="联系时间" 
-                                            Binding="{Binding FormattedCreatedAt}" 
-                                            Width="120" 
-                                            IsReadOnly="True"/>
+                        <DataGridTextColumn Header="联系时间"
+                                            Binding="{Binding FormattedCreatedAt}"
+                                            Width="120"
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
 
                         <!-- 下次预约 -->
-                        <DataGridTextColumn Header="下次预约" 
-                                            Binding="{Binding FormattedNextFollowUpDate}" 
-                                            Width="100" 
-                                            IsReadOnly="True"/>
+                        <DataGridTextColumn Header="下次预约"
+                                            Binding="{Binding FormattedNextFollowUpDate}"
+                                            Width="100"
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
 
                         <!-- 销售 -->
-                        <DataGridTextColumn Header="销售" 
-                                            Binding="{Binding SalesPersonName}" 
-                                            Width="80" 
-                                            IsReadOnly="True"/>
+                        <DataGridTextColumn Header="销售"
+                                            Binding="{Binding SalesPersonName}"
+                                            Width="80"
+                                            IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
 
                         <!-- 操作 -->
                         <DataGridTemplateColumn Header="操作" Width="120">

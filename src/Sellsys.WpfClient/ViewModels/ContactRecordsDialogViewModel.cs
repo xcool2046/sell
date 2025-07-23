@@ -66,39 +66,12 @@ namespace Sellsys.WpfClient.ViewModels
             try
             {
                 IsLoading = true;
-                
-                // TODO: Call API to get contact records for this customer
-                // For now, create some sample data
-                var records = new List<SalesFollowUpLog>
-                {
-                    new SalesFollowUpLog
-                    {
-                        Id = 1,
-                        CustomerId = _customer.Id,
-                        CustomerName = _customer.Name,
-                        ContactName = _customer.PrimaryContactName,
-                        Summary = "已来电咨询产品信息，预约下周见面",
-                        CustomerIntention = "高",
-                        CreatedAt = DateTime.Now.AddDays(-7),
-                        NextFollowUpDate = DateTime.Now.AddDays(2),
-                        SalesPersonName = "张飞"
-                    },
-                    new SalesFollowUpLog
-                    {
-                        Id = 2,
-                        CustomerId = _customer.Id,
-                        CustomerName = _customer.Name,
-                        ContactName = _customer.PrimaryContactName,
-                        Summary = "电话联系，了解需求",
-                        CustomerIntention = "中",
-                        CreatedAt = DateTime.Now.AddDays(-3),
-                        NextFollowUpDate = DateTime.Now.AddDays(5),
-                        SalesPersonName = "张飞"
-                    }
-                };
+
+                // Call API to get contact records for this customer
+                var records = await _apiService.GetSalesFollowUpLogsByCustomerIdAsync(_customer.Id);
 
                 ContactRecords.Clear();
-                foreach (var record in records)
+                foreach (var record in records.OrderByDescending(r => r.CreatedAt))
                 {
                     ContactRecords.Add(record);
                 }
@@ -186,7 +159,8 @@ namespace Sellsys.WpfClient.ViewModels
 
                 if (result == MessageBoxResult.Yes)
                 {
-                    // TODO: Call API to delete the record
+                    // Call API to delete the record
+                    await _apiService.DeleteSalesFollowUpLogAsync(record.Id);
                     ContactRecords.Remove(record);
                 }
             }

@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="编辑联系记录"
-        Height="500"
-        Width="600"
+        Height="650"
+        Width="700"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize">
     <Grid>
@@ -25,7 +25,7 @@
         </Border>
 
         <!-- Content -->
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="20">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Disabled" Padding="20">
             <StackPanel>
                 <!-- 客户单位 -->
                 <Grid Margin="0,0,0,15">
@@ -45,7 +45,7 @@
                         <ColumnDefinition Width="100"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="*联系姓名：" VerticalAlignment="Center" FontWeight="Bold" Foreground="Red"/>
+                    <TextBlock Grid.Column="0" Text="联系姓名：" VerticalAlignment="Center" FontWeight="Bold" Foreground="Black"/>
                     <ComboBox Grid.Column="1" 
                               ItemsSource="{Binding Contacts}"
                               SelectedItem="{Binding SelectedContact}"
@@ -75,7 +75,7 @@
                         <ColumnDefinition Width="100"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="*联系情况：" VerticalAlignment="Top" FontWeight="Bold" Foreground="Red" Margin="0,8,0,0"/>
+                    <TextBlock Grid.Column="0" Text="联系情况：" VerticalAlignment="Top" FontWeight="Bold" Foreground="Black" Margin="0,8,0,0"/>
                     <TextBox Grid.Column="1" 
                              Text="{Binding ContactSummary}" 
                              Style="{StaticResource StandardTextBoxStyle}"
@@ -112,7 +112,7 @@
                         <ColumnDefinition Width="100"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="*客户状态：" VerticalAlignment="Top" FontWeight="Bold" Foreground="Red" Margin="0,8,0,0"/>
+                    <TextBlock Grid.Column="0" Text="客户状态：" VerticalAlignment="Top" FontWeight="Bold" Foreground="Black" Margin="0,8,0,0"/>
                     <StackPanel Grid.Column="1" Orientation="Horizontal">
                         <RadioButton Content="待联系" 
                                      IsChecked="{Binding IsWaitingContact}" 
@@ -137,7 +137,7 @@
                         <ColumnDefinition Width="100"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="*客户意向：" VerticalAlignment="Top" FontWeight="Bold" Foreground="Red" Margin="0,8,0,0"/>
+                    <TextBlock Grid.Column="0" Text="客户意向：" VerticalAlignment="Top" FontWeight="Bold" Foreground="Black" Margin="0,8,0,0"/>
                     <StackPanel Grid.Column="1" Orientation="Horizontal">
                         <RadioButton Content="未知" 
                                      IsChecked="{Binding IsIntentionUnknown}" 

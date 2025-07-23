@@ -504,11 +504,34 @@ namespace Sellsys.WpfClient.Services
                 var response = await _httpClient.PutAsJsonAsync($"{BaseUrl}/salesfollowuplogs/{id}", logDto);
                 response.EnsureSuccessStatusCode();
 
-                var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse>();
-                if (apiResponse?.IsSuccess != true)
+                // Check if response has content before trying to parse JSON
+                var content = await response.Content.ReadAsStringAsync();
+                if (!string.IsNullOrWhiteSpace(content))
                 {
-                    throw new Exception(apiResponse?.Message ?? "更新销售跟进记录失败");
+                    var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse>();
+                    if (apiResponse?.IsSuccess != true)
+                    {
+                        throw new Exception(apiResponse?.Message ?? "更新销售跟进记录失败");
+                    }
                 }
+                // If no content (204 No Content), consider it successful
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new Exception($"网络请求失败: {ex.Message}");
+            }
+        }
+
+        public async Task<List<SalesFollowUpLog>> GetSalesFollowUpLogsByCustomerIdAsync(int customerId)
+        {
+            try
+            {
+                var response = await _httpClient.GetFromJsonAsync<ApiResponse<List<SalesFollowUpLogDto>>>($"{BaseUrl}/salesfollowuplogs/customer/{customerId}");
+                if (response != null && response.IsSuccess && response.Data != null)
+                {
+                    return response.Data.Select(MapToSalesFollowUpLog).ToList();
+                }
+                throw new Exception(response?.Message ?? "获取客户销售跟进记录失败");
             }
             catch (HttpRequestException ex)
             {
@@ -523,11 +546,17 @@ namespace Sellsys.WpfClient.Services
                 var response = await _httpClient.DeleteAsync($"{BaseUrl}/salesfollowuplogs/{id}");
                 response.EnsureSuccessStatusCode();
 
-                var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse>();
-                if (apiResponse?.IsSuccess != true)
+                // Check if response has content before trying to parse JSON
+                var content = await response.Content.ReadAsStringAsync();
+                if (!string.IsNullOrWhiteSpace(content))
                 {
-                    throw new Exception(apiResponse?.Message ?? "删除销售跟进记录失败");
+                    var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse>();
+                    if (apiResponse?.IsSuccess != true)
+                    {
+                        throw new Exception(apiResponse?.Message ?? "删除销售跟进记录失败");
+                    }
                 }
+                // If no content (204 No Content), consider it successful
             }
             catch (HttpRequestException ex)
             {

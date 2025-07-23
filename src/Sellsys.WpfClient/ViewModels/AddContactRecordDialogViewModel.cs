@@ -165,7 +165,7 @@ namespace Sellsys.WpfClient.ViewModels
             NextFollowUpDate = null;
         }
 
-        private void Save()
+        private async void Save()
         {
             try
             {
@@ -186,21 +186,19 @@ namespace Sellsys.WpfClient.ViewModels
                 string customerStatus = GetSelectedCustomerStatus();
                 string customerIntention = GetSelectedCustomerIntention();
 
-                // Create contact record
-                var contactRecord = new SalesFollowUpLog
+                // Create contact record DTO for API call
+                var contactRecordDto = new SalesFollowUpLogUpsertDto
                 {
                     CustomerId = _customer.Id,
-                    CustomerName = _customer.Name,
-                    ContactId = SelectedContact.Id,
-                    ContactName = SelectedContact.Name,
+                    ContactId = SelectedContact?.Id,
                     Summary = ContactSummary,
                     CustomerIntention = customerIntention,
                     NextFollowUpDate = NextFollowUpDate,
-                    CreatedAt = DateTime.Now,
-                    SalesPersonName = "张飞" // TODO: Get current user
+                    SalesPersonId = null // TODO: Get current user ID
                 };
 
-                // TODO: Call API to save the contact record
+                // Call API to save the contact record
+                await _apiService.CreateSalesFollowUpLogAsync(contactRecordDto);
 
                 SaveCompleted?.Invoke(this, EventArgs.Empty);
                 Close();
