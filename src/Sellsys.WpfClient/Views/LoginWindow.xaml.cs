@@ -1,4 +1,5 @@
 using Sellsys.WpfClient.ViewModels;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 
@@ -20,8 +21,20 @@ namespace Sellsys.WpfClient.Views
             // 监听登录成功事件
             viewModel.LoginSuccessful += OnLoginSuccessful;
 
-            // 设置焦点到用户名输入框
-            Loaded += (s, e) => UsernameTextBox.Focus();
+            // 监听ViewModel属性变化，同步密码到PasswordBox
+            viewModel.PropertyChanged += ViewModel_PropertyChanged;
+
+            // 设置焦点到用户名输入框，并同步密码
+            Loaded += (s, e) =>
+            {
+                UsernameTextBox.Focus();
+                // 确保密码正确同步到PasswordBox
+                var vm = DataContext as LoginViewModel;
+                if (vm != null && !string.IsNullOrEmpty(vm.Password))
+                {
+                    PasswordBox.Password = vm.Password;
+                }
+            };
 
             // 监听密码框变化，同步到ViewModel
             PasswordBox.PasswordChanged += PasswordBox_PasswordChanged;
@@ -30,6 +43,18 @@ namespace Sellsys.WpfClient.Views
         private void OnLoginSuccessful()
         {
             _isLoginSuccessful = true;
+        }
+
+        private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(LoginViewModel.Password))
+            {
+                var viewModel = sender as LoginViewModel;
+                if (viewModel != null && PasswordBox.Password != viewModel.Password)
+                {
+                    PasswordBox.Password = viewModel.Password;
+                }
+            }
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)

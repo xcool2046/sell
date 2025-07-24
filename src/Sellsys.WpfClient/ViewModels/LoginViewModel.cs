@@ -185,13 +185,14 @@ namespace Sellsys.WpfClient.ViewModels
                 {
                     var json = File.ReadAllText(_settingsFilePath);
                     var settings = JsonSerializer.Deserialize<LoginSettings>(json);
-                    
+
                     if (settings != null)
                     {
                         RememberUsername = settings.RememberUsername;
                         if (RememberUsername)
                         {
                             Username = settings.Username ?? string.Empty;
+                            Password = settings.Password ?? string.Empty;
                         }
                     }
                 }
@@ -209,7 +210,8 @@ namespace Sellsys.WpfClient.ViewModels
                 var settings = new LoginSettings
                 {
                     RememberUsername = RememberUsername,
-                    Username = RememberUsername ? Username : string.Empty
+                    Username = RememberUsername ? Username : string.Empty,
+                    Password = RememberUsername ? Password : string.Empty
                 };
 
                 var json = JsonSerializer.Serialize(settings, new JsonSerializerOptions
@@ -238,5 +240,6 @@ namespace Sellsys.WpfClient.ViewModels
     {
         public bool RememberUsername { get; set; }
         public string Username { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
     }
 }
