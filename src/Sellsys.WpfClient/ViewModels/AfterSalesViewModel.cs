@@ -154,7 +154,11 @@ namespace Sellsys.WpfClient.ViewModels
                 CustomerAfterSales.Clear();
                 foreach (var customerAfterSales in customerAfterSalesTask.Result)
                 {
-                    CustomerAfterSales.Add(customerAfterSales);
+                    // 应用分组权限过滤
+                    if (ShouldShowCustomerAfterSales(customerAfterSales))
+                    {
+                        CustomerAfterSales.Add(customerAfterSales);
+                    }
                 }
 
                 Customers.Clear();
@@ -210,7 +214,11 @@ namespace Sellsys.WpfClient.ViewModels
                 CustomerAfterSales.Clear();
                 foreach (var customer in filteredCustomers)
                 {
-                    CustomerAfterSales.Add(customer);
+                    // 应用分组权限过滤
+                    if (ShouldShowCustomerAfterSales(customer))
+                    {
+                        CustomerAfterSales.Add(customer);
+                    }
                 }
             }
             catch (Exception ex)
@@ -374,6 +382,34 @@ namespace Sellsys.WpfClient.ViewModels
             {
                 System.Diagnostics.Debug.WriteLine($"处理员工更新事件失败: {ex.Message}");
             }
+        }
+
+        /// <summary>
+        /// 检查是否应该显示指定客户的售后信息（基于分组权限）
+        /// </summary>
+        /// <param name="customerAfterSales">客户售后信息</param>
+        /// <returns>是否应该显示</returns>
+        private bool ShouldShowCustomerAfterSales(CustomerAfterSales customerAfterSales)
+        {
+            // 获取客服人员的分组信息
+            var supportPersonGroupId = GetEmployeeGroupId(customerAfterSales.SupportPersonId);
+
+            // 检查是否可以访问该客户的数据
+            return CurrentUser.CanAccessUserData(customerAfterSales.SupportPersonId, supportPersonGroupId);
+        }
+
+        /// <summary>
+        /// 获取员工的分组ID
+        /// </summary>
+        /// <param name="employeeId">员工ID</param>
+        /// <returns>分组ID</returns>
+        private int? GetEmployeeGroupId(int? employeeId)
+        {
+            if (!employeeId.HasValue)
+                return null;
+
+            var employee = Employees.FirstOrDefault(e => e.Id == employeeId.Value);
+            return employee?.GroupId;
         }
     }
 }

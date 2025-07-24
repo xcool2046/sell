@@ -19,7 +19,7 @@
                 <Button Content="添加产品"
                         Command="{Binding AddProductCommand}"
                         Style="{StaticResource ActionButtonStyle}"
-                        Visibility="{Binding ., Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=产品管理}"/>
+                        Visibility="{Binding ., Converter={StaticResource OperationPermissionToVisibilityConverter}, ConverterParameter=产品管理:Create}"/>
             </StackPanel>
         </Border>
 
@@ -181,7 +181,7 @@
                                                 Width="50"
                                                 Height="25"
                                                 Margin="2"
-                                                Visibility="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=产品管理}"/>
+                                                Visibility="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource OperationPermissionToVisibilityConverter}, ConverterParameter=产品管理:Edit}"/>
                                         <Button Content="删除"
                                                 Command="{Binding DataContext.DeleteProductRowCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"
@@ -189,7 +189,7 @@
                                                 Width="50"
                                                 Height="25"
                                                 Margin="2"
-                                                Visibility="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=产品管理}"/>
+                                                Visibility="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource OperationPermissionToVisibilityConverter}, ConverterParameter=产品管理:Delete}"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>

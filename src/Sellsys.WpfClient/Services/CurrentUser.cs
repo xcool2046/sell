@@ -73,5 +73,52 @@ namespace Sellsys.WpfClient.Services
         {
             return _currentUser?.UserDisplayInfo ?? "未登录";
         }
+
+        /// <summary>
+        /// 检查是否可以查看指定分组的数据
+        /// </summary>
+        /// <param name="targetGroupId">目标分组ID</param>
+        /// <returns>是否有权限</returns>
+        public static bool CanAccessGroupData(int? targetGroupId)
+        {
+            return _currentUser?.CanAccessGroupData(targetGroupId) ?? false;
+        }
+
+        /// <summary>
+        /// 获取当前用户的角色级别
+        /// </summary>
+        /// <returns>角色级别</returns>
+        public static Models.RoleLevel GetRoleLevel()
+        {
+            return _currentUser?.GetRoleLevel() ?? Models.RoleLevel.Staff;
+        }
+
+        /// <summary>
+        /// 检查是否可以查看指定用户分配的数据
+        /// </summary>
+        /// <param name="assignedUserId">分配的用户ID</param>
+        /// <param name="assignedUserGroupId">分配用户的分组ID</param>
+        /// <returns>是否有权限</returns>
+        public static bool CanAccessUserData(int? assignedUserId, int? assignedUserGroupId)
+        {
+            if (_currentUser == null)
+                return false;
+
+            // 管理员可以访问所有数据
+            if (_currentUser.IsAdmin)
+                return true;
+
+            var roleLevel = _currentUser.GetRoleLevel();
+
+            // 普通员工只能访问分配给自己的数据
+            if (roleLevel == Models.RoleLevel.Staff)
+                return assignedUserId == _currentUser.Id;
+
+            // 主管和经理可以访问同分组的数据
+            if (roleLevel == Models.RoleLevel.Supervisor || roleLevel == Models.RoleLevel.Manager)
+                return _currentUser.CanAccessGroupData(assignedUserGroupId);
+
+            return false;
+        }
     }
 }

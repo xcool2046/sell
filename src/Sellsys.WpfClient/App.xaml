@@ -28,6 +28,8 @@
             <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
             <converters:PermissionToVisibilityConverter x:Key="PermissionToVisibilityConverter"/>
             <converters:PermissionToBooleanConverter x:Key="PermissionToBooleanConverter"/>
+            <converters:OperationPermissionToVisibilityConverter x:Key="OperationPermissionToVisibilityConverter"/>
+            <converters:OperationPermissionToBooleanConverter x:Key="OperationPermissionToBooleanConverter"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
             <!-- ViewModel to View mappings -->

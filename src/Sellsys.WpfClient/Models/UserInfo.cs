@@ -43,6 +43,16 @@ namespace Sellsys.WpfClient.Models
         public string? DepartmentName { get; set; }
 
         /// <summary>
+        /// 分组ID
+        /// </summary>
+        public int? GroupId { get; set; }
+
+        /// <summary>
+        /// 分组名称
+        /// </summary>
+        public string? GroupName { get; set; }
+
+        /// <summary>
         /// 可访问的模块列表
         /// </summary>
         public List<string> AccessibleModules { get; set; } = new List<string>();
@@ -59,6 +69,59 @@ namespace Sellsys.WpfClient.Models
                 return true;
 
             return AccessibleModules.Contains(module);
+        }
+
+        /// <summary>
+        /// 获取角色级别
+        /// </summary>
+        /// <returns>角色级别</returns>
+        public RoleLevel GetRoleLevel()
+        {
+            if (IsAdmin)
+                return RoleLevel.Admin;
+
+            if (string.IsNullOrEmpty(RoleName))
+                return RoleLevel.Staff;
+
+            // 根据角色名称判断级别
+            if (RoleName.Contains("经理"))
+                return RoleLevel.Manager;
+            else if (RoleName.Contains("主管"))
+                return RoleLevel.Supervisor;
+            else
+                return RoleLevel.Staff;
+        }
+
+        /// <summary>
+        /// 检查是否可以查看指定分组的数据
+        /// </summary>
+        /// <param name="targetGroupId">目标分组ID</param>
+        /// <returns>是否有权限</returns>
+        public bool CanAccessGroupData(int? targetGroupId)
+        {
+            // 管理员可以访问所有分组数据
+            if (IsAdmin)
+                return true;
+
+            // 如果目标分组为空，表示数据未分组，只有管理员可以访问
+            if (!targetGroupId.HasValue)
+                return IsAdmin;
+
+            // 如果当前用户没有分组，只能访问自己的数据
+            if (!GroupId.HasValue)
+                return false;
+
+            var roleLevel = GetRoleLevel();
+
+            // 普通员工只能访问自己分配的数据（在数据级权限中处理）
+            if (roleLevel == RoleLevel.Staff)
+                return GroupId == targetGroupId;
+
+            // 主管和经理可以访问同分组的数据
+            if (roleLevel == RoleLevel.Supervisor || roleLevel == RoleLevel.Manager)
+                return GroupId == targetGroupId;
+
+            return false;
         }
 
         /// <summary>

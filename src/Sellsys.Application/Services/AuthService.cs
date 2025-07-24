@@ -82,6 +82,8 @@ namespace Sellsys.Application.Services
                     RoleId = employee.RoleId,
                     RoleName = employee.Role?.Name,
                     DepartmentName = employee.Group?.Department?.Name,
+                    GroupId = employee.GroupId,
+                    GroupName = employee.Group?.Name,
                     AccessibleModules = employee.Role?.AccessibleModules ?? string.Empty
                 };
 

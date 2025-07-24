@@ -1989,6 +1989,8 @@ namespace Sellsys.WpfClient.Services
         public int? RoleId { get; set; }
         public string? RoleName { get; set; }
         public string? DepartmentName { get; set; }
+        public int? GroupId { get; set; }
+        public string? GroupName { get; set; }
         public string AccessibleModules { get; set; } = string.Empty;
     }
 

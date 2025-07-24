@@ -221,9 +221,13 @@ namespace Sellsys.WpfClient.ViewModels
                 Customers.Clear();
                 foreach (var customer in customersTask.Result)
                 {
-                    // Add next contact date from latest follow-up log
-                    await EnrichCustomerWithFollowUpData(customer);
-                    Customers.Add(customer);
+                    // 应用分组权限过滤
+                    if (ShouldShowCustomer(customer))
+                    {
+                        // Add next contact date from latest follow-up log
+                        await EnrichCustomerWithFollowUpData(customer);
+                        Customers.Add(customer);
+                    }
                 }
 
                 Employees.Clear();
@@ -334,9 +338,13 @@ namespace Sellsys.WpfClient.ViewModels
                 Customers.Clear();
                 foreach (var customer in filteredCustomers.OrderByDescending(c => c.CreatedAt))
                 {
-                    // Enrich with follow-up data
-                    await EnrichCustomerWithFollowUpData(customer);
-                    Customers.Add(customer);
+                    // 应用分组权限过滤
+                    if (ShouldShowCustomer(customer))
+                    {
+                        // Enrich with follow-up data
+                        await EnrichCustomerWithFollowUpData(customer);
+                        Customers.Add(customer);
+                    }
                 }
             }
             catch (Exception ex)
@@ -636,6 +644,34 @@ namespace Sellsys.WpfClient.ViewModels
             {
                 System.Diagnostics.Debug.WriteLine($"处理员工更新事件失败: {ex.Message}");
             }
+        }
+
+        /// <summary>
+        /// 检查是否应该显示指定客户（基于分组权限）
+        /// </summary>
+        /// <param name="customer">客户信息</param>
+        /// <returns>是否应该显示</returns>
+        private bool ShouldShowCustomer(Customer customer)
+        {
+            // 获取销售人员的分组信息
+            var salesPersonGroupId = GetEmployeeGroupId(customer.SalesPersonId);
+
+            // 检查是否可以访问该客户的数据
+            return CurrentUser.CanAccessUserData(customer.SalesPersonId, salesPersonGroupId);
+        }
+
+        /// <summary>
+        /// 获取员工的分组ID
+        /// </summary>
+        /// <param name="employeeId">员工ID</param>
+        /// <returns>分组ID</returns>
+        private int? GetEmployeeGroupId(int? employeeId)
+        {
+            if (!employeeId.HasValue)
+                return null;
+
+            var employee = Employees.FirstOrDefault(e => e.Id == employeeId.Value);
+            return employee?.GroupId;
         }
     }
 }

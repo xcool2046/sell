@@ -38,6 +38,16 @@ namespace Sellsys.Application.DTOs.Auth
         public string? DepartmentName { get; set; }
 
         /// <summary>
+        /// 分组ID
+        /// </summary>
+        public int? GroupId { get; set; }
+
+        /// <summary>
+        /// 分组名称
+        /// </summary>
+        public string? GroupName { get; set; }
+
+        /// <summary>
         /// 可访问的模块列表（逗号分隔）
         /// </summary>
         public string AccessibleModules { get; set; } = string.Empty;

@@ -110,6 +110,8 @@ namespace Sellsys.WpfClient.Services
                     RoleId = loginResponse.RoleId,
                     RoleName = loginResponse.RoleName,
                     DepartmentName = loginResponse.DepartmentName,
+                    GroupId = loginResponse.GroupId,
+                    GroupName = loginResponse.GroupName,
                     AccessibleModules = accessibleModules
                 };
 
