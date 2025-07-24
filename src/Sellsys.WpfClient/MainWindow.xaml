@@ -8,7 +8,7 @@
         xmlns:viewmodels="clr-namespace:Sellsys.WpfClient.ViewModels"
         mc:Ignorable="d"
         Title="巨炜科技客户管理信息系统"
-        Icon="Resources/logo.jpg"
+        Icon="Resources/favicon.ico"
         MinHeight="600" MinWidth="1000"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized"

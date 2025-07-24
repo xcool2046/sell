@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="销售管理系统 - 登录"
-        Icon="../Resources/logo.jpg"
+        Icon="../Resources/favicon.ico"
         Height="726" Width="1280"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
