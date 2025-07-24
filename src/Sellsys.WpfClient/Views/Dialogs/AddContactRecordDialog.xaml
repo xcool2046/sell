@@ -82,7 +82,9 @@
                              TextWrapping="Wrap"
                              AcceptsReturn="True"
                              Height="80"
-                             VerticalScrollBarVisibility="Auto"/>
+                             VerticalScrollBarVisibility="Auto"
+                             VerticalContentAlignment="Top"
+                             HorizontalContentAlignment="Left"/>
                 </Grid>
 
                 <!-- 联系时间 -->
