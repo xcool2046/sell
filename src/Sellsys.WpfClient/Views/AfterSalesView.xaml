@@ -92,7 +92,7 @@
                         <!-- 省份 -->
                         <DataGridTextColumn Header="省份"
                                             Binding="{Binding Province}"
-                                            Width="80"
+                                            Width="1*" MinWidth="80"
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -105,7 +105,7 @@
                         <!-- 城市 -->
                         <DataGridTextColumn Header="城市"
                                             Binding="{Binding City}"
-                                            Width="80"
+                                            Width="1*" MinWidth="80"
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -118,18 +118,19 @@
                         <!-- 客户单位名称 -->
                         <DataGridTextColumn Header="客户单位名称"
                                             Binding="{Binding CustomerName}"
-                                            Width="200"
+                                            Width="3*" MinWidth="150"
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
-                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="HorizontalAlignment" Value="Left"/>
                                     <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="TextWrapping" Value="Wrap"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
                         <!-- 联系人 -->
-                        <DataGridTemplateColumn Header="联系人" Width="100">
+                        <DataGridTemplateColumn Header="联系人" Width="1*" MinWidth="100">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock>
@@ -147,7 +148,7 @@
                         <!-- 销售 -->
                         <DataGridTextColumn Header="销售"
                                             Binding="{Binding SalesPersonDisplay}"
-                                            Width="80"
+                                            Width="1*" MinWidth="80"
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -160,7 +161,7 @@
                         <!-- 客服 -->
                         <DataGridTextColumn Header="客服"
                                             Binding="{Binding SupportPersonDisplay}"
-                                            Width="80"
+                                            Width="1*" MinWidth="80"
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -171,7 +172,7 @@
                         </DataGridTextColumn>
 
                         <!-- 客服记录 -->
-                        <DataGridTemplateColumn Header="客服记录" Width="80">
+                        <DataGridTemplateColumn Header="客服记录" Width="1*" MinWidth="80">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button Content="{Binding ServiceRecordCount}"
@@ -212,7 +213,7 @@
                         <!-- 更新时间 -->
                         <DataGridTextColumn Header="更新时间"
                                             Binding="{Binding UpdatedAt, StringFormat=yyyy-MM-dd HH:mm:ss}"
-                                            Width="140"
+                                            Width="2*" MinWidth="140"
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">

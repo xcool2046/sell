@@ -216,16 +216,18 @@
                           CanUserAddRows="False"
                           CanUserDeleteRows="False"
                           CanUserReorderColumns="False"
-                          CanUserResizeRows="False"
+                          CanUserResizeRows="True"
                           CanUserSortColumns="True"
                           GridLinesVisibility="Horizontal"
                           HeadersVisibility="Column"
                           SelectionMode="Single"
-                          AlternatingRowBackground="{StaticResource TableRowEvenBrush}"
+                          AlternatingRowBackground="#F8F9FA"
                           Background="White"
                           BorderThickness="0"
-                          RowHeight="40"
-                          FontSize="14">
+                          FontSize="14"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                          RowHeight="NaN">
 
                     <!-- 列头样式 -->
                     <DataGrid.ColumnHeaderStyle>
@@ -246,8 +248,9 @@
                     <DataGrid.RowStyle>
                         <Style TargetType="DataGridRow">
                             <Setter Property="Background" Value="White"/>
-                            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
-                            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                            <Setter Property="BorderBrush" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="MinHeight" Value="60"/>
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter Property="Background" Value="{StaticResource LightBlueBrush}"/>
@@ -265,21 +268,9 @@
                         <Style TargetType="DataGridCell">
                             <Setter Property="BorderThickness" Value="0,0,1,0"/>
                             <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
-                            <Setter Property="Padding" Value="12,8"/>
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="DataGridCell">
-                                        <Border Background="{TemplateBinding Background}"
-                                                BorderBrush="{TemplateBinding BorderBrush}"
-                                                BorderThickness="{TemplateBinding BorderThickness}"
-                                                Padding="{TemplateBinding Padding}">
-                                            <ContentPresenter VerticalAlignment="{TemplateBinding VerticalAlignment}"/>
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-
+                            <Setter Property="Padding" Value="8,8"/>
+                            <Setter Property="VerticalAlignment" Value="Stretch"/>
+                            <Setter Property="VerticalContentAlignment" Value="Top"/>
                         </Style>
                     </DataGrid.CellStyle>
 
@@ -303,14 +294,16 @@
                         <!-- 客户单位 -->
                         <DataGridTextColumn Header="客户单位"
                                             Binding="{Binding CustomerName}"
-                                            Width="3*" MinWidth="120"
+                                            Width="220" MinWidth="180"
                                             IsReadOnly="True">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
-                                    <Setter Property="HorizontalAlignment" Value="Center"/>
-                                    <Setter Property="VerticalAlignment" Value="Center"/>
-                                    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-                                    <Setter Property="ToolTip" Value="{Binding CustomerName}"/>
+                                    <Setter Property="HorizontalAlignment" Value="Left"/>
+                                    <Setter Property="VerticalAlignment" Value="Top"/>
+                                    <Setter Property="TextWrapping" Value="Wrap"/>
+                                    <Setter Property="Margin" Value="8,8,8,8"/>
+                                    <Setter Property="LineHeight" Value="22"/>
+                                    <Setter Property="TextTrimming" Value="None"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
@@ -503,7 +496,7 @@
                         </DataGridTextColumn>
 
                         <!-- 操作 -->
-                        <DataGridTemplateColumn Header="操作" Width="100" MinWidth="100"
+                        <DataGridTemplateColumn Header="操作" Width="140" MinWidth="140"
                                                 Visibility="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=财务管理}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -513,8 +506,8 @@
                                                 Command="{Binding DataContext.ConfirmPaymentCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                                 CommandParameter="{Binding}"
                                                 Style="{StaticResource BlueButtonStyle}"
-                                                Width="70"
-                                                Height="28"
+                                                Width="85"
+                                                Height="30"
                                                 FontSize="12"
                                                 Margin="2"
                                                 Visibility="{Binding OrderStatus, Converter={StaticResource StringToVisibilityConverter}, ConverterParameter=待收款}"/>
@@ -547,7 +540,7 @@
                     <ColumnDefinition Width="100"/>  <!-- 收款比例 -->
                     <ColumnDefinition Width="120"/>  <!-- 收款日期 -->
                     <ColumnDefinition Width="100"/>  <!-- 负责人 -->
-                    <ColumnDefinition Width="100"/>  <!-- 操作 -->
+                    <ColumnDefinition Width="120"/>  <!-- 操作 -->
                 </Grid.ColumnDefinitions>
 
                 <!-- 合计标签 -->
