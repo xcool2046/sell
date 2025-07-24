@@ -86,7 +86,7 @@ namespace Sellsys.WpfClient.ViewModels.Dialogs
             {
                 IsLoading = true;
 
-                // Get all departments to find support department ID
+                // Get all departments to find support department ID (keeping original logic for batch operations)
                 var departments = await _apiService.GetDepartmentsAsync();
                 var supportDepartment = departments.FirstOrDefault(d => d.Name == "客服部");
 

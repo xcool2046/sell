@@ -12,17 +12,30 @@ namespace Sellsys.WpfClient.ViewModels
         private readonly ApiService _apiService;
         private readonly Customer _customer;
 
-        private string _departmentName = "销售部";
+        private ObservableCollection<Department> _departments;
         private ObservableCollection<DepartmentGroup> _groups;
         private ObservableCollection<Employee> _salesPersons;
+        private Department? _selectedDepartment;
         private DepartmentGroup? _selectedGroup;
         private Employee? _selectedSalesPerson;
         private bool _isLoading = false;
 
-        public string DepartmentName
+        public ObservableCollection<Department> Departments
         {
-            get => _departmentName;
-            set => SetProperty(ref _departmentName, value);
+            get => _departments;
+            set => SetProperty(ref _departments, value);
+        }
+
+        public Department? SelectedDepartment
+        {
+            get => _selectedDepartment;
+            set
+            {
+                if (SetProperty(ref _selectedDepartment, value))
+                {
+                    _ = OnSelectedDepartmentChangedAsync();
+                }
+            }
         }
 
         public ObservableCollection<DepartmentGroup> Groups
@@ -73,6 +86,7 @@ namespace Sellsys.WpfClient.ViewModels
             _customer = customer;
 
             // Initialize collections
+            _departments = new ObservableCollection<Department>();
             _groups = new ObservableCollection<DepartmentGroup>();
             _salesPersons = new ObservableCollection<Employee>();
 
@@ -90,31 +104,63 @@ namespace Sellsys.WpfClient.ViewModels
             {
                 IsLoading = true;
 
-                // Get all departments to find sales department ID
+                // Load all departments
                 var departments = await _apiService.GetDepartmentsAsync();
-                var salesDepartment = departments.FirstOrDefault(d => d.Name == "销售部");
-
-                if (salesDepartment != null)
+                Departments.Clear();
+                foreach (var department in departments)
                 {
-                    // Load groups for sales department
-                    var groups = await _apiService.GetDepartmentGroupsByDepartmentIdAsync(salesDepartment.Id);
-                    Groups.Clear();
-                    foreach (var group in groups)
-                    {
-                        Groups.Add(group);
-                    }
-
-                    // Set default selection
-                    SelectedGroup = Groups.FirstOrDefault();
+                    Departments.Add(department);
                 }
-                else
+
+                // Try to select "销售部" as default, or first department if not found
+                var salesDepartment = departments.FirstOrDefault(d => d.Name == "销售部");
+                SelectedDepartment = salesDepartment ?? departments.FirstOrDefault();
+
+                if (Departments.Count == 0)
                 {
-                    MessageBox.Show("未找到销售部门，请先在系统设置中创建销售部门", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("未找到任何部门，请先在系统设置中创建部门", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"加载数据失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
+        private async Task OnSelectedDepartmentChangedAsync()
+        {
+            if (SelectedDepartment == null)
+            {
+                Groups.Clear();
+                SalesPersons.Clear();
+                return;
+            }
+
+            try
+            {
+                IsLoading = true;
+
+                // Load groups for selected department
+                var groups = await _apiService.GetDepartmentGroupsByDepartmentIdAsync(SelectedDepartment.Id);
+                Groups.Clear();
+                foreach (var group in groups)
+                {
+                    Groups.Add(group);
+                }
+
+                // Set default selection
+                SelectedGroup = Groups.FirstOrDefault();
+
+                // Clear sales persons as they depend on group selection
+                SalesPersons.Clear();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"加载部门分组失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally
             {

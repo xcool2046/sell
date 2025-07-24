@@ -78,10 +78,11 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="部门名称：" Style="{StaticResource DialogLabelStyle}"/>
-                <TextBlock Grid.Column="1" 
-                           Text="{Binding DepartmentName}" 
-                           Style="{StaticResource DialogLabelStyle}"
-                           FontWeight="Bold"/>
+                <ComboBox Grid.Column="1"
+                          ItemsSource="{Binding Departments}"
+                          SelectedItem="{Binding SelectedDepartment}"
+                          DisplayMemberPath="Name"
+                          Style="{StaticResource StandardComboBoxStyle}"/>
             </Grid>
 
             <!-- 组别名称 -->
@@ -124,7 +125,7 @@
                         Height="35"
                         Margin="0,0,10,0"
                         VerticalAlignment="Center"/>
-                <Button Command="{Binding SaveCommand}"
+                <Button Command="{Binding AssignCommand}"
                         Width="80"
                         Height="35"
                         Margin="0"
