@@ -93,16 +93,18 @@
         </Grid.RowDefinitions>
 
         <!-- 订单列表标签 -->
-        <Border Grid.Row="0"
-                Background="#007ACC"
-                CornerRadius="4,4,0,0"
-                Padding="15,8"
-                Margin="0,15,0,0"
-                HorizontalAlignment="Left">
-            <TextBlock Text="订单列表"
-                       FontSize="14"
-                       FontWeight="Bold"
-                       Foreground="White"/>
+        <Border Grid.Row="0" Style="{StaticResource SearchAreaBorderStyle}" Padding="15,7,15,15">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+                <Border Background="#007ACC"
+                        CornerRadius="8"
+                        Padding="20,10"
+                        HorizontalAlignment="Left">
+                    <TextBlock Text="订单列表"
+                               FontSize="14"
+                               FontWeight="Bold"
+                               Foreground="White"/>
+                </Border>
+            </StackPanel>
         </Border>
 
         <!-- 筛选区域 -->
