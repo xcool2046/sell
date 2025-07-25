@@ -5,9 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Sellsys.WpfClient.Views"
              mc:Ignorable="d"
-             d:DesignHeight="600" d:DesignWidth="1000"
-             Margin="0"
-             Padding="0">
+             d:DesignHeight="600" d:DesignWidth="1000">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/> <!-- Top Navigation -->
@@ -16,7 +14,7 @@
 
         <!-- Top Navigation Bar -->
         <Border Grid.Row="0" Background="#F8F9FA" Height="50">
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="0,7,20,0">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="15,7,20,0">
                 <Button Content="部门管理"
                         Command="{Binding ShowDepartmentManagementCommand}"
                         Style="{StaticResource NavigationButtonStyle}"
@@ -54,7 +52,7 @@
                 </Grid.RowDefinitions>
 
                 <!-- Action Buttons -->
-                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,15">
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="15,0,0,15">
                     <Button Content="添加部门"
                             Command="{Binding AddDepartmentCommand}"
                             Style="{StaticResource PrimaryButtonStyle}"
@@ -68,7 +66,8 @@
                               SelectedItem="{Binding SelectedDepartment}"
                               Style="{StaticResource StandardDataGridStyle}"
                               ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
-                              RowStyle="{StaticResource DataGridRowStyle}">
+                              RowStyle="{StaticResource DataGridRowStyle}"
+                              RowHeaderWidth="0">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="序号"
                                                 Binding="{Binding Id}"
@@ -134,7 +133,7 @@
                 </Grid.RowDefinitions>
 
                 <!-- Action Buttons -->
-                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,15">
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="15,0,0,15">
                     <Button Content="添加分组"
                             Command="{Binding AddDepartmentGroupCommand}"
                             Style="{StaticResource PrimaryButtonStyle}"
@@ -148,7 +147,8 @@
                               SelectedItem="{Binding SelectedDepartmentGroup}"
                               Style="{StaticResource StandardDataGridStyle}"
                               ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
-                              RowStyle="{StaticResource DataGridRowStyle}">
+                              RowStyle="{StaticResource DataGridRowStyle}"
+                              RowHeaderWidth="0">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="序号"
                                                 Binding="{Binding Id}"
@@ -224,7 +224,7 @@
                 </Grid.RowDefinitions>
 
                 <!-- Action Buttons -->
-                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,15">
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="15,0,0,15">
                     <Button Content="添加员工"
                             Command="{Binding AddEmployeeCommand}"
                             Style="{StaticResource PrimaryButtonStyle}"
@@ -238,7 +238,8 @@
                               SelectedItem="{Binding SelectedEmployee}"
                               Style="{StaticResource StandardDataGridStyle}"
                               ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
-                              RowStyle="{StaticResource DataGridRowStyle}">
+                              RowStyle="{StaticResource DataGridRowStyle}"
+                              RowHeaderWidth="0">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="序号"
                                                 Binding="{Binding Id}"
@@ -344,7 +345,7 @@
                 </Grid.RowDefinitions>
 
                 <!-- Action Buttons -->
-                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,15">
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="15,0,0,15">
                     <Button Content="添加权限"
                             Command="{Binding AddPermissionCommand}"
                             Style="{StaticResource PrimaryButtonStyle}"
@@ -358,7 +359,8 @@
                               SelectedItem="{Binding SelectedRole}"
                               Style="{StaticResource StandardDataGridStyle}"
                               ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
-                              RowStyle="{StaticResource DataGridRowStyle}">
+                              RowStyle="{StaticResource DataGridRowStyle}"
+                              RowHeaderWidth="0">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="序号"
                                                 Binding="{Binding Id}"

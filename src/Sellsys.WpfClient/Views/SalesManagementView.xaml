@@ -5,9 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Sellsys.WpfClient.Views"
              mc:Ignorable="d"
-             d:DesignHeight="600" d:DesignWidth="1200"
-             Margin="0"
-             Padding="0">
+             d:DesignHeight="600" d:DesignWidth="1200">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/> <!-- Search and Filters -->
@@ -78,7 +76,7 @@
                 BorderBrush="{StaticResource BorderBrush}"
                 BorderThickness="0,0,0,1"
                 CornerRadius="0">
-            <Grid>
+            <Grid Margin="0" Background="White">
                 <!-- Loading Indicator -->
                 <Grid Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <Grid.Background>
@@ -96,7 +94,8 @@
                 <DataGrid x:Name="CustomersDataGrid"
                           ItemsSource="{Binding Customers}"
                           SelectedItem="{Binding SelectedCustomer}"
-                          Style="{StaticResource ResponsiveBlueHeaderDataGridStyle}">
+                          Style="{StaticResource ResponsiveBlueHeaderDataGridStyle}"
+                          BorderThickness="0">
                     <DataGrid.Columns>
                         <!-- 序号 -->
                         <DataGridTextColumn Header="序号"

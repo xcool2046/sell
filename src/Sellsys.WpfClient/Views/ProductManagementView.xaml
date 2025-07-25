@@ -14,7 +14,7 @@
         </Grid.RowDefinitions>
 
         <!-- Action Button Section -->
-        <Border Grid.Row="0" Style="{StaticResource SearchAreaBorderStyle}" Padding="0,7,15,15">
+        <Border Grid.Row="0" Style="{StaticResource SearchAreaBorderStyle}" Padding="15,7,15,15">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
                 <Button Content="添加产品"
                         Command="{Binding AddProductCommand}"
@@ -28,7 +28,7 @@
                 BorderBrush="{StaticResource BorderBrush}"
                 BorderThickness="0,0,0,1"
                 Background="White">
-            <Grid>
+            <Grid Margin="0" Background="White">
                 <!-- Loading Indicator -->
                 <Grid Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <Grid.Background>
@@ -46,7 +46,8 @@
                 <DataGrid x:Name="ProductsDataGrid"
                           ItemsSource="{Binding Products}"
                           SelectedItem="{Binding SelectedProduct}"
-                          Style="{StaticResource ResponsiveBlueHeaderDataGridStyle}">
+                          Style="{StaticResource ResponsiveBlueHeaderDataGridStyle}"
+                          BorderThickness="0">
                     <DataGrid.Columns>
                         <!-- 序号 -->
                         <DataGridTextColumn Header="序号"

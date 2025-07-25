@@ -85,13 +85,16 @@
         <!-- Main Content Area -->
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" MinWidth="180" MaxWidth="250"/> <!-- Left Navigation -->
+                <ColumnDefinition Width="200"/> <!-- Left Navigation -->
                 <ColumnDefinition Width="*"/>   <!-- Main View -->
             </Grid.ColumnDefinitions>
 
             <!-- Left Navigation Panel -->
             <Border Grid.Column="0" Background="{StaticResource LeftMenuBackgroundBrush}">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled"
+                              Margin="0"
+                              Padding="0">
                     <StackPanel Margin="10,20,10,20">
                         <!-- Navigation Buttons -->
                         <Button Content="客户管理"
