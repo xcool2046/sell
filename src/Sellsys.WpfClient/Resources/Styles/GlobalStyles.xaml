@@ -42,7 +42,7 @@
         <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
         <Setter Property="BorderThickness" Value="0,0,0,1"/>
         <Setter Property="CornerRadius" Value="0"/>
-        <Setter Property="Padding" Value="15"/>
+        <Setter Property="Padding" Value="0,15,15,15"/>
         <Setter Property="Margin" Value="0,0,0,0"/>
     </Style>
 
@@ -312,6 +312,17 @@
                 <Setter Property="BorderThickness" Value="2"/>
             </Trigger>
         </Style.Triggers>
+    </Style>
+
+    <!-- 多行文本框样式 -->
+    <Style x:Key="MultiLineTextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource StandardTextBoxStyle}">
+        <Setter Property="VerticalContentAlignment" Value="Top"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="Height" Value="Auto"/>
+        <Setter Property="MinHeight" Value="80"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="AcceptsReturn" Value="True"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
     </Style>
 
     <!-- DataGrid样式 -->

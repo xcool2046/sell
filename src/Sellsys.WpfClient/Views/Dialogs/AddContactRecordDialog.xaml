@@ -78,13 +78,8 @@
                     <TextBlock Grid.Column="0" Text="联系记录：" VerticalAlignment="Top" FontWeight="Bold" Foreground="Black" Margin="0,8,0,0"/>
                     <TextBox Grid.Column="1"
                              Text="{Binding ContactSummary}"
-                             Style="{StaticResource StandardTextBoxStyle}"
-                             TextWrapping="Wrap"
-                             AcceptsReturn="True"
-                             Height="80"
-                             VerticalScrollBarVisibility="Auto"
-                             VerticalContentAlignment="Top"
-                             HorizontalContentAlignment="Left"/>
+                             Style="{StaticResource MultiLineTextBoxStyle}"
+                             Height="80"/>
                 </Grid>
 
                 <!-- 联系时间 -->

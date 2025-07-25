@@ -145,7 +145,7 @@
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="HorizontalAlignment" Value="Left"/>
-                                <Setter Property="VerticalAlignment" Value="Top"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
                                 <Setter Property="TextWrapping" Value="Wrap"/>
                                 <Setter Property="Margin" Value="8,8,8,8"/>
                                 <Setter Property="LineHeight" Value="22"/>

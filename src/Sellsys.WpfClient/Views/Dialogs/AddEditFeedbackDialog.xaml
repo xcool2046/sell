@@ -105,10 +105,7 @@
                            Style="{StaticResource FormLabelStyle}"/>
                 <TextBox Grid.Row="1"
                          Text="{Binding CustomerFeedback, UpdateSourceTrigger=PropertyChanged}"
-                         Style="{StaticResource StandardTextBoxStyle}"
-                         TextWrapping="Wrap"
-                         AcceptsReturn="True"
-                         VerticalScrollBarVisibility="Auto"
+                         Style="{StaticResource MultiLineTextBoxStyle}"
                          Height="120"
                          Margin="0,0,0,15"/>
 
@@ -118,10 +115,7 @@
                            Style="{StaticResource FormLabelStyle}"/>
                 <TextBox Grid.Row="3"
                          Text="{Binding OurReply, UpdateSourceTrigger=PropertyChanged}"
-                         Style="{StaticResource StandardTextBoxStyle}"
-                         TextWrapping="Wrap"
-                         AcceptsReturn="True"
-                         VerticalScrollBarVisibility="Auto"
+                         Style="{StaticResource MultiLineTextBoxStyle}"
                          Height="120"
                          Margin="0,0,0,15"/>
 

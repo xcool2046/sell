@@ -347,7 +347,7 @@
                                                 Style="{StaticResource BlueButtonStyle}"
                                                 Width="70"
                                                 Height="25"
-                                                Margin="0,0,5,0"
+                                                Margin="5,0,5,0"
                                                 Visibility="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=销售跟进}"/>
                                         <Button Content="订单记录"
                                                 Command="{Binding DataContext.ViewOrderRecordsCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
@@ -355,6 +355,7 @@
                                                 Style="{StaticResource EditButtonStyle}"
                                                 Width="70"
                                                 Height="25"
+                                                Margin="5,0,0,0"
                                                 Visibility="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=销售跟进}"/>
                                     </StackPanel>
                                 </DataTemplate>

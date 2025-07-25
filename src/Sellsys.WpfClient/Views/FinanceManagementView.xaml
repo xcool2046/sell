@@ -97,7 +97,7 @@
                 Background="#007ACC"
                 CornerRadius="4,4,0,0"
                 Padding="15,8"
-                Margin="15,15,0,0"
+                Margin="0,15,0,0"
                 HorizontalAlignment="Left">
             <TextBlock Text="订单列表"
                        FontSize="14"
@@ -189,14 +189,22 @@
             </StackPanel>
         </Border>
 
-        <!-- 数据表格区域 -->
-        <Border Grid.Row="2"
+        <!-- 数据表格和底部合计区域 -->
+        <Border Grid.Row="2" Grid.RowSpan="2"
                 BorderBrush="{StaticResource BorderBrush}"
-                BorderThickness="0,0,0,1"
-                Background="White">
-            <Grid>
+                BorderThickness="1"
+                CornerRadius="8"
+                Background="White"
+                Padding="0"
+                Margin="0">
+            <Grid Margin="0" Background="White">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>    <!-- 数据表格 -->
+                    <RowDefinition Height="Auto"/> <!-- 底部合计行 -->
+                </Grid.RowDefinitions>
                 <!-- 加载指示器 -->
-                <Grid Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
+                <Grid Grid.RowSpan="2"
+                      Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
                       Background="#80FFFFFF">
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                         <ProgressBar IsIndeterminate="True" Width="200" Height="20" Margin="0,0,0,10"/>
@@ -208,26 +216,36 @@
                 </Grid>
 
                 <!-- 财务订单明细表格 -->
-                <DataGrid x:Name="FinanceOrderDetailsDataGrid"
-                          ItemsSource="{Binding FinanceOrderDetails}"
-                          SelectedItem="{Binding SelectedOrderDetail}"
-                          Style="{StaticResource ResponsiveBlueHeaderDataGridStyle}"
-                          AutoGenerateColumns="False"
-                          CanUserAddRows="False"
-                          CanUserDeleteRows="False"
-                          CanUserReorderColumns="False"
-                          CanUserResizeRows="True"
-                          CanUserSortColumns="True"
-                          GridLinesVisibility="Horizontal"
-                          HeadersVisibility="Column"
-                          SelectionMode="Single"
-                          AlternatingRowBackground="#F8F9FA"
-                          Background="White"
-                          BorderThickness="0"
-                          FontSize="14"
-                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                          ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                          RowHeight="NaN">
+                <Border Grid.Row="0"
+                        CornerRadius="6,6,0,0"
+                        Background="White"
+                        ClipToBounds="True"
+                        Margin="0"
+                        Padding="0">
+                    <DataGrid x:Name="FinanceOrderDetailsDataGrid"
+                              ItemsSource="{Binding FinanceOrderDetails}"
+                              SelectedItem="{Binding SelectedOrderDetail}"
+                              Style="{StaticResource ResponsiveBlueHeaderDataGridStyle}"
+                              AutoGenerateColumns="False"
+                              CanUserAddRows="False"
+                              CanUserDeleteRows="False"
+                              CanUserReorderColumns="False"
+                              CanUserResizeRows="True"
+                              CanUserSortColumns="True"
+                              GridLinesVisibility="Horizontal"
+                              HeadersVisibility="Column"
+                              SelectionMode="Single"
+                              AlternatingRowBackground="#F8F9FA"
+                              Background="White"
+                              BorderThickness="0"
+                              FontSize="14"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                              ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                              RowHeight="NaN"
+                              Margin="0"
+                              Padding="0"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Stretch">
 
                     <!-- 列头样式 -->
                     <DataGrid.ColumnHeaderStyle>
@@ -299,7 +317,7 @@
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="HorizontalAlignment" Value="Left"/>
-                                    <Setter Property="VerticalAlignment" Value="Top"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
                                     <Setter Property="TextWrapping" Value="Wrap"/>
                                     <Setter Property="Margin" Value="8,8,8,8"/>
                                     <Setter Property="LineHeight" Value="22"/>
@@ -496,11 +514,11 @@
                         </DataGridTextColumn>
 
                         <!-- 操作 -->
-                        <DataGridTemplateColumn Header="操作" Width="140" MinWidth="140"
+                        <DataGridTemplateColumn Header="操作" Width="120" MinWidth="120"
                                                 Visibility="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=财务管理}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,0,0,0">
                                         <!-- 确认收款按钮 - 仅在待收款状态显示 -->
                                         <Button Content="确认收款"
                                                 Command="{Binding DataContext.ConfirmPaymentCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
@@ -509,113 +527,118 @@
                                                 Width="85"
                                                 Height="30"
                                                 FontSize="12"
-                                                Margin="2"
+                                                Margin="0"
                                                 Visibility="{Binding OrderStatus, Converter={StaticResource StringToVisibilityConverter}, ConverterParameter=待收款}"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
-                </DataGrid>
+                    </DataGrid>
+                </Border>
+
+                <!-- 底部合计行 -->
+                <Border Grid.Row="1"
+                        Background="{StaticResource TableHeaderBrush}"
+                        BorderBrush="{StaticResource BorderBrush}"
+                        BorderThickness="0,1,0,0"
+                        CornerRadius="0,0,6,6"
+                        Padding="0"
+                        Margin="0">
+                    <Grid Height="50" Margin="0">
+                        <Grid.ColumnDefinitions>
+                            <!-- 对应表格列的宽度 -->
+                            <ColumnDefinition Width="60"/>   <!-- 序号 -->
+                            <ColumnDefinition Width="150"/>  <!-- 客户名称 -->
+                            <ColumnDefinition Width="180"/>  <!-- 产品名称 -->
+                            <ColumnDefinition Width="80"/>   <!-- 数量 -->
+                            <ColumnDefinition Width="100"/>  <!-- 单价 -->
+                            <ColumnDefinition Width="120"/>  <!-- 总金额 -->
+                            <ColumnDefinition Width="120"/>  <!-- 已收金额 -->
+                            <ColumnDefinition Width="120"/>  <!-- 未收金额 -->
+                            <ColumnDefinition Width="100"/>  <!-- 收款比例 -->
+                            <ColumnDefinition Width="120"/>  <!-- 收款日期 -->
+                            <ColumnDefinition Width="100"/>  <!-- 负责人 -->
+                            <ColumnDefinition Width="120"/>  <!-- 操作 -->
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 合计标签 -->
+                        <Border Grid.Column="0" Grid.ColumnSpan="5"
+                                BorderBrush="{StaticResource BorderBrush}"
+                                BorderThickness="0,0,1,0">
+                            <TextBlock Text="合计"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontWeight="Bold"
+                                       FontSize="16"
+                                       Foreground="{StaticResource TextBrush}"/>
+                        </Border>
+
+                        <!-- 总金额合计 -->
+                        <Border Grid.Column="5"
+                                BorderBrush="{StaticResource BorderBrush}"
+                                BorderThickness="0,0,1,0">
+                            <TextBlock Text="{Binding Summary.FormattedTotalAmount}"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Center"
+                                       FontWeight="Bold"
+                                       FontSize="14"
+                                       Foreground="{StaticResource TextBrush}"
+                                       Margin="12,0"/>
+                        </Border>
+
+                        <!-- 已收金额合计 -->
+                        <Border Grid.Column="6"
+                                BorderBrush="{StaticResource BorderBrush}"
+                                BorderThickness="0,0,1,0">
+                            <TextBlock Text="{Binding Summary.FormattedTotalReceivedAmount}"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Center"
+                                       FontWeight="Bold"
+                                       FontSize="14"
+                                       Foreground="#67C23A"
+                                       Margin="12,0"/>
+                        </Border>
+
+                        <!-- 未收金额合计 -->
+                        <Border Grid.Column="7"
+                                BorderBrush="{StaticResource BorderBrush}"
+                                BorderThickness="0,0,1,0">
+                            <TextBlock Text="{Binding Summary.FormattedTotalUnreceivedAmount}"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Center"
+                                       FontWeight="Bold"
+                                       FontSize="14"
+                                       Foreground="#E6A23C"
+                                       Margin="12,0"/>
+                        </Border>
+
+                        <!-- 收款比例合计 -->
+                        <Border Grid.Column="8"
+                                BorderBrush="{StaticResource BorderBrush}"
+                                BorderThickness="0,0,1,0">
+                            <TextBlock Text="{Binding Summary.FormattedTotalPaymentRatio}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontWeight="Bold"
+                                       FontSize="14"
+                                       Foreground="{StaticResource TextBrush}"
+                                       Margin="12,0"/>
+                        </Border>
+
+                        <!-- 其他列留空 -->
+                        <Border Grid.Column="9"
+                                BorderBrush="{StaticResource BorderBrush}"
+                                BorderThickness="0,0,1,0"/>
+                        <Border Grid.Column="10"
+                                BorderBrush="{StaticResource BorderBrush}"
+                                BorderThickness="0,0,1,0"/>
+                        <Border Grid.Column="11"/>
+                    </Grid>
+                </Border>
             </Grid>
         </Border>
 
-        <!-- 底部合计行 -->
-        <Border Grid.Row="3"
-                Background="{StaticResource TableHeaderBrush}"
-                BorderBrush="{StaticResource BorderBrush}"
-                BorderThickness="1,0,1,1"
-                Padding="0">
-            <Grid Height="50">
-                <Grid.ColumnDefinitions>
-                    <!-- 对应表格列的宽度 -->
-                    <ColumnDefinition Width="60"/>   <!-- 序号 -->
-                    <ColumnDefinition Width="150"/>  <!-- 客户名称 -->
-                    <ColumnDefinition Width="180"/>  <!-- 产品名称 -->
-                    <ColumnDefinition Width="80"/>   <!-- 数量 -->
-                    <ColumnDefinition Width="100"/>  <!-- 单价 -->
-                    <ColumnDefinition Width="120"/>  <!-- 总金额 -->
-                    <ColumnDefinition Width="120"/>  <!-- 已收金额 -->
-                    <ColumnDefinition Width="120"/>  <!-- 未收金额 -->
-                    <ColumnDefinition Width="100"/>  <!-- 收款比例 -->
-                    <ColumnDefinition Width="120"/>  <!-- 收款日期 -->
-                    <ColumnDefinition Width="100"/>  <!-- 负责人 -->
-                    <ColumnDefinition Width="120"/>  <!-- 操作 -->
-                </Grid.ColumnDefinitions>
 
-                <!-- 合计标签 -->
-                <Border Grid.Column="0" Grid.ColumnSpan="5"
-                        BorderBrush="{StaticResource BorderBrush}"
-                        BorderThickness="0,0,1,0">
-                    <TextBlock Text="合计"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"
-                               FontWeight="Bold"
-                               FontSize="16"
-                               Foreground="{StaticResource TextBrush}"/>
-                </Border>
-
-                <!-- 总金额合计 -->
-                <Border Grid.Column="5"
-                        BorderBrush="{StaticResource BorderBrush}"
-                        BorderThickness="0,0,1,0">
-                    <TextBlock Text="{Binding Summary.FormattedTotalAmount}"
-                               HorizontalAlignment="Right"
-                               VerticalAlignment="Center"
-                               FontWeight="Bold"
-                               FontSize="14"
-                               Foreground="{StaticResource TextBrush}"
-                               Margin="12,0"/>
-                </Border>
-
-                <!-- 已收金额合计 -->
-                <Border Grid.Column="6"
-                        BorderBrush="{StaticResource BorderBrush}"
-                        BorderThickness="0,0,1,0">
-                    <TextBlock Text="{Binding Summary.FormattedTotalReceivedAmount}"
-                               HorizontalAlignment="Right"
-                               VerticalAlignment="Center"
-                               FontWeight="Bold"
-                               FontSize="14"
-                               Foreground="#67C23A"
-                               Margin="12,0"/>
-                </Border>
-
-                <!-- 未收金额合计 -->
-                <Border Grid.Column="7"
-                        BorderBrush="{StaticResource BorderBrush}"
-                        BorderThickness="0,0,1,0">
-                    <TextBlock Text="{Binding Summary.FormattedTotalUnreceivedAmount}"
-                               HorizontalAlignment="Right"
-                               VerticalAlignment="Center"
-                               FontWeight="Bold"
-                               FontSize="14"
-                               Foreground="#E6A23C"
-                               Margin="12,0"/>
-                </Border>
-
-                <!-- 收款比例合计 -->
-                <Border Grid.Column="8"
-                        BorderBrush="{StaticResource BorderBrush}"
-                        BorderThickness="0,0,1,0">
-                    <TextBlock Text="{Binding Summary.FormattedTotalPaymentRatio}"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"
-                               FontWeight="Bold"
-                               FontSize="14"
-                               Foreground="{StaticResource TextBrush}"
-                               Margin="12,0"/>
-                </Border>
-
-                <!-- 其他列留空 -->
-                <Border Grid.Column="9"
-                        BorderBrush="{StaticResource BorderBrush}"
-                        BorderThickness="0,0,1,0"/>
-                <Border Grid.Column="10"
-                        BorderBrush="{StaticResource BorderBrush}"
-                        BorderThickness="0,0,1,0"/>
-                <Border Grid.Column="11"/>
-            </Grid>
-        </Border>
     </Grid>
 </UserControl>
