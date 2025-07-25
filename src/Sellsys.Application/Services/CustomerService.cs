@@ -111,6 +111,7 @@ namespace Sellsys.Application.Services
                 .Include(c => c.Contacts)
                 .Include(c => c.SalesPerson)
                 .Include(c => c.SupportPerson)
+                .OrderByDescending(c => c.CreatedAt)
                 .Select(c => new CustomerDto
                 {
                     Id = c.Id,
@@ -193,6 +194,7 @@ namespace Sellsys.Application.Services
             }
 
             var customers = await query
+                .OrderByDescending(c => c.CreatedAt)
                 .Select(c => new CustomerDto
                 {
                     Id = c.Id,

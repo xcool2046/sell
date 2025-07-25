@@ -81,6 +81,7 @@ namespace Sellsys.Application.Services
         public async Task<ApiResponse<List<ProductDto>>> GetAllProductsAsync()
         {
             var products = await _context.Products
+                .OrderByDescending(p => p.CreatedAt)
                 .Select(p => new ProductDto
                 {
                     Id = p.Id,

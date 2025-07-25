@@ -86,6 +86,7 @@ namespace Sellsys.Application.Services
                 .Include(o => o.SalesPerson)
                 .Include(o => o.OrderItems)
                     .ThenInclude(oi => oi.Product)
+                .OrderByDescending(o => o.CreatedAt)
                 .Select(o => new OrderDto
                 {
                     Id = o.Id,

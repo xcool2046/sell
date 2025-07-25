@@ -153,6 +153,7 @@ namespace Sellsys.Application.Services
                 .Include(e => e.Group)
                     .ThenInclude(g => g!.Department)
                 .Include(e => e.Role)
+                .OrderByDescending(e => e.CreatedAt)
                 .Select(e => new EmployeeDto
                 {
                     Id = e.Id,
@@ -179,6 +180,7 @@ namespace Sellsys.Application.Services
                     .ThenInclude(g => g!.Department)
                 .Include(e => e.Role)
                 .Where(e => e.Group != null && e.Group.Department != null && e.Group.Department.Name == departmentName)
+                .OrderByDescending(e => e.CreatedAt)
                 .Select(e => new EmployeeDto
                 {
                     Id = e.Id,
@@ -205,6 +207,7 @@ namespace Sellsys.Application.Services
                     .ThenInclude(g => g!.Department)
                 .Include(e => e.Role)
                 .Where(e => e.GroupId == groupId)
+                .OrderByDescending(e => e.CreatedAt)
                 .Select(e => new EmployeeDto
                 {
                     Id = e.Id,
