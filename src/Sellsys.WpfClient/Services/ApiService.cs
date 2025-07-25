@@ -189,7 +189,17 @@ namespace Sellsys.WpfClient.Services
         {
             try
             {
-                var httpResponse = await _httpClient.GetAsync($"{BaseUrl}/customers");
+                // 获取当前用户ID并传递给API
+                var currentUser = CurrentUser.User;
+                var url = $"{BaseUrl}/customers";
+
+                // 如果有当前用户且不是管理员，传递用户ID进行权限控制
+                if (currentUser != null && !currentUser.IsAdmin)
+                {
+                    url += $"?userId={currentUser.Id}";
+                }
+
+                var httpResponse = await _httpClient.GetAsync(url);
                 httpResponse.EnsureSuccessStatusCode();
 
                 var content = await httpResponse.Content.ReadAsStringAsync();
@@ -715,17 +725,35 @@ namespace Sellsys.WpfClient.Services
             try
             {
                 var response = await _httpClient.DeleteAsync($"{BaseUrl}/employees/{id}");
-                response.EnsureSuccessStatusCode();
 
+                // 读取响应内容
                 var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse>();
-                if (apiResponse?.IsSuccess != true)
+
+                if (response.IsSuccessStatusCode && apiResponse?.IsSuccess == true)
                 {
-                    throw new Exception(apiResponse?.Message ?? "删除员工失败");
+                    // 删除成功
+                    return;
+                }
+                else
+                {
+                    // 删除失败，抛出详细错误信息
+                    var errorMessage = apiResponse?.Message ?? "删除员工失败";
+                    throw new Exception(errorMessage);
                 }
             }
             catch (HttpRequestException ex)
             {
                 throw new Exception($"网络请求失败: {ex.Message}");
+            }
+            catch (Exception ex) when (!(ex is HttpRequestException))
+            {
+                // 如果是我们自己抛出的异常，直接重新抛出
+                if (ex.Message.Contains("删除员工失败") || ex.Message.Contains("无法删除员工"))
+                {
+                    throw;
+                }
+                // 其他异常包装一下
+                throw new Exception($"删除员工时发生错误: {ex.Message}");
             }
         }
 

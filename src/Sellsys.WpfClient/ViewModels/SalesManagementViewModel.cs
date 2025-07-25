@@ -653,11 +653,39 @@ namespace Sellsys.WpfClient.ViewModels
         /// <returns>是否应该显示</returns>
         private bool ShouldShowCustomer(Customer customer)
         {
-            // 获取销售人员的分组信息
-            var salesPersonGroupId = GetEmployeeGroupId(customer.SalesPersonId);
+            // 管理员可以看到所有客户
+            if (CurrentUser.IsAdmin)
+                return true;
 
-            // 检查是否可以访问该客户的数据
-            return CurrentUser.CanAccessUserData(customer.SalesPersonId, salesPersonGroupId);
+            var currentUser = CurrentUser.User;
+            if (currentUser == null)
+                return false;
+
+            var roleLevel = currentUser.GetRoleLevel();
+
+            // 销售管理模块只关注销售相关的客户
+            if (roleLevel == Models.RoleLevel.Staff)
+            {
+                // 普通销售：只能看到分配给自己的客户
+                return customer.SalesPersonId == currentUser.Id;
+            }
+            else if (roleLevel == Models.RoleLevel.Supervisor || roleLevel == Models.RoleLevel.Manager)
+            {
+                // 销售主管/经理：可以看到同组销售的客户 + 未分配销售的客户
+                if (customer.SalesPersonId == null)
+                {
+                    // 未分配销售的客户，主管/经理可以看到
+                    return true;
+                }
+                else
+                {
+                    // 已分配销售的客户，检查是否同组
+                    var salesPersonGroupId = GetEmployeeGroupId(customer.SalesPersonId);
+                    return currentUser.CanAccessGroupData(salesPersonGroupId);
+                }
+            }
+
+            return false;
         }
 
         /// <summary>

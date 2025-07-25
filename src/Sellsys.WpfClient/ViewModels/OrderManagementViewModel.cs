@@ -233,11 +233,15 @@ namespace Sellsys.WpfClient.ViewModels
                 IsLoading = true;
 
                 var orders = await _apiService.GetOrdersAsync();
-                
+
                 Orders.Clear();
                 foreach (var order in orders)
                 {
-                    Orders.Add(order);
+                    // 应用权限过滤：订单同组可见
+                    if (ShouldShowOrder(order))
+                    {
+                        Orders.Add(order);
+                    }
                 }
 
                 // Update summary
@@ -571,6 +575,34 @@ namespace Sellsys.WpfClient.ViewModels
             {
                 System.Diagnostics.Debug.WriteLine($"处理产品更新事件失败: {ex.Message}");
             }
+        }
+
+        /// <summary>
+        /// 检查是否应该显示指定订单（基于同组可见规则）
+        /// </summary>
+        /// <param name="order">订单信息</param>
+        /// <returns>是否应该显示</returns>
+        private bool ShouldShowOrder(Order order)
+        {
+            // 获取销售人员的分组信息
+            var salesPersonGroupId = GetEmployeeGroupId(order.SalesPersonId);
+
+            // 订单同组可见：检查是否可以访问该订单的数据
+            return CurrentUser.CanAccessOrderOrAfterSalesData(salesPersonGroupId);
+        }
+
+        /// <summary>
+        /// 获取员工的分组ID
+        /// </summary>
+        /// <param name="employeeId">员工ID</param>
+        /// <returns>分组ID</returns>
+        private int? GetEmployeeGroupId(int? employeeId)
+        {
+            if (!employeeId.HasValue)
+                return null;
+
+            var employee = Employees.FirstOrDefault(e => e.Id == employeeId.Value);
+            return employee?.GroupId;
         }
     }
 }

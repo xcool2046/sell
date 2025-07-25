@@ -75,12 +75,12 @@
                 <Button Content="分配给销售"
                         Command="{Binding AssignSalesCommand}"
                         Style="{StaticResource ActionButtonStyle}"
-                        Visibility="{Binding ., Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=客户管理}"/>
+                        Visibility="{Binding ., Converter={StaticResource AssignPermissionToVisibilityConverter}, ConverterParameter=sales}"/>
                 <Button Content="分配给客服"
                         Command="{Binding AssignSupportCommand}"
                         Style="{StaticResource ActionButtonStyle}"
                         Margin="0"
-                        Visibility="{Binding ., Converter={StaticResource PermissionToVisibilityConverter}, ConverterParameter=客户管理}"/>
+                        Visibility="{Binding ., Converter={StaticResource AssignPermissionToVisibilityConverter}, ConverterParameter=support}"/>
             </WrapPanel>
         </Border>
 

@@ -48,5 +48,31 @@ namespace Sellsys.WpfClient.Converters
         }
     }
 
+    /// <summary>
+    /// 分配权限到可见性转换器
+    /// </summary>
+    public class AssignPermissionToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (parameter is not string assignType)
+                return Visibility.Collapsed;
+
+            bool hasPermission = assignType.ToLower() switch
+            {
+                "sales" => CurrentUser.CanAssignSales(),
+                "support" => CurrentUser.CanAssignSupport(),
+                _ => CurrentUser.CanAssignData()
+            };
+
+            return hasPermission ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 
 }

@@ -80,12 +80,71 @@ namespace Sellsys.Application.Services
             var employee = await _context.Employees.FindAsync(id);
             if (employee == null)
             {
-                return ApiResponse.Fail("Employee not found.", HttpStatusCode.NotFound);
+                return ApiResponse.Fail("员工不存在", HttpStatusCode.NotFound);
             }
 
-            _context.Employees.Remove(employee);
-            await _context.SaveChangesAsync();
-            return ApiResponse.Success();
+            try
+            {
+                // 检查员工是否被其他数据引用
+                var referencedBy = new List<string>();
+
+                // 检查订单引用
+                var orderCount = await _context.Orders.CountAsync(o => o.SalesPersonId == id);
+                if (orderCount > 0)
+                {
+                    referencedBy.Add($"{orderCount} 个订单");
+                }
+
+                // 检查客户引用（销售人员）
+                var salesCustomerCount = await _context.Customers.CountAsync(c => c.SalesPersonId == id);
+                if (salesCustomerCount > 0)
+                {
+                    referencedBy.Add($"{salesCustomerCount} 个客户（作为销售人员）");
+                }
+
+                // 检查客户引用（客服人员）
+                var supportCustomerCount = await _context.Customers.CountAsync(c => c.SupportPersonId == id);
+                if (supportCustomerCount > 0)
+                {
+                    referencedBy.Add($"{supportCustomerCount} 个客户（作为客服人员）");
+                }
+
+                // 检查销售跟进记录引用
+                var salesLogCount = await _context.SalesFollowUpLogs.CountAsync(s => s.SalesPersonId == id);
+                if (salesLogCount > 0)
+                {
+                    referencedBy.Add($"{salesLogCount} 条销售跟进记录");
+                }
+
+                // 检查售后记录引用
+                var afterSalesCount = await _context.AfterSalesRecords.CountAsync(a => a.SupportPersonId == id);
+                if (afterSalesCount > 0)
+                {
+                    referencedBy.Add($"{afterSalesCount} 条售后服务记录");
+                }
+
+                // 如果有引用，返回详细错误信息
+                if (referencedBy.Any())
+                {
+                    var referenceInfo = string.Join("、", referencedBy);
+                    return ApiResponse.Fail(
+                        $"无法删除员工 '{employee.Name}'，该员工被以下数据引用：{referenceInfo}。\n\n" +
+                        "请先处理相关数据后再删除员工，或联系管理员进行数据迁移。",
+                        HttpStatusCode.BadRequest);
+                }
+
+                // 如果没有引用，执行删除
+                _context.Employees.Remove(employee);
+                await _context.SaveChangesAsync();
+                return ApiResponse.Success($"成功删除员工 '{employee.Name}'");
+            }
+            catch (Exception ex)
+            {
+                return ApiResponse.Fail(
+                    $"删除员工失败：{ex.Message}\n\n" +
+                    "可能原因：该员工被其他数据引用。请联系管理员处理。",
+                    HttpStatusCode.InternalServerError);
+            }
         }
 
         public async Task<ApiResponse<List<EmployeeDto>>> GetAllEmployeesAsync()

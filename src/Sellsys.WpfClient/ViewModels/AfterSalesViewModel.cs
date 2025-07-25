@@ -385,7 +385,7 @@ namespace Sellsys.WpfClient.ViewModels
         }
 
         /// <summary>
-        /// 检查是否应该显示指定客户的售后信息（基于分组权限）
+        /// 检查是否应该显示指定客户的售后信息（基于同组可见规则）
         /// </summary>
         /// <param name="customerAfterSales">客户售后信息</param>
         /// <returns>是否应该显示</returns>
@@ -394,8 +394,8 @@ namespace Sellsys.WpfClient.ViewModels
             // 获取客服人员的分组信息
             var supportPersonGroupId = GetEmployeeGroupId(customerAfterSales.SupportPersonId);
 
-            // 检查是否可以访问该客户的数据
-            return CurrentUser.CanAccessUserData(customerAfterSales.SupportPersonId, supportPersonGroupId);
+            // 售后同组可见：检查是否可以访问该客户的数据
+            return CurrentUser.CanAccessOrderOrAfterSalesData(supportPersonGroupId);
         }
 
         /// <summary>

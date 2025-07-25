@@ -120,5 +120,76 @@ namespace Sellsys.WpfClient.Services
 
             return false;
         }
+
+        /// <summary>
+        /// 检查是否可以查看订单或售后数据（同组可见规则）
+        /// </summary>
+        /// <param name="assignedUserGroupId">分配用户的分组ID</param>
+        /// <returns>是否有权限</returns>
+        public static bool CanAccessOrderOrAfterSalesData(int? assignedUserGroupId)
+        {
+            if (_currentUser == null)
+                return false;
+
+            // 管理员可以访问所有数据
+            if (_currentUser.IsAdmin)
+                return true;
+
+            // 订单和售后：同组可见（不区分角色级别）
+            return _currentUser.CanAccessGroupData(assignedUserGroupId);
+        }
+
+        /// <summary>
+        /// 检查是否有分配权限
+        /// </summary>
+        /// <returns>是否有分配权限</returns>
+        public static bool CanAssignData()
+        {
+            if (_currentUser == null)
+                return false;
+
+            // 管理员拥有所有分配权限
+            if (_currentUser.IsAdmin)
+                return true;
+
+            var roleLevel = _currentUser.GetRoleLevel();
+
+            // 主管和经理级别可以进行分配操作
+            return roleLevel == Models.RoleLevel.Supervisor || roleLevel == Models.RoleLevel.Manager;
+        }
+
+        /// <summary>
+        /// 检查是否可以分配销售人员
+        /// </summary>
+        /// <returns>是否有权限</returns>
+        public static bool CanAssignSales()
+        {
+            if (_currentUser == null)
+                return false;
+
+            // 管理员拥有所有分配权限
+            if (_currentUser.IsAdmin)
+                return true;
+
+            // 销售经理和销售主管可以分配销售
+            return _currentUser.RoleName?.Contains("销售") == true && CanAssignData();
+        }
+
+        /// <summary>
+        /// 检查是否可以分配客服人员
+        /// </summary>
+        /// <returns>是否有权限</returns>
+        public static bool CanAssignSupport()
+        {
+            if (_currentUser == null)
+                return false;
+
+            // 管理员拥有所有分配权限
+            if (_currentUser.IsAdmin)
+                return true;
+
+            // 客服经理和客服主管可以分配客服
+            return _currentUser.RoleName?.Contains("客服") == true && CanAssignData();
+        }
     }
 }

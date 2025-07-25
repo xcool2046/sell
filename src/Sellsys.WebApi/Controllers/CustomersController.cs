@@ -19,10 +19,18 @@ namespace Sellsys.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ApiResponse<List<CustomerDto>>>> GetCustomers()
+        public async Task<ActionResult<ApiResponse<List<CustomerDto>>>> GetCustomers([FromQuery] int? userId = null)
         {
-            var response = await _customerService.GetAllCustomersAsync();
-            return Ok(response);
+            // 如果传递了userId参数，使用权限控制的方法
+            if (userId.HasValue)
+            {
+                var response = await _customerService.GetCustomersWithPermissionAsync(userId.Value);
+                return Ok(response);
+            }
+
+            // 否则返回所有客户（管理员权限）
+            var allCustomersResponse = await _customerService.GetAllCustomersAsync();
+            return Ok(allCustomersResponse);
         }
 
         [HttpGet("{id}")]
