@@ -113,9 +113,11 @@ namespace Sellsys.WpfClient.Models
 
             var roleLevel = GetRoleLevel();
 
-            // 普通员工只能访问自己分配的数据（在数据级权限中处理）
+            // 普通员工（Staff）不应该基于分组进行权限控制
+            // 他们的权限应该在数据级别控制（即只能访问分配给自己的数据）
+            // 这个方法主要用于主管和经理级别的分组权限判断
             if (roleLevel == RoleLevel.Staff)
-                return GroupId == targetGroupId;
+                return false;
 
             // 主管和经理可以访问同分组的数据
             if (roleLevel == RoleLevel.Supervisor || roleLevel == RoleLevel.Manager)

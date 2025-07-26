@@ -927,116 +927,14 @@ namespace Sellsys.WpfClient.ViewModels
             }
         }
 
-        /// <summary>
-        /// 检查是否应该显示指定客户（基于权限控制）
-        /// 注意：此方法已废弃，权限控制已移至后端API
-        /// </summary>
-        /// <param name="customer">客户信息</param>
-        /// <returns>是否应该显示</returns>
-        [Obsolete("权限控制已移至后端API，此方法不再使用")]
-        private bool ShouldShowCustomer(Customer customer)
-        {
-            // 管理员可以看到所有客户
-            if (CurrentUser.IsAdmin)
-                return true;
+        // 注意：客户权限控制已完全移至后端API
+        // 所有客户数据的权限控制都由后端CustomerService.GetCustomersWithPermissionAsync()方法处理
+        // 前端不再进行任何权限过滤，直接显示后端返回的已过滤数据
 
-            var currentUser = CurrentUser.User;
-            if (currentUser == null)
-                return false;
 
-            var roleLevel = currentUser.GetRoleLevel();
-            var currentDepartment = currentUser.DepartmentName;
 
-            // 根据当前用户的部门和角色级别进行权限控制
-            if (currentDepartment == "销售部")
-            {
-                return ShouldShowCustomerForSales(customer, roleLevel);
-            }
-            else if (currentDepartment == "客服部")
-            {
-                return ShouldShowCustomerForSupport(customer, roleLevel);
-            }
-            else
-            {
-                // 其他部门暂时不显示客户数据
-                return false;
-            }
-        }
 
-        /// <summary>
-        /// 销售部门的客户权限控制
-        /// </summary>
-        private bool ShouldShowCustomerForSales(Customer customer, Models.RoleLevel roleLevel)
-        {
-            var currentUser = CurrentUser.User!;
 
-            if (roleLevel == Models.RoleLevel.Staff)
-            {
-                // 普通销售：只能看到分配给自己的客户
-                return customer.SalesPersonId == currentUser.Id;
-            }
-            else if (roleLevel == Models.RoleLevel.Supervisor || roleLevel == Models.RoleLevel.Manager)
-            {
-                // 销售主管/经理：可以看到同组销售的客户 + 未分配销售的客户
-                if (customer.SalesPersonId == null)
-                {
-                    // 未分配销售的客户，主管/经理可以看到
-                    return true;
-                }
-                else
-                {
-                    // 已分配销售的客户，检查是否同组
-                    var salesPersonGroupId = GetEmployeeGroupId(customer.SalesPersonId);
-                    return currentUser.CanAccessGroupData(salesPersonGroupId);
-                }
-            }
 
-            return false;
-        }
-
-        /// <summary>
-        /// 客服部门的客户权限控制
-        /// </summary>
-        private bool ShouldShowCustomerForSupport(Customer customer, Models.RoleLevel roleLevel)
-        {
-            var currentUser = CurrentUser.User!;
-
-            if (roleLevel == Models.RoleLevel.Staff)
-            {
-                // 普通客服：只能看到分配给自己的客户
-                return customer.SupportPersonId == currentUser.Id;
-            }
-            else if (roleLevel == Models.RoleLevel.Supervisor || roleLevel == Models.RoleLevel.Manager)
-            {
-                // 客服主管/经理：可以看到同组客服的客户 + 未分配客服的客户
-                if (customer.SupportPersonId == null)
-                {
-                    // 未分配客服的客户，主管/经理可以看到
-                    return true;
-                }
-                else
-                {
-                    // 已分配客服的客户，检查是否同组
-                    var supportPersonGroupId = GetEmployeeGroupId(customer.SupportPersonId);
-                    return currentUser.CanAccessGroupData(supportPersonGroupId);
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// 获取员工的分组ID
-        /// </summary>
-        /// <param name="employeeId">员工ID</param>
-        /// <returns>分组ID</returns>
-        private int? GetEmployeeGroupId(int? employeeId)
-        {
-            if (!employeeId.HasValue)
-                return null;
-
-            var employee = _employees.FirstOrDefault(e => e.Id == employeeId.Value);
-            return employee?.GroupId;
-        }
     }
 }

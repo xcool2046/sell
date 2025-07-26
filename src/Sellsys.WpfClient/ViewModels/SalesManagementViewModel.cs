@@ -221,13 +221,10 @@ namespace Sellsys.WpfClient.ViewModels
                 Customers.Clear();
                 foreach (var customer in customersTask.Result)
                 {
-                    // 应用分组权限过滤
-                    if (ShouldShowCustomer(customer))
-                    {
-                        // Add next contact date from latest follow-up log
-                        await EnrichCustomerWithFollowUpData(customer);
-                        Customers.Add(customer);
-                    }
+                    // 后端API已经进行了权限过滤，直接添加所有返回的客户
+                    // Add next contact date from latest follow-up log
+                    await EnrichCustomerWithFollowUpData(customer);
+                    Customers.Add(customer);
                 }
 
                 Employees.Clear();
@@ -338,13 +335,10 @@ namespace Sellsys.WpfClient.ViewModels
                 Customers.Clear();
                 foreach (var customer in filteredCustomers.OrderByDescending(c => c.CreatedAt))
                 {
-                    // 应用分组权限过滤
-                    if (ShouldShowCustomer(customer))
-                    {
-                        // Enrich with follow-up data
-                        await EnrichCustomerWithFollowUpData(customer);
-                        Customers.Add(customer);
-                    }
+                    // 后端API已经进行了权限过滤，直接添加所有返回的客户
+                    // Enrich with follow-up data
+                    await EnrichCustomerWithFollowUpData(customer);
+                    Customers.Add(customer);
                 }
             }
             catch (Exception ex)
@@ -646,60 +640,7 @@ namespace Sellsys.WpfClient.ViewModels
             }
         }
 
-        /// <summary>
-        /// 检查是否应该显示指定客户（基于分组权限）
-        /// </summary>
-        /// <param name="customer">客户信息</param>
-        /// <returns>是否应该显示</returns>
-        private bool ShouldShowCustomer(Customer customer)
-        {
-            // 管理员可以看到所有客户
-            if (CurrentUser.IsAdmin)
-                return true;
-
-            var currentUser = CurrentUser.User;
-            if (currentUser == null)
-                return false;
-
-            var roleLevel = currentUser.GetRoleLevel();
-
-            // 销售管理模块只关注销售相关的客户
-            if (roleLevel == Models.RoleLevel.Staff)
-            {
-                // 普通销售：只能看到分配给自己的客户
-                return customer.SalesPersonId == currentUser.Id;
-            }
-            else if (roleLevel == Models.RoleLevel.Supervisor || roleLevel == Models.RoleLevel.Manager)
-            {
-                // 销售主管/经理：可以看到同组销售的客户 + 未分配销售的客户
-                if (customer.SalesPersonId == null)
-                {
-                    // 未分配销售的客户，主管/经理可以看到
-                    return true;
-                }
-                else
-                {
-                    // 已分配销售的客户，检查是否同组
-                    var salesPersonGroupId = GetEmployeeGroupId(customer.SalesPersonId);
-                    return currentUser.CanAccessGroupData(salesPersonGroupId);
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// 获取员工的分组ID
-        /// </summary>
-        /// <param name="employeeId">员工ID</param>
-        /// <returns>分组ID</returns>
-        private int? GetEmployeeGroupId(int? employeeId)
-        {
-            if (!employeeId.HasValue)
-                return null;
-
-            var employee = Employees.FirstOrDefault(e => e.Id == employeeId.Value);
-            return employee?.GroupId;
-        }
+        // 注意：权限控制已移至后端API，前端不再进行权限过滤
+        // 所有客户数据的权限控制都由后端CustomerService.GetCustomersWithPermissionAsync()方法处理
     }
 }
