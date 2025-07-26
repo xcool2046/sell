@@ -276,8 +276,8 @@
                                     <Setter Property="Background" Value="{StaticResource LightBlueBrush}"/>
                                 </Trigger>
                                 <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="#F0F8FF"/>
-                                    <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
+                                    <Setter Property="Background" Value="#007ACC"/>
+                                    <Setter Property="Foreground" Value="White"/>
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
